@@ -8,17 +8,18 @@ logging.basicConfig(level=logging.ERROR)
 
 class DataStore:
     def __init__(self, app):
-        self.application = app
-        def add_record(self, record):
-            if self.try_send_data(record):
-                return
-            self.data.append(data)
-        def try_send_data(self, record):
-            if not self.live_trip_active():
-                return
-            self.application.connection.send_data(record)
-        def live_trip_active():
-            return self.application.live_trip_active()
+		self.application = app
+		self.data = []
+    def add_record(self, record):
+        if self.try_send_data(record):
+			return
+        self.data.append(record)
+    def try_send_data(self, record):
+        if not self.live_trip_active():
+			return
+        self.application.connection.send_data(record)
+    def live_trip_active(self):
+        return self.application.live_trip_active()
 
 class Application:
     def __init__(self, group_id, user_id):
@@ -57,7 +58,8 @@ class Connection:
         self.open_connection()
     def send_data(self, data):
         to_send = {'_id':self.trip_id, "sensorData":data}
-        self.socket.emit('rt-sensordata', to_send)
+        print("tries to send: ",to_send)
+        self.socket.emit('rt-sensordata', json.dumps(to_send))
     def open_connection(self):
         self.socket = SocketIO(self.server, self.port)
         self.socket.on('server_message', self.on_response)
@@ -130,7 +132,7 @@ class DummySensor(SensorReader):
     def __init__(self):
         pass
     def read(self):
-        data = [
+        data = [{
                 "sensorID":1,
                 "timestamp":time.time(),
                 "data":[
@@ -139,14 +141,14 @@ class DummySensor(SensorReader):
                             [100,0]
                             ]
                         }]
-                    ]
+                    }]
         self.send_record(data)
 
 app = Application("cwa3", "r0463107")
 
-gps_reader = GPSReader()
-accellero_reader = AccelleroReader()
-dummy_reader = DummyReader()
+gps_reader = GPSSensor()
+accellero_reader = AccelleroSensor()
+dummy_reader = DummySensor()
 
 app.attachSensorReader(gps_reader)
 app.attachSensorReader(accellero_reader)
