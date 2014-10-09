@@ -28,6 +28,9 @@ class Application:
         self.data_store = DataStore(self)
         self.connection = Connection(self, "dali.cs.kuleuven.be", 8080)
     def action(self):
+        if self.live_trip_active():
+            for s in self.sensors:
+                s.read()
         self.connection.wait()
     def start(self):
         #start realtime sender
@@ -151,7 +154,7 @@ app.attachSensorReader(dummy_reader)
 
 app.start()
 
-for i in range(5):
+for i in range(10):
     app.action()
 
 
