@@ -1,5 +1,7 @@
 import threading
 import time, random
+import datetime
+import serial
 __author__ = 'fkint'
 
 class SensorReader:
@@ -34,7 +36,7 @@ class DummySensor(SensorReader):
     def read(self):
         data = [{
                 "sensorID":1,
-                "timestamp":time.time(),
+                "timestamp":datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'),
                 "data":[
                     {"type":"Point",
                         "coordinates":[
@@ -43,3 +45,33 @@ class DummySensor(SensorReader):
                         }]
                     }]
         self.send_record(data)
+class ThermoSensor(SensorReader):
+    def __init__(self):
+        self.ser = serial.Serial('/dev/arduino1', 9600)
+    def read(self):
+        line = self.ser.readline()
+        print("thermo sensor received: ", line)
+        if len(line) < 10:
+            print("no meaningful data")
+        else:
+            if line[:10] == "Error No :":
+                print("thermo sensor error: ", line)
+            elif line[:3] == "th;":
+                splitted = line.split(";")
+                t = float(splitted[1])
+                h = float(splitted[2])
+
+                temperature_data = [{
+                    "sensorID":3,
+                    "timestamp":datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'),
+                    "data":[{"value":t }]
+                }]
+                humidity_data =[{
+                    "sensorID":4,
+                    "timestamp":datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'),
+                    "data":[{"value":h}]
+                }]
+                self.send_record(temperature_data)
+                self.send_record(humidity_data)
+            else:
+                print("received nonsense: ", line)
