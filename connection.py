@@ -17,7 +17,7 @@ class Connection:
         self.trip_started = False
         self.trip_id = None
         self.socket = None
-        self.thread = threading.Thread(name='connection', target=self.action)
+        self.thread = None
 
     def send_data(self, data):
         to_send = {'_id': self.trip_id, "sensorData": data}
@@ -27,6 +27,7 @@ class Connection:
         self.socket = SocketIO(self.server, self.port)
         self.socket.on('server_message', self.on_response)
         self.connection_opened = True
+        self.thread = threading.Thread(name='connection', target=self.action)
         self.thread.start()
 
     def close_connection(self):

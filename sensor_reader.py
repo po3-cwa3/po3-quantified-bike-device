@@ -90,7 +90,6 @@ class HumiditySensor(SerialSensor):
 
 class ThermoSensor(SerialSensor):
     def __init__(self, serial, application):
-        #super(serial, application)
         SerialSensor.__init__(self, serial, application)
 
     def data_received(self, data):

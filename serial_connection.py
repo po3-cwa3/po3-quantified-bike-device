@@ -8,8 +8,8 @@ class SerialConnection:
     def __init__(self, address, baud):
         self.ser = serial.Serial(address, baud)
         self.active = False
-        self.thread = threading.Thread(name="serial", target=self.action)
         self.listeners = set()
+        self.thread = None
 
     def attach_listener(self, listener):
         self.listeners.add(listener)
@@ -29,6 +29,7 @@ class SerialConnection:
 
     def start(self):
         self.active = True;
+        self.thread = threading.Thread(name="serial", target=self.action)
         self.thread.start()
 
 
