@@ -12,12 +12,11 @@ const int pin=2;
 const int button = 4;
 int i=0;
 int buttonState=0;
-DHT11 dht11(pin); 
+DHT11 dht11(pin);
+
 void setup(){
   Serial.begin(9600);
-  while (!Serial){
-    ;
-    }
+  while (!Serial){;}
   pinMode(button, INPUT);
   }
 
@@ -43,8 +42,7 @@ void loop(){
   buttonState = digitalRead(button);
   if (buttonState == LOW) {
     Serial.println("pb;1;");
-    }
-    else{
+    }else{
       Serial.println("pb;0;");
     }
   delay(10);
