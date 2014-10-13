@@ -1,24 +1,42 @@
-from socketIO_client import SocketIO
 import time
-import json
-
-import data_store, application, sensor_reader
-
 import logging
+
+import serial_connection
+import application
+import sensor_reader
+
+
 logging.basicConfig(level=logging.ERROR)
 
 app = application.Application("cwa3", "r0463107")
 
-#gps_reader = sensor_reader.GPSSensor()
-#accellero_reader = sensor_reader.AccelleroSensor()
-dummy_reader = sensor_reader.DummySensor()
-thermo_sensor = sensor_reader.ThermoSensor()
+started = False
 
-#app.attachSensorReader(gps_reader)
-#app.attachSensorReader(accellero_reader)
-app.attachSensorReader(dummy_reader)
-app.attachSensorReader(thermo_sensor)
 
-app.start()
-time.sleep(15)
-app.stop()
+def start():
+    global started, app
+    started = True
+    app.start()
+
+
+def stop():
+    global app, started
+    app.stop()
+    started = False
+
+
+def click():
+    global started
+    if started:
+        stop()
+    else:
+        start()
+
+# gps_reader = sensor_reader.GPSSensor()
+# accellero_reader = sensor_reader.AccelleroSensor()
+sc = serial_connection.SerialConnection("/dev/arduino1", 9600)
+sc.start()
+#dummy_reader = sensor_reader.DummySensor()
+thermo_sensor = sensor_reader.ThermoSensor(sc, app)
+humidity_sensor = sensor_reader.HumiditySensor(sc, app)
+button = sensor_reader.PushButton(sc, click)
