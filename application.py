@@ -29,10 +29,14 @@ class Application:
         #stop realtime sender
         print("trying to stop!")
         self.connection.stop_trip()
+        for sensor in self.sensors:
+            sensor.stop()
+        self.connection.close_connection()
 
     def attachSensorReader(self, sensor):
         self.sensors.append(sensor)
         sensor.setDataStore(self.data_store)
+
     def live_trip_active(self):
         if self.connection is None:
             print "no connection"
