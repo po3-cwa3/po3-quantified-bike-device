@@ -1,3 +1,5 @@
+import threading
+import time, random
 __author__ = 'fkint'
 
 class SensorReader:
@@ -5,6 +7,8 @@ class SensorReader:
         self.active = False
     def start(self):
         self.active = True
+        self.thread = threading.Thread(name="sensor", target=self.action)
+        self.thread.start()
     def stop(self):
         self.active = False
     def setDataStore(self, store):
@@ -13,6 +17,10 @@ class SensorReader:
         self.data_store.add_record(record)
     def read(self):
         print("read should be overridden")
+    def action(self):
+        while self.active:
+            self.read()
+            time.sleep(1)
 
 class GPSSensor(SensorReader):
     def __init__(self):
@@ -30,7 +38,7 @@ class DummySensor(SensorReader):
                 "data":[
                     {"type":"Point",
                         "coordinates":[
-                            [100,0]
+                            [random.randint(0,100),random.randint(0,100)]
                             ]
                         }]
                     }]
