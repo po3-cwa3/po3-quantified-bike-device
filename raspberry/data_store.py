@@ -34,7 +34,7 @@ class DataStore:
         t = Trip(live)
         self.current_trip = t
         if live:
-            self.get_connection().start_trip(t)
+            self.get_connection().start_trip()
         else:
             self.get_database().start_trip(t)
 
@@ -58,7 +58,7 @@ class DataStore:
         while self.current_trip.has_data():
             d = self.current_trip.next_data()
             if self.current_trip.is_live():
-                self.get_connection().send_data(d)
+                self.get_connection().send_data(d, self.current_trip.get_id())
             else:
                 self.get_database().send_data(d, self.current_trip.get_id())
 
@@ -117,6 +117,7 @@ class Trip:
 
     def set_id(self, id):
         self.id = id
+        print("self id = "+self.id)
 
     def has_data(self):
         return len(self.data) > 0

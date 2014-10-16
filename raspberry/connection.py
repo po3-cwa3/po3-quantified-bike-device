@@ -20,8 +20,8 @@ class Connection:
         self.thread = threading.Thread(name='connection', target=self.action)
         self.thread.start()
 
-    def send_data(self, data):
-        to_send = {'_id': self.trip_id, "sensorData": data}
+    def send_data(self, data, trip_id):
+        to_send = {'_id': trip_id, "sensorData": data}
         self.socket.emit('rt-sensordata', json.dumps(to_send))
 
     def open_connection(self):
@@ -37,14 +37,16 @@ class Connection:
         self.socket.emit('start', json.dumps(data))
 
     def stop_trip(self):
+        print("stop trip")
         data = {'_id': self.trip_id, "meta": None}
         self.socket.emit('endBikeTrip', json.dumps(data))
 
     def on_response(self, *args):
         parsed = args[0]
         if "Connection accepted. Ready to receive realtime data." in parsed:
+            print("started!")
             self.application.trip_started(parsed['_id'])
-        elif 'Data succesfully received and saved' in parsed:
+        elif 'Data successfully received and saved' in parsed:
             pass
         elif "bikeTrip saved to Database" in parsed:
             self.trip_started = False

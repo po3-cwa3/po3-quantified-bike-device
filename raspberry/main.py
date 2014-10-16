@@ -19,12 +19,13 @@ def start():
     app.start()
 
     #start live trip
-    app.start_trip(False)
+    app.start_trip(True)
 
 
 def stop():
-    global app, started
+    global app, started, sc
     app.stop()
+    sc.stop()
     started = False
 
 
@@ -37,13 +38,13 @@ def click():
 
 # gps_reader = sensor_reader.GPSSensor()
 # accellero_reader = sensor_reader.AccelleroSensor()
-#sc = serial_connection.SerialConnection("/dev/arduino1", 9600)
-#sc.start()
+sc = serial_connection.SerialConnection("/dev/arduino1", 9600)
+sc.start()
 dummy_reader = sensor_reader.DummySensor(app)
-#thermo_sensor = sensor_reader.ThermoSensor(sc, app)
-#humidity_sensor = sensor_reader.HumiditySensor(sc, app)
-#button = sensor_reader.PushButton(sc, click)
-click()
+thermo_sensor = sensor_reader.ThermoSensor(sc, app)
+humidity_sensor = sensor_reader.HumiditySensor(sc, app)
+button = sensor_reader.PushButton(sc, click)
+#click()
 
-time.sleep(10)
-click()
+#time.sleep(10)
+#click()
