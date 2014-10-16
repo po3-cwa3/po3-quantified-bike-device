@@ -1,3 +1,4 @@
+import threading
 import time
 import random
 import datetime
@@ -37,8 +38,15 @@ class AccelleroSensor(SensorReader):
 
 
 class DummySensor(SensorReader):
-    def __init__(self):
-        pass
+    def __init__(self, app):
+        self.application = app
+        self.thread = threading.Thread(name="dummy sensor", target=self.action)
+        self.thread.start()
+
+    def action(self):
+        for i in range(10):
+            self.read()
+            time.sleep(1)
 
     def read(self):
         data = [{
@@ -51,7 +59,7 @@ class DummySensor(SensorReader):
                          ]
                         }]
                 }]
-        self.send_record(data)
+        self.application.get_data_store().add_record(data)
 
 
 class SerialSensor(SensorReader, serial_connection.SerialListener):

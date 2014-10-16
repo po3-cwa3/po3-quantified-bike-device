@@ -1,3 +1,4 @@
+import threading
 import data_store
 import connection
 
@@ -10,27 +11,39 @@ class Application:
         self.group_id = group_id
         self.user_id = user_id
         self.sensors = []
-        self.thread = None
         self.data_store = data_store.DataStore(self)
         self.connection = connection.Connection(self, "dali.cs.kuleuven.be", 8080)
+        self.active = False
+        self.thread = None
 
     def action(self):
         self.connection.wait()
 
     def start(self):
+        self.active = True
         self.connection.open_connection()
-        self.connection.start_trip()
+        self.thread = threading.Thread(name="main thread", target=self.action)
+        self.thread.start()
+
+    def start_trip(self, live):
+        self.data_store.start_trip(live)
+
+    def trip_started(self, id):
+        self.data_store.trip_started(id)
 
     def stop(self):
-        print("trying to stop!")
+        self.active = False
         self.connection.stop_trip()
         self.connection.close_connection()
-
-    def live_trip_active(self):
-        if self.connection is None:
-            print "no connection"
-            return
-        return self.connection.live_trip_active()
-
-    def send_data(self):
         self.data_store.send_data()
+
+    def get_connection(self):
+        return self.connection
+
+    def get_data_store(self):
+        return self.data_store
+
+    def action(self):
+        while self.active:
+            self.data_store.send_data()
+            self.connection.action()

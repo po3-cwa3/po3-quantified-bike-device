@@ -17,7 +17,8 @@ class Connection:
         self.trip_started = False
         self.trip_id = None
         self.socket = None
-        self.thread = None
+        self.thread = threading.Thread(name='connection', target=self.action)
+        self.thread.start()
 
     def send_data(self, data):
         to_send = {'_id': self.trip_id, "sensorData": data}
@@ -27,8 +28,6 @@ class Connection:
         self.socket = SocketIO(self.server, self.port)
         self.socket.on('server_message', self.on_response)
         self.connection_opened = True
-        self.thread = threading.Thread(name='connection', target=self.action)
-        self.thread.start()
 
     def close_connection(self):
         self.socket.disconnect()
@@ -40,17 +39,11 @@ class Connection:
     def stop_trip(self):
         data = {'_id': self.trip_id, "meta": None}
         self.socket.emit('endBikeTrip', json.dumps(data))
-        self.trip_started = False
-
-    def live_trip_active(self):
-        return self.connection_opened and self.trip_started
 
     def on_response(self, *args):
         parsed = args[0]
         if "Connection accepted. Ready to receive realtime data." in parsed:
-            self.trip_started = True
-            self.trip_id = parsed['_id']
-            print("trip started, id = ", self.trip_id)
+            self.application.trip_started(parsed['_id'])
         elif 'Data succesfully received and saved' in parsed:
             pass
         elif "bikeTrip saved to Database" in parsed:
@@ -64,11 +57,5 @@ class Connection:
             print("error: ", parsed)
 
     def action(self):
-        while self.socket.connected:
-            self.wait()
-
-    def wait(self):
-        self.application.send_data()
-        time.sleep(.2)
-        self.socket.wait(.5)
-
+        if self.connection_opened and self.socket.connected:
+            self.socket.wait(.5)

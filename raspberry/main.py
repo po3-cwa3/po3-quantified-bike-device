@@ -1,6 +1,6 @@
-import time
 import logging
 
+import time
 import serial_connection
 import application
 import sensor_reader
@@ -18,6 +18,9 @@ def start():
     started = True
     app.start()
 
+    #start live trip
+    app.start_trip(False)
+
 
 def stop():
     global app, started
@@ -34,9 +37,13 @@ def click():
 
 # gps_reader = sensor_reader.GPSSensor()
 # accellero_reader = sensor_reader.AccelleroSensor()
-sc = serial_connection.SerialConnection("/dev/arduino1", 9600)
-sc.start()
-#dummy_reader = sensor_reader.DummySensor()
-thermo_sensor = sensor_reader.ThermoSensor(sc, app)
-humidity_sensor = sensor_reader.HumiditySensor(sc, app)
-button = sensor_reader.PushButton(sc, click)
+#sc = serial_connection.SerialConnection("/dev/arduino1", 9600)
+#sc.start()
+dummy_reader = sensor_reader.DummySensor(app)
+#thermo_sensor = sensor_reader.ThermoSensor(sc, app)
+#humidity_sensor = sensor_reader.HumiditySensor(sc, app)
+#button = sensor_reader.PushButton(sc, click)
+click()
+
+time.sleep(10)
+click()
