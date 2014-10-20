@@ -5,19 +5,19 @@ Klik nu in het arduinoprogramma op Sketch -> Import Library... -> Add Library...
 Vind de zip-file en voeg deze toe.
 Herstart nu het arduinoprogramma om de library volledig in te laden.
 */
-//De TempHumi-sensor zit op pin 2, de Button op pin 4
+//De TempHumi-sensor zit op pin 5, de Button op pin 4
 
 #include <DHT11.h>
-const int pin=2;
-const int button = 4;
+const int TempHumiPin=5;
+const int ButtonPin = 4;
 int i=0;
 int buttonState=0;
-DHT11 dht11(pin);
+DHT11 dht11(TempHumiPin);
 
 void setup(){
-  Serial.begin(9600);
+  Serial.begin(115200);
   while (!Serial){;}
-  pinMode(button, INPUT);
+  pinMode(ButtonPin, INPUT);
   }
 
 void loop(){
@@ -39,7 +39,7 @@ void loop(){
       Serial.println();    
     }
   }
-  buttonState = digitalRead(button);
+  buttonState = digitalRead(ButtonPin);
   if (buttonState == LOW) {
     Serial.println("pb;1;");
     }else{
