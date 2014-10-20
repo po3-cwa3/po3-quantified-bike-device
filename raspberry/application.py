@@ -1,4 +1,5 @@
 import threading
+import time
 import data_store
 import connection
 
@@ -32,8 +33,9 @@ class Application:
         self.data_store.trip_started(id)
 
     def stop(self):
-        self.active = False
         self.connection.stop_trip()
+        time.sleep(2);
+        self.active = False
         self.connection.close_connection()
         self.data_store.send_data()
 
