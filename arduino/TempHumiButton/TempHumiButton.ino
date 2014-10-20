@@ -15,7 +15,7 @@ int buttonState=0;
 DHT11 dht11(TempHumiPin);
 
 void setup(){
-  Serial.begin(9600);
+  Serial.begin(115200);
   while (!Serial){;}
   pinMode(ButtonPin, INPUT);
   }
