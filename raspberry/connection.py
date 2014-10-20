@@ -14,11 +14,7 @@ class Connection:
         self.server = server
         self.port = port
         self.connection_opened = False
-        self.trip_started = False
-        self.trip_id = None
         self.socket = None
-        #self.thread = threading.Thread(name='connection', target=self.action)
-        #self.thread.start()
 
     def send_data(self, data, trip_id):
         to_send = {'_id': trip_id, "sensorData": data}
@@ -37,7 +33,7 @@ class Connection:
         self.socket.emit('start', json.dumps(data))
 
     def stop_trip(self):
-        data = {'_id': self.trip_id, "meta": None}
+        data = {'_id': self.application.data_store.current_trip.get_id(), "meta": None}
         self.socket.emit('endBikeTrip', json.dumps(data))
 
     def on_response(self, *args):
@@ -47,7 +43,6 @@ class Connection:
         elif 'Data succesfully received and saved' in parsed:
             pass
         elif "bikeTrip saved to Database" in parsed:
-            self.trip_started = False
             print("trip saved to database!")
         elif "illegal JSON data received" in parsed:
             print("saving data to database failed")
