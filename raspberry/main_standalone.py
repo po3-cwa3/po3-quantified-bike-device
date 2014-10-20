@@ -19,7 +19,7 @@ def start():
     app.start()
 
     #start live trip
-    app.start_trip(True)
+    app.start_trip(False)
 
 
 def stop():
