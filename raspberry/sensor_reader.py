@@ -3,7 +3,7 @@ import time
 import random
 import datetime
 
-import serial_connection
+from raspberry.service import serial_connection
 
 
 __author__ = 'fkint'

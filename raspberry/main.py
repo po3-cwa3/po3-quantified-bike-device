@@ -1,8 +1,6 @@
 import logging
 
-import time
-import serial_connection
-import application
+from raspberry.service import application, serial_connection
 import sensor_reader
 
 
