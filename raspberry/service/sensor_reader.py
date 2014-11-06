@@ -123,16 +123,17 @@ class ThermoSensor(SerialSensor):
 
 
 class PushButton(serial_connection.SerialListener):
-    def __init__(self, serial, action):
+    def __init__(self, serial, action, identifier):
         serial_connection.SerialListener.__init__(self, serial)
         self.action = action
         self.previous_value = False
+        self.identifier = identifier
 
     def data_received(self, data):
         line = data
         if len(line) < 5:
             return
-        if line[:3] != "pb;":
+        if line[:len(self.identifier)+1] != self.identifier+";":
             return
         splitted = line.split(";")
         if splitted[1] == "1":
