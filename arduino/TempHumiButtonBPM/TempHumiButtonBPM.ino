@@ -5,17 +5,22 @@ Klik nu in het arduinoprogramma op Sketch -> Import Library... -> Add Library...
 Vind de zip-file en voeg deze toe.
 Herstart nu het arduinoprogramma om de library volledig in te laden.
 */
-//De TempHumi-sensor zit op pin 5, de Button op pin 4
+//De TempHumi-sensor zit op pin 5, de Button op pin 4, puls sensor op pin 0.
+//Voor code puls sensor (en referenties) zie BPM.ino. 
 
 #include <DHT11.h>
-const int TempHumiPin = 5;
-const int ButtonPin = 4;
+const int TempHumiPin = 8;
+const int ButtonPin = 7;
 
 int i = 0;
 int buttonState = 0;
 int pulsePin = 0;
+int blinkPin = 13;
+int fadePin = 5;
+int fadeRate = 0;
 int BPM;
 
+volatile int Signal;
 volatile int IBI = 600;
 volatile boolean Pulse = false;
 volatile boolean QS = false;
@@ -31,6 +36,7 @@ void setup(){
 
 void loop(){
   if (i%100==0){
+    Serial.println("test");
     int err;
     float temp, humi;
     if((err=dht11.read(humi, temp))==0)
@@ -47,6 +53,7 @@ void loop(){
       Serial.print(err);
       Serial.println();    
     }
+  Serial.println("after read");
   }
   buttonState = digitalRead(ButtonPin);
   if (buttonState == LOW) {
