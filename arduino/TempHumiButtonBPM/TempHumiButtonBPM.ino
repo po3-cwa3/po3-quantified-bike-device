@@ -50,9 +50,9 @@ void loop(){
   }
   buttonState = digitalRead(ButtonPin);
   if (buttonState == LOW) {
-      Serial.println("pb;1;");
+      Serial.println("pb1;1;");
     }else{
-      Serial.println("pb;0;");
+      Serial.println("pb1;0;");
     }
   if (QS == true){                      
       Serial.print("BPM;");
