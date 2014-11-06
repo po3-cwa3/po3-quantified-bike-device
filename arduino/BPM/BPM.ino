@@ -28,11 +28,15 @@ This update fixes the firstBeat and secondBeat flag usage so that realistic BPM 
 */
 
 //  VARIABLES
-int pulsePin = 0;                 // Pulse Sensor purple wire connected to analog pin 0               // used to fade LED on with PWM on fadePin
+int pulsePin = 0;                 // Pulse Sensor purple wire connected to analog pin 0
+int blinkPin = 13;                // pin to blink led at each beat
+int fadePin = 5;                  // pin to do fancy classy fading blink at each beat
+int fadeRate = 0;                 // used to fade LED on with PWM on fadePin
 int BPM;                          // used to hold the pulse rate
 
 // these variables are volatile because they are used during the interrupt service routine!
 
+volatile int Signal;
 volatile int IBI = 600;             // holds the time between beats, must be seeded! 
 volatile boolean Pulse = false;     // true when pulse wave is high, false when it's low
 volatile boolean QS = false;        // becomes true when Arduoino finds a beat.

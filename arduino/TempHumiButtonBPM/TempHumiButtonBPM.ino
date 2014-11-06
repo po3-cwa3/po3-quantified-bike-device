@@ -1,14 +1,16 @@
-#include <DHT.h>
-
 /*
 DHT-library: https://github.com/adafruit/DHT-sensor-library
 Klik nu in het arduinoprogramma op Sketch -> Import Library... -> Add Library...
 Vind de zip-file en voeg deze toe.
 Herstart nu het arduinoprogramma om de library volledig in te laden.
+De TempHumi-sensor zit op pin 8, de Button op pin 7, puls sensor op pin 0.
+Voor code puls sensor (en referenties) zie BPM.ino.
 */
-//De TempHumi-sensor zit op pin 5, de Button op pin 4, puls sensor op pin 0.
-//Voor code puls sensor (en referenties) zie BPM.ino. 
+
+#include <DHT.h>
 #define DHTTYPE DHT11
+
+// VARIABLES
 const int TempHumiPin = 8;
 const int ButtonPin = 7;
 
@@ -37,37 +39,18 @@ void setup(){
 
 void loop(){
   if (i%100==0){
-    Serial.println("test");
-    /*int err;
-    float temp, humi;
-    err=dht11.read(humi, temp);
-    if(err==0)
-    {
-      Serial.print("th;");
-      Serial.print(temp);
-      Serial.print(";");
-      Serial.print(humi);
-      Serial.print(";");
-      Serial.println();
-    }else{
-      Serial.println();
-      Serial.print("Error No :");
-      Serial.print(err);
-      Serial.println();    
-    }*/
       Serial.print("th;");
       Serial.print(dht.readTemperature());
       Serial.print(";");
       Serial.print(dht.readHumidity());
       Serial.print(";");
       Serial.println();
-  Serial.println("after read");
   }
   buttonState = digitalRead(ButtonPin);
   if (buttonState == LOW) {
-      //Serial.println("pb1;1;");
+      Serial.println("pb1;1;");
     }else{
-      //Serial.println("pb1;0;");
+      Serial.println("pb1;0;");
     }
   if (QS == true){                      
       Serial.print("BPM;");
