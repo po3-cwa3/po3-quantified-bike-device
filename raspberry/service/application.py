@@ -17,8 +17,11 @@ class Application:
         self.active = False
         self.thread = None
 
-    def action(self):
-        self.connection.wait()
+    #def action(self):
+    #     self.connection.wait()
+
+    def has_active_trip(self):
+        return self.data_store.current_trip is not None
 
     def start(self):
         self.active = True
@@ -28,6 +31,9 @@ class Application:
 
     def start_trip(self, live):
         self.data_store.start_trip(live)
+
+    def stop_trip(self):
+        self.data_store.stop_trip()
 
     def trip_started(self, id):
         self.data_store.trip_started(id)
