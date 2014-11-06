@@ -25,15 +25,18 @@ class Application:
 
     def start(self):
         self.active = True
-        self.connection.open_connection()
+        self.connection.start()
+        #self.connection.open_connection()
         self.thread = threading.Thread(name="main thread", target=self.action)
         self.thread.start()
 
     def start_trip(self, live):
         self.data_store.start_trip(live)
+        print("start trip")
 
     def stop_trip(self):
         self.data_store.stop_trip()
+        print("stop trip")
 
     def trip_started(self, id):
         self.data_store.trip_started(id)
@@ -53,5 +56,7 @@ class Application:
 
     def action(self):
         while self.active:
+            #print("action in application")
             self.data_store.send_data()
-            self.connection.action()
+            time.sleep(.1)
+            #self.connection.action()

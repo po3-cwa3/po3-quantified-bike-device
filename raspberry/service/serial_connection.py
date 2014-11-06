@@ -30,6 +30,7 @@ class SerialConnection:
     def start(self):
         self.active = True;
         self.thread = threading.Thread(name="serial", target=self.action)
+        self.thread.daemon = True
         self.thread.start()
 
 

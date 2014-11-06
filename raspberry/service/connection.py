@@ -1,9 +1,11 @@
 import json
-import threading
 import time
+import logging
+import threading
 
 from socketIO_client import SocketIO
 
+logging.basicConfig()
 
 __author__ = 'fkint'
 
@@ -15,6 +17,11 @@ class Connection:
         self.port = port
         self.connection_opened = False
         self.socket = None
+        self.thread = None
+
+    def start(self):
+        self.thread = threading.Thread(name="connection thread", target=self.action)
+        self.thread.start()
 
     def send_data(self, data, trip_id):
         to_send = {'_id': trip_id, "sensorData": data}
@@ -52,7 +59,13 @@ class Connection:
             print("error: ", parsed)
 
     def action(self):
-        if self.connection_opened and self.socket.connected:
-            self.socket.wait(.5)
-        else:
-            time.sleep(.1)
+        while True:
+            #print("connected: "+str(self.connection_opened and self.socket.connected))
+            if self.connection_opened and self.socket.connected:
+                self.socket.wait(.5)
+            else:
+                try:
+                    self.open_connection()
+                    time.sleep(.1)
+                except ValueError:
+                    print("value error")

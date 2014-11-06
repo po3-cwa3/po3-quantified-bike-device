@@ -97,7 +97,7 @@ class Trip:
 
     def set_id(self, id):
         self.id = id
-        print("self id = "+self.id)
+        print("self id = "+str(self.id))
 
     def has_data(self):
         return len(self.data) > 0
