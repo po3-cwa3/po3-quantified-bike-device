@@ -1,16 +1,19 @@
+#include <Adafruit_GPS.h>
 
+#include "headers.h"
 #include <Adafruit_GPS.h>
 #include <SoftwareSerial.h>
 
 // Variables for the GPS
 // Configuration based on the examples in the Adafruit_GPS library
-SoftwareSerial mySerial(10, 2);
+SoftwareSerial mySerial(12, 5);
 Adafruit_GPS GPS(&mySerial);
 #define GPS_UPDATE_INTERVAL 2000
 // GPS interrupt
-/*SIGNAL(TIMER0_COMPA_vect) {
+SIGNAL(TIMER0_COMPA_vect) {
   char c = GPS.read();
-}*/
+}
+
 void setupGPS(){
   GPS.begin(9600);
   GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);//Recommended minimum + fix data (including altitude)
@@ -25,11 +28,15 @@ void setupGPS(){
 uint32_t last_gps_data_time = millis();
 //checks if new GPS data is available and processes it
 void readGPSData(){
+  
   char c = GPS.read();
+  //Serial.print("c = ");Serial.println(c);
   if(GPS.newNMEAreceived()){ // is there new data available?
+    //Serial.println("new data");
     if(!GPS.parse(GPS.lastNMEA())){ // can this data be parsed? (also sets newNMEAreceived to false)
       return;
     }
+  }else{
   }
   if(last_gps_data_time > millis()) last_gps_data_time = millis();
   if(millis()-last_gps_data_time < GPS_UPDATE_INTERVAL){
@@ -39,18 +46,18 @@ void readGPSData(){
   //TODO: insert timing information (see gps_test for examples)
   Serial.print("GPS;");
   //Do we really need time information?
-  Serial.print(GPS.hour, DEC); Serial.print(":");
+  /*Serial.print(GPS.hour, DEC); Serial.print(":");
   Serial.print(GPS.minute, DEC); Serial.print(":");
   Serial.print(GPS.seconds, DEC); Serial.print(".");
   Serial.print(GPS.milliseconds); Serial.print(";");
   Serial.print(GPS.day, DEC); Serial.print("/");
   Serial.print(GPS.month, DEC); Serial.print("/");
   Serial.print(GPS.year, DEC); Serial.print(";");
-  Serial.print(GPS.fixquality); Serial.print(";");
+  Serial.print(GPS.fixquality); Serial.print(";");*/
   if(GPS.fix){
     //Location data
-    Serial.print(GPS.latitudeDegrees, 4); Serial.print(";");
-    Serial.print(GPS.longitudeDegrees, 4); Serial.print(";");
+    Serial.print(GPS.latitudeDegrees, 8); Serial.print(";");
+    Serial.print(GPS.longitudeDegrees, 8); Serial.print(";");
     Serial.print(GPS.speed); Serial.print(";");
     Serial.print(GPS.altitude); Serial.print(";");
     Serial.print(GPS.satellites); Serial.println();
@@ -58,18 +65,3 @@ void readGPSData(){
     Serial.println("nofix");
   }
 }
-
-void setup(){
-  Serial.begin(115200);
-  setupGPS();
-  delay(1000);
-}
-
-void loop(){
-  //Serial.println("in loop");
-  readGPSData();
-}
-  
-
-
-
