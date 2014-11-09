@@ -43,17 +43,21 @@ volatile boolean secondBeat = false;      // used to seed rate array so we start
 
 void BPMInterruptSetup(){     
   // Initializes Timer2 to throw an interrupt every 2mS.
-  TCCR2A = 0x02;     // DISABLE PWM ON DIGITAL PINS 3 AND 11, AND GO INTO CTC MODE
-  TCCR2B = 0x06;     // DON'T FORCE COMPARE, 256 PRESCALER 
-  OCR2A = 0X7C;      // SET THE TOP OF THE COUNT TO 124 FOR 500Hz SAMPLE RATE
-  TIMSK2 = 0x02;     // ENABLE INTERRUPT ON MATCH BETWEEN TIMER2 AND OCR2A
+  //TCCR2A = 0x02;     // DISABLE PWM ON DIGITAL PINS 3 AND 11, AND GO INTO CTC MODE
+  //TCCR2B = 0x06;     // DON'T FORCE COMPARE, 256 PRESCALER 
+  //OCR2A = 0X7C;      // SET THE TOP OF THE COUNT TO 124 FOR 500Hz SAMPLE RATE
+  //TIMSK2 = 0x02;     // ENABLE INTERRUPT ON MATCH BETWEEN TIMER2 AND OCR2A
+  TCCR1A = 0x02;
+  TCCR1B = 0x06;
+  OCR1A = 0x7C;
+  TIMSK1 = 0x02;
   sei();             // MAKE SURE GLOBAL INTERRUPTS ARE ENABLED      
 } 
 
 
 // THIS IS THE TIMER 2 INTERRUPT SERVICE ROUTINE. 
 // Timer 2 makes sure that we take a reading every 2 miliseconds
-ISR(TIMER2_COMPA_vect){                         // triggered when Timer2 counts to 124
+ISR(TIMER1_COMPA_vect){                         // triggered when Timer2 counts to 124
   cli();                                      // disable interrupts while we do this
   Signal = analogRead(PIN_PULSE);              // read the Pulse Sensor 
   sampleCounter += 2;                         // keep track of the time in mS with this variable
