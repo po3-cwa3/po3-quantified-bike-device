@@ -13,13 +13,20 @@ void setupTempHumi(){
 
 uint32_t last_temphumi_data_time = millis();
 void readTempHumi(){
-  if(last_temphumi_data_time > millis()) last_temphumi_data_time = millis();
-  if(millis()-last_temphumi_data_time < TEMPHUMI_UPDATE_INTERVAL){
+  //Serial.println(millis());
+  
+  //noInterrupts();
+  uint32_t current_millis = millis();
+  if(last_temphumi_data_time > current_millis) last_temphumi_data_time = current_millis;
+  if(current_millis-last_temphumi_data_time < TEMPHUMI_UPDATE_INTERVAL){
+    interrupts();
     return;
   }
-  last_temphumi_data_time = millis();
+  last_temphumi_data_time = current_millis;
   Serial.print("th;");
+  //noInterrupts();
   Serial.print(dht.readTemperature());
   Serial.print(";");
   Serial.println(dht.readHumidity());
+  //interrupts();
 }

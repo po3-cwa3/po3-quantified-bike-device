@@ -6,30 +6,45 @@
 
 // Variables for the GPS
 // Configuration based on the examples in the Adafruit_GPS library
-SoftwareSerial mySerial(12, 5);
+SoftwareSerial mySerial(12, 4);
 Adafruit_GPS GPS(&mySerial);
 #define GPS_UPDATE_INTERVAL 2000
 // GPS interrupt
-SIGNAL(TIMER0_COMPA_vect) {
+unsigned int current_value_gps = 0;
+//uint32_t gps_time = 0;
+SIGNAL(TIMER0_COMPB_vect) {
+  //cli();
+  //Serial.println(millis()-gps_time);
+  //gps_time = millis();
   char c = GPS.read();
+  ++current_value_gps;
+  //Serial.print("gps:");
+  //Serial.println(current_value_gps);
+//  sei();
+  digitalWrite(5, current_value_gps%100 > 50);
+  //Serial.println(millis()-gps_time);
 }
 
 void setupGPS(){
   GPS.begin(9600);
-  GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);//Recommended minimum + fix data (including altitude)
+  //GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);//Recommended minimum + fix data (including altitude)
+  GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCONLY);//Recommended minimum + fix data (including altitude)
   GPS.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);//Update interval 1 Hz
   
   //configuration of interrupt
-  //OCR0A = 0xAF;
-  //TIMSK0 |= _BV(OCIE0A);
-  TIMSK0 &= ~_BV(OCIE0A);
+  //TCCR0A |= _BV(WGM01);
+  //TCCR0B |= _BV(CS02);
+  
+  OCR0B = 0xAF;//compare value
+  TIMSK0 |= _BV(OCIE0B);//enable B
+  //TIMSK0 &= ~_BV(OCIE0A);
   mySerial.println(PMTK_Q_RELEASE);
 }
 uint32_t last_gps_data_time = millis();
 //checks if new GPS data is available and processes it
 void readGPSData(){
-  
-  char c = GPS.read();
+  //Serial.println(millis());
+  //char c = GPS.read();
   //Serial.print("c = ");Serial.println(c);
   if(GPS.newNMEAreceived()){ // is there new data available?
     //Serial.println("new data");

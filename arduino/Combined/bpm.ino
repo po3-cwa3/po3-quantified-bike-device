@@ -41,24 +41,55 @@ volatile int amp = 100;                   // used to hold amplitude of pulse wav
 volatile boolean firstBeat = true;        // used to seed rate array so we startup with reasonable BPM
 volatile boolean secondBeat = false;      // used to seed rate array so we startup with reasonable BPM
 
+//http://www.protostack.com/blog/2010/09/timer-interrupts-on-an-atmega168/
 void BPMInterruptSetup(){     
   // Initializes Timer2 to throw an interrupt every 2mS.
-  //TCCR2A = 0x02;     // DISABLE PWM ON DIGITAL PINS 3 AND 11, AND GO INTO CTC MODE
-  //TCCR2B = 0x06;     // DON'T FORCE COMPARE, 256 PRESCALER 
-  //OCR2A = 0X7C;      // SET THE TOP OF THE COUNT TO 124 FOR 500Hz SAMPLE RATE
-  //TIMSK2 = 0x02;     // ENABLE INTERRUPT ON MATCH BETWEEN TIMER2 AND OCR2A
-  TCCR1A = 0x02;
-  TCCR1B = 0x06;
-  OCR1A = 0x7C;
+//  TCCR2A = 0x02;     // DISABLE PWM ON DIGITAL PINS 3 AND 11, AND GO INTO CTC MODE (=_BV(WGM01))
+//  TCCR2B = 0x06;     // DON'T FORCE COMPARE, 256 PRESCALER  (= _BV(CS01) | _BV(CS02)) (?means external clock source on T0 pin)
+//  OCR2A = 0X7C;      // SET THE TOP OF THE COUNT TO 124 FOR 500Hz SAMPLE RATE
+//  TIMSK2 = 0x02;     // ENABLE INTERRUPT ON MATCH BETWEEN TIMER2 AND OCR2A
+  //TCCR1A = 0x02; // = _BV(WGM11) = CTC Mode
+  TCCR1A = _BV(WGM11);
+  TCCR1B = _BV(CS12) | _BV(CS10);
+  //TCCR1B = 4;
+  OCR1A = 0x10;
   TIMSK1 = 0x02;
+  TCCR1C = _BV(FOC1A);
+/*  TCCR0A = _BV(WGM01);
+  TCCR0B = _BV(CS02) | 4;
+  OCR0A = 124;
+  TIMSK0 = _BV(OCIE0A);*/
+  //TCCR0A = 0x02;
+  //TCCR0B = 0x06;
+  /*TCCR0A = _BV(WGM01);
+  TCCR0B = _BV(CS02) | 6;
+  OCR0A = 124;
+  //OCR0A = 0x7c;
+  TIMSK0 = 0x02;*/
+  //Serial.println(TCCR0A, HEX);
+  //Serial.println(TCCR0B, HEX);
+  //Serial.println(OCR0A, HEX);
+  //Serial.println(TIMSK0, HEX);
   sei();             // MAKE SURE GLOBAL INTERRUPTS ARE ENABLED      
 } 
 
 
 // THIS IS THE TIMER 2 INTERRUPT SERVICE ROUTINE. 
 // Timer 2 makes sure that we take a reading every 2 miliseconds
+unsigned int current_value = 0;
+uint32_t previous_time = 0;
 ISR(TIMER1_COMPA_vect){                         // triggered when Timer2 counts to 124
-  cli();                                      // disable interrupts while we do this
+//return;
+  //Serial.println(millis()-previous_time);
+  //previous_time = millis();
+  //uint32_t start_time = micros();
+  cli();                // disable interrupts while we do this
+  //Serial.println('in irs');
+  ++current_value;
+  //Serial.print("bpm: ");
+  //Serial.println(current_value);
+  digitalWrite(9, current_value%100 > 50);
+  
   Signal = analogRead(PIN_PULSE);              // read the Pulse Sensor 
   sampleCounter += 2;                         // keep track of the time in mS with this variable
   int N = sampleCounter - lastBeatTime;       // monitor the time since the last beat to avoid noise
@@ -133,7 +164,13 @@ ISR(TIMER1_COMPA_vect){                         // triggered when Timer2 counts 
     secondBeat = false;                    // when we get the heartbeat back
   }
 
-  sei();                                   // enable interrupts when youre done!
+  sei();   // enable interrupts when youre done!
+  //Serial.print("current length: ");
+  //Serial.println(micros()-start_time);
+  //Serial.print("idle: ");
+  //Serial.println(micros()-previous_time);
+  //previous_time = micros();
+  //Serial.print("one method: ");Serial.println(millis()-previous_time);
 }// end isr
 
 

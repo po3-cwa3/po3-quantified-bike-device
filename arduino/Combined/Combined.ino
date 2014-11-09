@@ -7,15 +7,17 @@ void setup(){
   Serial.begin(115200);
   setupButtons();
   setupTempHumi();
-  setupBPM();
   setupGPS();
-  delay(1000);
+  setupBPM();
+  digitalWrite(9, LOW);
+  //delay(1000);
 }
 void loop(){
+  //Serial.println("in loop");
   //readButtons();
   readGPSData();
   readTempHumi();
   readBPM();
-  //delay(100);
+  delay(1);
 }
   
