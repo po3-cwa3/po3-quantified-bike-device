@@ -48,28 +48,11 @@ void BPMInterruptSetup(){
 //  TCCR2B = 0x06;     // DON'T FORCE COMPARE, 256 PRESCALER  (= _BV(CS01) | _BV(CS02)) (?means external clock source on T0 pin)
 //  OCR2A = 0X7C;      // SET THE TOP OF THE COUNT TO 124 FOR 500Hz SAMPLE RATE
 //  TIMSK2 = 0x02;     // ENABLE INTERRUPT ON MATCH BETWEEN TIMER2 AND OCR2A
-  //TCCR1A = 0x02; // = _BV(WGM11) = CTC Mode
-  TCCR1A = _BV(WGM11);
-  TCCR1B = _BV(CS12) | _BV(CS10);
-  //TCCR1B = 4;
-  OCR1A = 0x10;
-  TIMSK1 = 0x02;
-  TCCR1C = _BV(FOC1A);
-/*  TCCR0A = _BV(WGM01);
-  TCCR0B = _BV(CS02) | 4;
-  OCR0A = 124;
-  TIMSK0 = _BV(OCIE0A);*/
-  //TCCR0A = 0x02;
-  //TCCR0B = 0x06;
-  /*TCCR0A = _BV(WGM01);
-  TCCR0B = _BV(CS02) | 6;
-  OCR0A = 124;
-  //OCR0A = 0x7c;
-  TIMSK0 = 0x02;*/
-  //Serial.println(TCCR0A, HEX);
-  //Serial.println(TCCR0B, HEX);
-  //Serial.println(OCR0A, HEX);
-  //Serial.println(TIMSK0, HEX);
+  TCCR1A = _BV(WGM11);   //CTC-mode (PWM on pins 9 and 10 disabled)
+  TCCR1B = _BV(CS00) | _BV(CS01);    //64 prescalar
+  OCR1A = 500;          //value 500 (500/16000000*64 = .002)
+  TIMSK1 = _BV(OCIE1A);  //enable A-timer
+//  TCCR1C = _BV(FOC1A);  //Force compare
   sei();             // MAKE SURE GLOBAL INTERRUPTS ARE ENABLED      
 } 
 
@@ -86,9 +69,10 @@ ISR(TIMER1_COMPA_vect){                         // triggered when Timer2 counts 
   cli();                // disable interrupts while we do this
   //Serial.println('in irs');
   ++current_value;
+  current_value %= 1000;
   //Serial.print("bpm: ");
   //Serial.println(current_value);
-  digitalWrite(9, current_value%100 > 50);
+  digitalWrite(9, current_value > 500);
   
   Signal = analogRead(PIN_PULSE);              // read the Pulse Sensor 
   sampleCounter += 2;                         // keep track of the time in mS with this variable

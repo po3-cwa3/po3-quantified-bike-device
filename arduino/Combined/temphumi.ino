@@ -1,6 +1,6 @@
 #include "headers.h"
 
-#define TEMPHUMI_UPDATE_INTERVAL 1000
+#define TEMPHUMI_UPDATE_INTERVAL 2000
 
 //const int pin_temphumi = 8;
 #define PIN_TEMPHUMI 8

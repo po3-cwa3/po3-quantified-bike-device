@@ -27,15 +27,15 @@ SIGNAL(TIMER0_COMPB_vect) {
 
 void setupGPS(){
   GPS.begin(9600);
-  //GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);//Recommended minimum + fix data (including altitude)
-  GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCONLY);//Recommended minimum + fix data (including altitude)
+  GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);//Recommended minimum + fix data (including altitude)
+  //GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCONLY);//Recommended minimum + fix data (including altitude)
   GPS.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);//Update interval 1 Hz
   
   //configuration of interrupt
   //TCCR0A |= _BV(WGM01);
   //TCCR0B |= _BV(CS02);
   
-  OCR0B = 0xAF;//compare value
+  OCR0B = 0xAF;//compare value = 176
   TIMSK0 |= _BV(OCIE0B);//enable B
   //TIMSK0 &= ~_BV(OCIE0A);
   mySerial.println(PMTK_Q_RELEASE);
