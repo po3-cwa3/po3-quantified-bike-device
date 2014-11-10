@@ -130,13 +130,14 @@ class PushButton(serial_connection.SerialListener):
         self.identifier = identifier
 
     def data_received(self, data):
+        #print(data)
         line = data
-        if len(line) < 5:
+        if len(line) < len(self.identifier)+2:
             return
         if line[:len(self.identifier)+1] != self.identifier+";":
             return
         splitted = line.split(";")
-        if splitted[1] == "1":
+        if splitted[1].strip() == "1":
             if not self.previous_value:
                 self.action()
             self.previous_value = True
