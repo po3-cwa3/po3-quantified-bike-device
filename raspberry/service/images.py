@@ -21,17 +21,18 @@ def get_filename(photo_id):
 
 def take_photo():
     photo_id=id_generator()
-    destination=''+photo_id+'.jpg'
     with picamera.PiCamera() as camera:
-        camera.capture(destination)
+        camera.capture(images_path+get_filename(photo_id))
     return photo_id
 
 
 def send_to_server(photo_id,trip_id,user_id):
-    location=images_path+photo_id+'.jpg'
+    location=images_path+get_filename(photo_id)
     f=open(location,"rb").read().encode("base64")
     test=json.dumps({"imageName":get_filename(photo_id),"tripID":trip_id,"userID":user_id,"raw":f})
     url=upload_url
     headers={'Content-type':'application/json','Accept':'text/plain'}
     requests.post(url,data=test,headers=headers)
     return get_filename(photo_id)
+
+# test_trip_id "5436a08271b56f091b616920","r0463107"
