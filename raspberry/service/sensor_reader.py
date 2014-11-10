@@ -137,7 +137,7 @@ class PushButton(serial_connection.SerialListener):
         if line[:len(self.identifier)+1] != self.identifier+";":
             return
         splitted = line.split(";")
-        if splitted[1].trim() == "1":
+        if splitted[1].strip() == "1":
             if not self.previous_value:
                 self.action()
             self.previous_value = True
