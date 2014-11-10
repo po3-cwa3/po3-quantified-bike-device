@@ -36,7 +36,7 @@ void readGPSData(){
   if(millis()-last_gps_data_time < GPS_UPDATE_INTERVAL){
     return;
   }
-  last_gps_data_time = millis();
+  last_gps_data_time = micros();
   //TODO: insert timing information (see gps_test for examples)
   Serial.print("GPS;");
   //Do we really need time information?

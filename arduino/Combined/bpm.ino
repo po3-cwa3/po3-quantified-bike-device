@@ -40,12 +40,23 @@ void process(){
   Signal = analogRead(PIN_PULSE);              // read the Pulse Sensor 
 
 //  sei();return;
+  uint32_t interval;
   if(last_bpm_time > micros()){
-    sampleCounter += ((~0)-last_bpm_time + micros())/1000;
+    interval = ((~0)-last_bpm_time + micros());
+//    sampleCounter += ((~0)-last_bpm_time + micros())/1000;
+//    Serial.println(((~0)-last_bpm_time + micros()));
   }else{
-    sampleCounter += (micros()-last_bpm_time)/1000;                         // keep track of the time in mS with this variable
+    interval = micros()-last_bpm_time;
+//    sampleCounter += (micros()-last_bpm_time)/1000;                         // keep track of the time in mS with this variable
+//    Serial.println(micros()-last_bpm_time);
   }
-  last_bpm_time = micros();
+  const uint32_t wanted_interval = 2000;
+  if(interval < wanted_interval){
+    return;
+  }
+  //last_bpm_time = micros();
+  last_bpm_time += wanted_interval;
+  sampleCounter += 2;
   int N = sampleCounter - lastBeatTime;       // monitor the time since the last beat to avoid noise
 
     //  find the peak and trough of the pulse wave
