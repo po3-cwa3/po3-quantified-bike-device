@@ -8,7 +8,7 @@ void setup(){
   setupButtons();
   setupTempHumi();
   setupGPS();
-  setupBPM();
+  //setupBPM();
   //digitalWrite(9, LOW);
   //delay(1000);
 }
@@ -17,7 +17,7 @@ void loop(){
   //readButtons();
   readGPSData();
   readTempHumi();
-  //readBPM();
+  readBPM();
   //delay(1);
 }
   

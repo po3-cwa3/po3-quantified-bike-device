@@ -10,7 +10,7 @@
 // GPS interrupt
 unsigned int current_value_gps = 0;
 //uint32_t gps_time = 0;
-SIGNAL(TIMER0_COMPA_vect) {
+/*SIGNAL(TIMER0_COMPA_vect) {
   //cli();
   //Serial.println(millis()-gps_time);
   //gps_time = millis();
@@ -21,7 +21,7 @@ SIGNAL(TIMER0_COMPA_vect) {
 //  sei();
   //digitalWrite(5, current_value_gps%100 > 50);
   //Serial.println(millis()-gps_time);
-}
+}*/
 
 void setupGPS(){
   GPS.begin(9600);
@@ -33,8 +33,8 @@ void setupGPS(){
   //TCCR0A |= _BV(WGM01);
   //TCCR0B |= _BV(CS02);
   
-  OCR0A = 0xAF;//compare value = 176
-  TIMSK0 |= _BV(OCIE0A);//enable B
+  //OCR0A = 0xAF;//compare value = 176
+  //TIMSK0 |= _BV(OCIE0A);//enable B
   //TIMSK0 &= ~_BV(OCIE0A);
   mySerial.println(PMTK_Q_RELEASE);
 }
@@ -42,7 +42,7 @@ uint32_t last_gps_data_time = millis();
 //checks if new GPS data is available and processes it
 void readGPSData(){
   //noInterrupts();
-  //char c = GPS.read();
+  char c = GPS.read();
   //interrupts();
   if(GPS.newNMEAreceived()){ // is there new data available?
     if(!GPS.parse(GPS.lastNMEA())){ // can this data be parsed? (also sets newNMEAreceived to false)
