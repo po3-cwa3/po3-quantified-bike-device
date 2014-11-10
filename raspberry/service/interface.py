@@ -16,12 +16,14 @@ class Interface:
         self.live_mode = False
 
     def trip_button_pressed(self):
+        print("trip button pressed")
         if self.app.has_active_trip():
             self.app.stop_trip()
         else:
             self.app.start_trip(self.live_mode)
 
     def picture_button_pressed(self):
+        print("picture button pressed")
         photo_id = images.take_photo()
         filename = images.send_to_server(photo_id, self.app.get_trip_id(), self.app.get_user_id())
         record = [{

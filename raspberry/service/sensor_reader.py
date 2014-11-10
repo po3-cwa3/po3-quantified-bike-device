@@ -130,7 +130,7 @@ class PushButton(serial_connection.SerialListener):
         self.identifier = identifier
 
     def data_received(self, data):
-        print(data)
+        #print(data)
         line = data
         if len(line) < 5:
             return
