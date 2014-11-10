@@ -6,7 +6,7 @@
 //const int pin_blink = 13;
 //const int pin_fade = 5;
 //const int fadeRate = 0;
-#define PIN_PULSE 0
+#define PIN_PULSE 14
 //#define PIN_BLINK 13
 //#define PIN_FADE 5
 //#define FADE_RATE 0
@@ -62,19 +62,19 @@ void BPMInterruptSetup(){
 unsigned int current_value = 0;
 uint32_t previous_time = 0;
 ISR(TIMER1_COMPA_vect){                         // triggered when Timer2 counts to 124
-//return;
+
   //Serial.println(millis()-previous_time);
   //previous_time = millis();
   //uint32_t start_time = micros();
-  cli();                // disable interrupts while we do this
-  //Serial.println('in irs');
+  //cli();                // disable interrupts while we do this
+
   ++current_value;
   current_value %= 1000;
-  //Serial.print("bpm: ");
-  //Serial.println(current_value);
-  digitalWrite(9, current_value > 500);
-  
+  //digitalWrite(9, current_value > 500);
+  //sei(); return;
   Signal = analogRead(PIN_PULSE);              // read the Pulse Sensor 
+  return;
+//  sei();return;
   sampleCounter += 2;                         // keep track of the time in mS with this variable
   int N = sampleCounter - lastBeatTime;       // monitor the time since the last beat to avoid noise
 

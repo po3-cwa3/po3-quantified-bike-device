@@ -19,7 +19,7 @@ void readTempHumi(){
   uint32_t current_millis = millis();
   if(last_temphumi_data_time > current_millis) last_temphumi_data_time = current_millis;
   if(current_millis-last_temphumi_data_time < TEMPHUMI_UPDATE_INTERVAL){
-    interrupts();
+    //interrupts();
     return;
   }
   last_temphumi_data_time = current_millis;
