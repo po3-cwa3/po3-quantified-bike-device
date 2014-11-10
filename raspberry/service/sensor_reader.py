@@ -142,5 +142,5 @@ class PushButton(serial_connection.SerialListener):
                 self.action()
             self.previous_value = True
         else:
-            print(splitted[1].trim())
+            print(splitted[1].strip())
             self.previous_value = False
