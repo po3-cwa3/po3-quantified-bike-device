@@ -19,7 +19,7 @@ class SerialConnection:
 
     def action(self):
         while self.active:
-            line = self.ser.readline()
+            line = self.ser.readline().strip()
             for listener in self.listeners:
                 listener.data_received(line)
         self.ser.close()

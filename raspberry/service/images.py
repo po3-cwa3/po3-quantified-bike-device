@@ -2,7 +2,7 @@ import string
 import random
 
 #import time
-import picamera
+#import picamera
 #import base64
 import json
 import requests
