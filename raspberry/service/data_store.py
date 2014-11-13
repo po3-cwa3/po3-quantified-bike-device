@@ -24,7 +24,7 @@ class DataStore:
             return
         self.send_data()
         if self.current_trip.is_live():
-            self.get_connection().stop_trip(self.current_trip)
+            self.get_connection().stop_trip()
         self.current_trip = None
 
     def trip_started(self, id):

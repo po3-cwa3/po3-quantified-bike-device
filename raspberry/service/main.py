@@ -2,8 +2,6 @@ __author__ = 'fkint'
 
 import application
 import serial_connection
-#import connection
-import data_store
 import sensor_reader
 import interface
 
@@ -20,6 +18,8 @@ sc.start()
 # #dummy_reader = sensor_reader.DummySensor(app)
 thermo_sensor = sensor_reader.ThermoSensor(sc, app)
 humidity_sensor = sensor_reader.HumiditySensor(sc, app)
+gps_sensor = sensor_reader.GPSSensor(sc, app)
+bpm_sensor = sensor_reader.BPMSensor(sc, app)
 interface = interface.Interface(sc, app)
 
 app.start()

@@ -23,7 +23,7 @@ void readTempHumi(){
     return;
   }
   last_temphumi_data_time = current_millis;
-  Serial.print("th;");
+  Serial.print("TH;");
   //noInterrupts();
   Serial.print(dht.readTemperature());
   Serial.print(";");

@@ -14,7 +14,7 @@ void setup(){
 }
 void loop(){
   //Serial.println("in loop");
-  //readButtons();
+  readButtons();
   readGPSData();
   readTempHumi();
   readBPM();

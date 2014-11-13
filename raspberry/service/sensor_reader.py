@@ -71,7 +71,6 @@ class SerialSensor(SensorReader, serial_connection.SerialListener):
 
 class HumiditySensor(SerialSensor):
     def __init__(self, serial, application):
-        #super(serial, application)
         SerialSensor.__init__(self, serial, application)
 
     def data_received(self, data):
@@ -81,7 +80,7 @@ class HumiditySensor(SerialSensor):
         if line[:10] == "Error No :":
             print("thermo sensor error: ", line)
             return
-        if line[:3] != "th;":
+        if line[:3] != "TH;":
             return
 
         splitted = line.split(";")
@@ -107,7 +106,7 @@ class ThermoSensor(SerialSensor):
         if line[:10] == "Error No :":
             print("thermo sensor error: ", line)
             return
-        if line[:3] != "th;":
+        if line[:3] != "TH;":
             return
 
         splitted = line.split(";")
@@ -120,6 +119,55 @@ class ThermoSensor(SerialSensor):
                                 "data": [{"value": t}]
                             }]
         self.send_record(temperature_data)
+
+class GPSSensor(SerialSensor):
+    def __init__(self, serial, application):
+        SerialSensor.__init__(self, serial, application)
+
+    def data_received(self, data):
+        line = data
+        if len(line) < 9:
+            return
+        if line[:4] != "GPS;":
+            return
+
+        splitted = line.split(";")
+        if splitted[1] == "nofix":
+            return
+        latitude = float(splitted[1])
+        altitude = float(splitted[2])
+
+        gps_data = [{
+                             "sensorID": 1,
+                             "timestamp": datetime.datetime.fromtimestamp(time.time()).strftime(
+                                 '%Y-%m-%d %H:%M:%S'),
+                             "data": [{"type": "Point",
+                                       "unit":"google",
+                                       "coordinates":[latitude, altitude]}]
+                         }]
+        self.send_record(gps_data)
+class BPMSensor(SerialSensor):
+    def __init__(self, serial, application):
+        SerialSensor.__init__(self, serial, application)
+
+    def data_received(self, data):
+        line = data
+        if len(line) < 5:
+            return
+        if line[:4] != "BPM;":
+            return
+
+        splitted = line.split(";")
+
+        bpm = float(splitted[1])
+        gps_data = [{
+                             "sensorID": 9,
+                             "timestamp": datetime.datetime.fromtimestamp(time.time()).strftime(
+                                 '%Y-%m-%d %H:%M:%S'),
+                             "data": [{"value": bpm}]
+                         }]
+        self.send_record(gps_data)
+
 
 
 class PushButton(serial_connection.SerialListener):
