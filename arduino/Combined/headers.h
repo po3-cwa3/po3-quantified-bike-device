@@ -11,9 +11,11 @@ void setupGPS();
 void readGPSData();
 void setupTempHumi();
 void setupBPM();
+void setupHall();
 
 void setupButtons();
 void readButtons();
 void readTempHumi();
 void readBPM();
+void readHall();
 #endif
