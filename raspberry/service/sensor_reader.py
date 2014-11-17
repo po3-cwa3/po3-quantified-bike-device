@@ -27,9 +27,9 @@ class SensorReader:
         self.data_store.add_record(record)
 
 
-class GPSSensor(SensorReader):
-    def __init__(self):
-        pass
+#class GPSSensor(SensorReader):
+#    def __init__(self):
+#        pass
 
 
 class AccelleroSensor(SensorReader):

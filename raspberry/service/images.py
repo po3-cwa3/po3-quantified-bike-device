@@ -7,7 +7,8 @@ import random
 import json
 import requests
 
-images_path = "/home/pi/workspace/po3-quantified-bike-device/raspberry/service/images/"
+#images_path = "/home/pi/workspace/po3-quantified-bike-device/raspberry/service/images/"
+images_path = "./images/"
 upload_url = "http://dali.cs.kuleuven.be:8080/qbike/upload"
 
 
@@ -20,6 +21,7 @@ def get_filename(photo_id):
 
 
 def take_photo():
+    return "halfvol"
     photo_id=id_generator()
     with picamera.PiCamera() as camera:
         camera.capture(images_path+get_filename(photo_id))
@@ -36,3 +38,10 @@ def send_to_server(photo_id,trip_id,user_id):
     return get_filename(photo_id)
 
 # test_trip_id "5436a08271b56f091b616920","r0463107"
+
+def debug():
+    photo_id = "img"
+    print(send_to_server("img", "5464d09f4e4238bc7756c319", "r0463107"))
+
+if __name__ == "__main__":
+    debug()
