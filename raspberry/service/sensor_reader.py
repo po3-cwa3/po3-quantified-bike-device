@@ -33,8 +33,30 @@ class SensorReader:
 
 
 class AccelleroSensor(SensorReader):
-    def __init__(self):
-        pass
+    def __init__(self,app):
+        SensorReader.__init__(self, app.data_store)
+        self.application = app
+        self.thread = threading.Thread(name="dummy sensor", target=self.action)
+        self.thread.start()
+
+    def read(self):
+        while(True):
+            #init x,y,z,mx,my,mz
+            data=[{
+                    "sensorID": 5,
+                    "timestamp": datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'),
+                    "data": [
+                        {"acceleration": [{
+                            "x":x
+                            "y":y
+                            "z":z
+                            }]
+                         "orientation": [{
+                             "mx":mx
+                             "my":my
+                             "mz":mz
+                             }]
+                }]
 
 
 class DummySensor(SensorReader):
