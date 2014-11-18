@@ -14,7 +14,7 @@ void readHall(){
      velocity = (distance/(millis()-time))*3600; //in km/u
      time = millis();
      counter = 0;
-     Serial.print("km/h;");
+     Serial.print("v;");
      Serial.print(velocity);
      Serial.print(";");
      Serial.println();

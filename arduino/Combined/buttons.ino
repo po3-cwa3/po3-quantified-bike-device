@@ -3,6 +3,7 @@
 //const int pin_button1 = 7;
 #define PIN_BUTTON1 7
 #define PIN_BUTTON2 15
+#define PIN_BUTTON3 10
 
 void setupButtons(){
   pinMode(PIN_BUTTON1, INPUT);
@@ -18,4 +19,6 @@ void readButtons(){
   Serial.println(digitalRead(PIN_BUTTON1));
   Serial.print("PB2;");//normal button -> camera
   Serial.println(digitalRead(PIN_BUTTON2));
+  Serial.print("PB3;");//normal button
+  Serial.println(digitalRead(PIN_BUTTON3));
 }

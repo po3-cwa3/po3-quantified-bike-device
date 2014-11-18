@@ -9,7 +9,7 @@ void setup(){
   setupTempHumi();
   setupGPS();
   setupHall();
-  //setupBPM();
+  setupBPM();
   //digitalWrite(9, LOW);
   //delay(1000);
 }
