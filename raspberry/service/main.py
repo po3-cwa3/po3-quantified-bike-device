@@ -6,10 +6,8 @@ import sensor_reader
 import interface
 
 
-
-
 app = application.Application("cwa3", "r0463107")
-#initialize server connection thread (connects if a Internet connection is available)
+# initialize server connection thread (connects if a Internet connection is available)
 #conn = connection.Connection(app, "dali.cs.kuleuven.be", 8080)
 
 #initialize Serial Thread (=Interface)

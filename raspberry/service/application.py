@@ -1,5 +1,6 @@
 import threading
 import time
+
 import data_store
 import connection
 
@@ -17,7 +18,7 @@ class Application:
         self.active = False
         self.thread = None
 
-    #def action(self):
+    # def action(self):
     #     self.connection.wait()
 
     def has_active_trip(self):
