@@ -3,6 +3,7 @@ import threading
 
 import sensor_reader
 import images
+import batch_upload
 
 
 # interface reads data from the serial monitor and from the camera installed on the RPi
@@ -13,8 +14,10 @@ class Interface:
     def __init__(self, serial, app):
         self.app = app
         self.taking_picture = False
+        self.batch_uploading = False
         self.trip_button = sensor_reader.SwitchButton(serial, self.start_trip, self.stop_trip, "PB1")
         self.picture_button = sensor_reader.PushButton(serial, self.picture_button_pressed, "PB2")
+        self.batch_button = sensor_reader.PushButton(serial, self.batch_button_pressed, "PB3")
         self.live_mode = True
 
     def start_trip(self):
@@ -30,6 +33,23 @@ class Interface:
     #     else:
     #         self.app.start_trip(self.live_mode)
 
+    def batch_button_pressed(self):
+        if self.batch_uploading:
+            #show error with LEDs
+            return
+        if not self.has_internet_connection():
+            #show error with LEDs
+            return
+        self.batch_uploading = True
+        t = threading.Thread(target=self.batch_upload)
+        t.start()
+
+    def batch_upload(self):
+        b = batch_upload.BatchUpload()
+        b.start()
+        while not b.ready:
+            b.socket.wait_for_callbacks(seconds=1)
+        self.batch_uploading = False
 
     def picture_button_pressed(self):
         print("picture button pressed")

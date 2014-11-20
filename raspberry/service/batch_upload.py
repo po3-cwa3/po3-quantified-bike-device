@@ -3,10 +3,10 @@ import datetime
 import time
 import json
 from socketIO_client import SocketIO
-
+import config
 
 class BatchUpload:
-    def __init__(self, hostname, username, password, database_name, server, port):
+    def __init__(self, hostname=config.local_host, username=config.local_database_username, password=config.local_database_password, database_name=config.local_database_name, server=config.remote_hostname, port=config.remote_port):
         self.hostname = hostname
         self.username = username
         self.password = password
@@ -24,7 +24,7 @@ class BatchUpload:
         self.socket = SocketIO(self.server, self.port)
         self.socket.on('server_message', self.on_response)
 
-    def start_trip(self):
+    def start(self):
         data = {'purpose': 'batch-sender', 'groupID': 'cwa3', 'userID': 'r0451433'}
         self.socket.emit('start', json.dumps(data))
 
@@ -66,8 +66,9 @@ class BatchUpload:
         print("json to send: "+json.dumps(to_send))
         self.socket.emit('batch-tripdata', json.dumps(to_send))
 
-B = BatchUpload('localhost', 'QB_CWA3', 'CEeT9cPFSnPExMzQ', 'QuantifiedBike','dali.cs.kuleuven.be',8080)
-B.start_trip()
+if __name__ == "__main__":
+    B = BatchUpload('localhost', 'QB_CWA3', 'CEeT9cPFSnPExMzQ', 'QuantifiedBike','dali.cs.kuleuven.be',8080)
+    B.start()
 
-while not B.ready:
-    B.socket.wait_for_callbacks(seconds=5)
+    while not B.ready:
+        B.socket.wait_for_callbacks(seconds=5)
