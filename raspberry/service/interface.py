@@ -66,7 +66,11 @@ class Interface:
         print("in take_picture")
         photo_id = images.take_photo()
         print("photo taken")
-        filename = images.send_to_server(photo_id, self.app.get_trip_id(), self.app.get_user_id())
+        self.app.get_data_store().add_image(photo_id)
+        #if self.live_mode:
+        #    filename = images.send_to_server(photo_id, self.app.get_trip_id(), self.app.get_user_id())
+        #else:
+        #    self.app.get_data_store().
         print("filename = " + filename)
         # record = [{
         # 	"sensorID": 8,

@@ -2,6 +2,7 @@ __author__ = 'fkint'
 
 import MySQLdb
 import json
+import images
 
 
 class DataStore:
@@ -41,6 +42,12 @@ class DataStore:
                 self.get_connection().send_data(d, self.current_trip.get_id())
             else:
                 self.get_database().send_data(d, self.current_trip.get_id())
+        while self.current_trip.has_images():
+            d = self.current_trip.next_image()
+            if self.current_trip.is_live():
+                images.send_to_server(d, self.current_trip.get_id(), self.application.get_user_id())
+            else:
+                self.get_database().send_image(d, self.current_trip.get_id())
 
     def get_connection(self):
         return self.application.get_connection()
@@ -53,6 +60,12 @@ class DataStore:
             print "no trip to add data"
             return
         self.current_trip.store_data(data)
+
+    def add_image(self, image_name):
+        if self.current_trip is None:
+            print "no trip to add image"
+            return
+        self.current_trip.store_image(image_name)
 
 
 class DatabaseConnection:
@@ -76,12 +89,22 @@ class DatabaseConnection:
         cursor.execute(query, (trip_id, json.dumps(data)))
         self.db.commit()
 
+    def send_image(self, image_name, trip_id):
+        query = "INSERT INTO Images (Trip, ImageName) VALUES (%s, %s)"
+        cursor = self.db.cursor()
+        cursor.execute(query, (trip_id, image_name))
+        self.db.commit()
+
 
 class Trip:
     def __init__(self, live):
         self.data = []
+        self.images = []
         self.live = live
         self.id = None
+
+    def store_image(self, image_name):
+        self.images.append(image_name)
 
     def store_data(self, data):
         self.data.append(data)
