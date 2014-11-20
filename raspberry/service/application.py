@@ -57,10 +57,8 @@ class Application:
 
     def action(self):
         while self.active:
-            #print("action in application")
             self.data_store.send_data()
             time.sleep(.1)
-            #self.connection.action()
 
     def get_trip_id(self):
         return self.get_data_store().current_trip.get_id()

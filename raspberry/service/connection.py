@@ -26,6 +26,7 @@ class Connection:
 
     def send_data(self, data, trip_id):
         to_send = {'_id': trip_id, "sensorData": data}
+        print("sending data: "+str(data))
         self.socket.emit('rt-sensordata', json.dumps(to_send))
 
     def open_connection(self):
@@ -38,6 +39,7 @@ class Connection:
 
     def start_trip(self):
         data = {'purpose': 'realtime-sender', 'groupID': self.application.group_id, 'userID': self.application.user_id}
+        print("starting bike trip")
         self.socket.emit('start', json.dumps(data))
 
     def stop_trip(self):
