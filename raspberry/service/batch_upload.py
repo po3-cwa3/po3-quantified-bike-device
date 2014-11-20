@@ -21,6 +21,7 @@ class BatchUpload:
         self.socket = None
         self.ready = False
         self.trips_left = 0
+        self.done = False
         self.open_connection()
 
     def open_connection(self):
@@ -82,6 +83,9 @@ class BatchUpload:
             self.db.commit()
         print("json to send: "+json.dumps(to_send))
         self.socket.emit('batch-tripdata', json.dumps(to_send))
+        self.done=True
+        time.sleep(5)
+        self.done=False
 
 if __name__ == "__main__":
     B = BatchUpload('localhost', 'QB_CWA3', 'CEeT9cPFSnPExMzQ', 'QuantifiedBike','dali.cs.kuleuven.be',8080)
