@@ -28,6 +28,7 @@ class BatchUpload:
         self.socket.on('server_message', self.on_response)
 
     def start(self):
+        print
         data = {'purpose': 'batch-sender', 'groupID': 'cwa3', 'userID': self.user_id}
         self.socket.emit('start', json.dumps(data))
 
@@ -54,8 +55,10 @@ class BatchUpload:
         results = cursor.fetchall()
         to_send = []
         for index in results:
+            print "will try to batch-upload trip ", index[0]
             if int(index[0]) in self.disabled_trips:
                 continue
+            print "not disabled"
             self.trips_left+=1
             query = "SELECT * FROM Images WHERE Trip = "+str(int(index[0]))
             cursor.execute(query)
