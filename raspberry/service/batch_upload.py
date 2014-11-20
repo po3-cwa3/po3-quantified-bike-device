@@ -59,7 +59,7 @@ class BatchUpload:
             data = cursor.fetchall()
             for d in data:
                 print d
-                images.send_to_server(d[0], str(int(index[0])), self.user_id)
+                images.send_to_server(d[1], str(int(index[0])), self.user_id)
             query = "DELETE FROM Images WHERE Trip = "+str(int(index[0]))
             cursor.execute(query)
             query = "SELECT * FROM Data WHERE Trip = " + str(int(index[0]))
