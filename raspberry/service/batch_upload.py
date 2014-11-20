@@ -7,7 +7,8 @@ import config
 import images
 
 class BatchUpload:
-    def __init__(self, hostname=config.local_host, username=config.local_database_username, password=config.local_database_password, database_name=config.local_database_name, server=config.remote_hostname, port=config.remote_port, user_id=config.user_id):
+    def __init__(self, disabled_trips, hostname=config.local_host, username=config.local_database_username, password=config.local_database_password, database_name=config.local_database_name, server=config.remote_hostname, port=config.remote_port, user_id=config.user_id):
+        self.disabled_trips = disabled_trips
         self.hostname = hostname
         self.username = username
         self.password = password
@@ -53,6 +54,8 @@ class BatchUpload:
         results = cursor.fetchall()
         to_send = []
         for index in results:
+            if int(index[0]) in self.disabled_trips:
+                continue
             self.trips_left+=1
             query = "SELECT * FROM Images WHERE Trip = "+str(int(index[0]))
             cursor.execute(query)

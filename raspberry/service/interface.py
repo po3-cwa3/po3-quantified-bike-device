@@ -46,7 +46,10 @@ class Interface:
         t.start()
 
     def batch_upload(self):
-        b = batch_upload.BatchUpload()
+        disabled_trips = set()
+        if self.app.get_data_store().current_trip is not None:
+            disabled_trips.add(self.app.get_trip_id())
+        b = batch_upload.BatchUpload(disabled_trips)
         b.start()
         while not b.ready:
             print "waiting for batch to finish"
