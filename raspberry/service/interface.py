@@ -13,6 +13,7 @@ class Interface:
     def __init__(self, serial, app):
         self.app = app
         self.taking_picture = False
+        self.batch_uploading = False
         self.trip_button = sensor_reader.PushButton(serial, self.trip_button_pressed, "PB1")
         self.picture_button = sensor_reader.PushButton(serial, self.picture_button_pressed, "PB2")
         self.batch_button = sensor_reader.PushButton(serial, self.batch_button_pressed, "PB3")
