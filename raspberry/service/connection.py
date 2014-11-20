@@ -27,6 +27,7 @@ class Connection:
     def send_data(self, data, trip_id):
         to_send = {'_id': trip_id, "sensorData": data}
         #print("sending data: "+str(data))
+        print("sending data for trip ", trip_id)
         self.socket.emit('rt-sensordata', json.dumps(to_send))
 
     def open_connection(self):
