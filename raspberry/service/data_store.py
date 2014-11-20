@@ -125,5 +125,10 @@ class Trip:
     def has_data(self):
         return len(self.data) > 0
 
+    def has_images(self):
+        return len(self.images) > 0
+
     def next_data(self):
         return self.data.pop()
+    def next_image(self):
+        return self.images.pop()
