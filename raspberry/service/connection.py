@@ -22,6 +22,7 @@ class Connection:
 
     def start(self):
         self.thread = threading.Thread(name="connection thread", target=self.action)
+        self.thread.daemon = True
         self.thread.start()
 
     def send_data(self, data, trip_id):

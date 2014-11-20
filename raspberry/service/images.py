@@ -2,6 +2,7 @@ import string
 import random
 import picamera
 #import base64
+import os
 import json
 import requests
 
@@ -33,6 +34,7 @@ def send_to_server(photo_id, trip_id, user_id):
     url = upload_url
     headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
     requests.post(url, data=test, headers=headers)
+    os.remove(location)
     return get_filename(photo_id)
 
 
