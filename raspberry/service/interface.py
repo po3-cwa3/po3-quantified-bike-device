@@ -18,7 +18,7 @@ class Interface:
         self.trip_button = sensor_reader.SwitchButton(serial, self.start_trip, self.stop_trip, "PB1")
         self.picture_button = sensor_reader.PushButton(serial, self.picture_button_pressed, "PB2")
         self.batch_button = sensor_reader.PushButton(serial, self.batch_button_pressed, "PB3")
-        self.live_mode = True
+        self.live_mode = False
 
     def start_trip(self):
         self.app.start_trip(self.live_mode)
@@ -71,7 +71,7 @@ class Interface:
         #    filename = images.send_to_server(photo_id, self.app.get_trip_id(), self.app.get_user_id())
         #else:
         #    self.app.get_data_store().
-        
+
         # record = [{
         # 	"sensorID": 8,
         # 	"timestamp": datetime.datetime.fromtimestamp(time.time()).strftime(
