@@ -71,7 +71,7 @@ class Interface:
         #    filename = images.send_to_server(photo_id, self.app.get_trip_id(), self.app.get_user_id())
         #else:
         #    self.app.get_data_store().
-        print("filename = " + filename)
+        
         # record = [{
         # 	"sensorID": 8,
         # 	"timestamp": datetime.datetime.fromtimestamp(time.time()).strftime(
