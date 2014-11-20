@@ -19,6 +19,7 @@ sc.start()
 thermo_sensor = sensor_reader.ThermoSensor(sc, app)
 humidity_sensor = sensor_reader.HumiditySensor(sc, app)
 gps_sensor = sensor_reader.GPSSensor(sc, app)
+accelero_sensor = sensor_reader.AcceleroSensor(app)
 bpm_sensor = sensor_reader.BPMSensor(sc, app)
 interface = interface.Interface(sc, app)
 

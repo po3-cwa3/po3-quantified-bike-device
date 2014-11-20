@@ -35,7 +35,7 @@ class SensorReader:
 #        pass
 
 
-class AccelleroSensor(SensorReader):
+class AcceleroSensor(SensorReader):
     def __init__(self,app):
         SensorReader.__init__(self, app.data_store)
         self.application = app
@@ -57,16 +57,18 @@ class AccelleroSensor(SensorReader):
                 "timestamp": datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'),
                 "data": [
                     {"acceleration": [{
-                        "x":x
-                        "y":y
+                        "x":x,
+                        "y":y,
                         "z":z
-                        }]
+                        }],
                      "orientation": [{
-                         "mx":mx
-                         "my":my
+                         "mx":mx,
+                         "my":my,
                          "mz":mz
                          }]
+                    }]
             }]
+        self.application.get_data_store().add_record(data)
 
 
 class DummySensor(SensorReader):
