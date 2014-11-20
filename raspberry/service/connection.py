@@ -42,6 +42,7 @@ class Connection:
 
     def stop_trip(self):
         data = {'_id': self.application.data_store.current_trip.get_id(), "meta": None}
+        print("stopping bike trip!")
         self.socket.emit('endBikeTrip', json.dumps(data))
 
     def on_response(self, *args):
