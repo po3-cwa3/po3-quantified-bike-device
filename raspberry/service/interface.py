@@ -49,7 +49,9 @@ class Interface:
         b = batch_upload.BatchUpload()
         b.start()
         while not b.ready:
+            print "waiting for batch to finish"
             b.socket.wait_for_callbacks(seconds=1)
+        print "batch finished"
         self.batch_uploading = False
 
     def picture_button_pressed(self):

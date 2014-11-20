@@ -44,6 +44,7 @@ class BatchUpload:
             print("error: ", parsed)
                 
     def retrieve_data(self):
+        print "start batch upload"
         #con = connection.Connection('dali.cs.kuleuven.be',8080)
         #self.start_trip()
         query = "SELECT * FROM Trips"
