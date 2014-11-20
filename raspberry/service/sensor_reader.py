@@ -256,6 +256,7 @@ class PushButton(serial_connection.SerialListener):
         splitted = line.split(";")
         if splitted[1].strip() == "1":
             if not self.previous_value:
+                print(self.identifier+" pressed")
                 self.action()
             self.previous_value = True
         else:

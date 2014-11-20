@@ -32,7 +32,8 @@ class Interface:
     #         self.app.stop_trip()
     #     else:
     #         self.app.start_trip(self.live_mode)
-
+    def has_internet_connection(self):
+        return True
     def batch_button_pressed(self):
         if self.batch_uploading:
             #show error with LEDs
