@@ -34,13 +34,13 @@ class Interface:
 		print("photo taken")
 		filename = images.send_to_server(photo_id, self.app.get_trip_id(), self.app.get_user_id())
 		print("filename = "+filename)
-		record = [{
-			"sensorID": 8,
-			"timestamp": datetime.datetime.fromtimestamp(time.time()).strftime(
-				'%Y-%m-%d %H:%M:%S'),
-			"data": [{"value": filename}]
-			}]
-		self.data_store.add_record(record)
+		# record = [{
+		# 	"sensorID": 8,
+		# 	"timestamp": datetime.datetime.fromtimestamp(time.time()).strftime(
+		# 		'%Y-%m-%d %H:%M:%S'),
+		# 	"data": [{"value": filename}]
+		# 	}]
+		#self.app.data_store.add_record(record)
 		print("record added")
 
 

@@ -20,7 +20,7 @@ volatile boolean QS = false;
 
 
 void setupBPM(){
-  BPMInterruptSetup();
+  //BPMInterruptSetup();
 }
 uint32_t last_bpm_time = millis();
 
@@ -160,7 +160,7 @@ void BPMInterruptSetup(){
 // Timer 2 makes sure that we take a reading every 2 miliseconds
 unsigned int current_value = 0;
 uint32_t previous_time = 0;
-ISR(TIMER1_COMPA_vect){                         // triggered when Timer2 counts to 124
+/*ISR(TIMER1_COMPA_vect){                         // triggered when Timer2 counts to 124
 //GPS.read();
   //Serial.println(millis()-previous_time);
   //previous_time = millis();
@@ -254,7 +254,7 @@ ISR(TIMER1_COMPA_vect){                         // triggered when Timer2 counts 
   //Serial.println(micros()-previous_time);
   //previous_time = micros();
   //Serial.print("one method: ");Serial.println(millis()-previous_time);
-}// end isr
+}// end isr*/
 
 
 
