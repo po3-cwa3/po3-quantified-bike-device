@@ -35,11 +35,14 @@ class Interface:
     def has_internet_connection(self):
         return True
     def batch_button_pressed(self):
+        print "batch button pressed"
         if self.batch_uploading:
             #show error with LEDs
+            print "already uploading"
             return
         if not self.has_internet_connection():
             #show error with LEDs
+            print "no internet connection"
             return
         self.batch_uploading = True
         t = threading.Thread(target=self.batch_upload)
