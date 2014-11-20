@@ -207,6 +207,33 @@ class BPMSensor(SerialSensor):
         self.send_record(gps_data)
 
 
+class SwitchButton(serial_connection.SerialListener):
+    def __init__(self, serial, action_on, action_off, identifier):
+        serial_connection.SerialListener.__init__(self, serial)
+        self.action_on = action_on
+        self.action_off = action_off
+        self.previous_value = False
+        self.identifier = identifier
+
+    def data_received(self, data):
+        line = data
+        if len(line) < len(self.identifier) + 2:
+            return
+        if line[:len(self.identifer)+1] != self.identifier + ";":
+            return
+        splitted = line.split(";")
+        if splitted[1].strip() == "1":
+            if self.previous_value:
+                return
+            else:
+                self.action_on()
+        else:
+            if self.previous_value:
+                self.action_off()
+            else:
+                return
+
+
 class PushButton(serial_connection.SerialListener):
     def __init__(self, serial, action, identifier):
         serial_connection.SerialListener.__init__(self, serial)

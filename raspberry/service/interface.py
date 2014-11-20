@@ -13,16 +13,22 @@ class Interface:
     def __init__(self, serial, app):
         self.app = app
         self.taking_picture = False
-        self.trip_button = sensor_reader.PushButton(serial, self.trip_button_pressed, "PB1")
+        self.trip_button = sensor_reader.SwitchButton(serial, self.start_trip, self.stop_trip, "PB1")
         self.picture_button = sensor_reader.PushButton(serial, self.picture_button_pressed, "PB2")
         self.live_mode = True
 
-    def trip_button_pressed(self):
-        print("trip button pressed")
-        if self.app.has_active_trip():
-            self.app.stop_trip()
-        else:
-            self.app.start_trip(self.live_mode)
+    def start_trip(self):
+        self.app.start_trip(self.live_mode)
+
+    def stop_trip(self):
+        self.app.stop_trip()
+
+    # def trip_button_pressed(self):
+    #     print("trip button pressed")
+    #     if self.app.has_active_trip():
+    #         self.app.stop_trip()
+    #     else:
+    #         self.app.start_trip(self.live_mode)
 
 
     def picture_button_pressed(self):
