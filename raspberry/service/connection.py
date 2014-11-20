@@ -5,6 +5,7 @@ import threading
 
 from socketIO_client import SocketIO
 
+
 logging.basicConfig()
 
 __author__ = 'fkint'
@@ -60,7 +61,7 @@ class Connection:
 
     def action(self):
         while True:
-            #print("connected: "+str(self.connection_opened and self.socket.connected))
+            # print("connected: "+str(self.connection_opened and self.socket.connected))
             if self.connection_opened and self.socket.connected:
                 self.socket.wait(.5)
             else:

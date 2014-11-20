@@ -2,12 +2,13 @@ import threading
 import time
 import random
 import datetime
+
 import XLoBorg
 import serial_connection
 
+
 XLoBorg.printFunction = XLoBorg.NoPrint
 XLoBorg.Init()
-
 
 __author__ = 'fkint'
 
@@ -30,44 +31,44 @@ class SensorReader:
         self.data_store.add_record(record)
 
 
-#class GPSSensor(SensorReader):
+# class GPSSensor(SensorReader):
 #    def __init__(self):
 #        pass
 
 
 class AcceleroSensor(SensorReader):
-    def __init__(self,app):
+    def __init__(self, app):
         SensorReader.__init__(self, app.data_store)
         self.application = app
-        
+
         self.thread = threading.Thread(name="AccelleroSensor", target=self.action)
         self.thread.start()
 
     def action(self):
-        while(True):
+        while (True):
             self.read()
             time.sleep(1)
 
     def read(self):
         #init x,y,z,mx,my,mz
-        x,y,z=XLoBorg.ReadAccelerometer()
-        mx,my,mz=XLoBorg.ReadCompassRaw()
-        data=[{
-                "sensorID": 5,
-                "timestamp": datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'),
-                "data": [
-                    {"acceleration": [{
-                        "x":x,
-                        "y":y,
-                        "z":z
-                        }],
-                     "orientation": [{
-                         "mx":mx,
-                         "my":my,
-                         "mz":mz
-                         }]
-                    }]
-            }]
+        x, y, z = XLoBorg.ReadAccelerometer()
+        mx, my, mz = XLoBorg.ReadCompassRaw()
+        data = [{
+                    "sensorID": 5,
+                    "timestamp": datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'),
+                    "data": [
+                        {"acceleration": [{
+                                              "x": x,
+                                              "y": y,
+                                              "z": z
+                                          }],
+                         "orientation": [{
+                                             "mx": mx,
+                                             "my": my,
+                                             "mz": mz
+                                         }]
+                        }]
+                }]
         self.application.get_data_store().add_record(data)
 
 
@@ -154,6 +155,7 @@ class ThermoSensor(SerialSensor):
                             }]
         self.send_record(temperature_data)
 
+
 class GPSSensor(SerialSensor):
     def __init__(self, serial, application):
         SerialSensor.__init__(self, serial, application)
@@ -172,14 +174,16 @@ class GPSSensor(SerialSensor):
         altitude = float(splitted[2])
 
         gps_data = [{
-                             "sensorID": 1,
-                             "timestamp": datetime.datetime.fromtimestamp(time.time()).strftime(
-                                 '%Y-%m-%d %H:%M:%S'),
-                             "data": [{"type": "Point",
-                                       "unit":"google",
-                                       "coordinates":[latitude, altitude]}]
-                         }]
+                        "sensorID": 1,
+                        "timestamp": datetime.datetime.fromtimestamp(time.time()).strftime(
+                            '%Y-%m-%d %H:%M:%S'),
+                        "data": [{"type": "Point",
+                                  "unit": "google",
+                                  "coordinates": [latitude, altitude]}]
+                    }]
         self.send_record(gps_data)
+
+
 class BPMSensor(SerialSensor):
     def __init__(self, serial, application):
         SerialSensor.__init__(self, serial, application)
@@ -195,13 +199,12 @@ class BPMSensor(SerialSensor):
 
         bpm = float(splitted[1])
         gps_data = [{
-                             "sensorID": 9,
-                             "timestamp": datetime.datetime.fromtimestamp(time.time()).strftime(
-                                 '%Y-%m-%d %H:%M:%S'),
-                             "data": [{"value": bpm}]
-                         }]
+                        "sensorID": 9,
+                        "timestamp": datetime.datetime.fromtimestamp(time.time()).strftime(
+                            '%Y-%m-%d %H:%M:%S'),
+                        "data": [{"value": bpm}]
+                    }]
         self.send_record(gps_data)
-
 
 
 class PushButton(serial_connection.SerialListener):
@@ -214,9 +217,9 @@ class PushButton(serial_connection.SerialListener):
     def data_received(self, data):
         #print(data)
         line = data
-        if len(line) < len(self.identifier)+2:
+        if len(line) < len(self.identifier) + 2:
             return
-        if line[:len(self.identifier)+1] != self.identifier+";":
+        if line[:len(self.identifier) + 1] != self.identifier + ";":
             return
         splitted = line.split(";")
         if splitted[1].strip() == "1":
