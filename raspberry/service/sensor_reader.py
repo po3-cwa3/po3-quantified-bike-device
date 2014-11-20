@@ -219,7 +219,7 @@ class SwitchButton(serial_connection.SerialListener):
         line = data
         if len(line) < len(self.identifier) + 2:
             return
-        if line[:len(self.identifer)+1] != self.identifier + ";":
+        if line[:len(self.identifier)+1] != self.identifier + ";":
             return
         splitted = line.split(";")
         if splitted[1].strip() == "1":
