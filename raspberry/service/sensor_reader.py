@@ -2,8 +2,11 @@ import threading
 import time
 import random
 import datetime
-
+import XLoBorg
 import serial_connection
+
+XLoBorg.printFunction = XLoBorg.NoPrint
+XLoBorg.Init()
 
 
 __author__ = 'fkint'
@@ -36,27 +39,34 @@ class AccelleroSensor(SensorReader):
     def __init__(self,app):
         SensorReader.__init__(self, app.data_store)
         self.application = app
-        self.thread = threading.Thread(name="dummy sensor", target=self.action)
+        
+        self.thread = threading.Thread(name="AccelleroSensor", target=self.action)
         self.thread.start()
 
-    def read(self):
+    def action(self):
         while(True):
-            #init x,y,z,mx,my,mz
-            data=[{
-                    "sensorID": 5,
-                    "timestamp": datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'),
-                    "data": [
-                        {"acceleration": [{
-                            "x":x
-                            "y":y
-                            "z":z
-                            }]
-                         "orientation": [{
-                             "mx":mx
-                             "my":my
-                             "mz":mz
-                             }]
-                }]
+            self.read()
+            time.sleep(1)
+
+    def read(self):
+        #init x,y,z,mx,my,mz
+        x,y,z=XLoBorg.ReadAccelerometer()
+        mx,my,mz=XLoBorg.ReadCompassRaw()
+        data=[{
+                "sensorID": 5,
+                "timestamp": datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'),
+                "data": [
+                    {"acceleration": [{
+                        "x":x
+                        "y":y
+                        "z":z
+                        }]
+                     "orientation": [{
+                         "mx":mx
+                         "my":my
+                         "mz":mz
+                         }]
+            }]
 
 
 class DummySensor(SensorReader):
