@@ -226,9 +226,11 @@ class SwitchButton(serial_connection.SerialListener):
             if self.previous_value:
                 return
             else:
+                self.previous_value = True
                 self.action_on()
         else:
             if self.previous_value:
+                self.previous_value = False
                 self.action_off()
             else:
                 return
