@@ -15,7 +15,8 @@ class Interface:
         self.taking_picture = False
         self.trip_button = sensor_reader.PushButton(serial, self.trip_button_pressed, "PB1")
         self.picture_button = sensor_reader.PushButton(serial, self.picture_button_pressed, "PB2")
-        self.live_mode = True
+        self.batch_button = sensor_reader.PushButton(serial, self.batch_button_pressed, "PB3")
+        self.live_mode = False
 
     def trip_button_pressed(self):
         print("trip button pressed")
@@ -24,6 +25,19 @@ class Interface:
         else:
             self.app.start_trip(self.live_mode)
 
+
+    def batch_upload(self):
+        disabled_trips = set()
+        if self.app.get_data_store().current_trip is not None:
+            disabled_trips.add(self.app.get_trip_id())
+        b = batch_upload.BatchUpload(disabled_trips)
+        b.start()
+        while not b.ready:
+            print "waiting for batch to finish"
+            b.socket.wait_for_callbacks(seconds=1)
+        print "batch finished"
+        self.batch_uploading = False
+    
 
     def picture_button_pressed(self):
         print("picture button pressed")
@@ -58,8 +72,12 @@ class Interface:
         print("in take_picture")
         photo_id = images.take_photo()
         print("photo taken")
-        filename = images.send_to_server(photo_id, self.app.get_trip_id(), self.app.get_user_id())
-        print("filename = " + filename)
+        self.app.get_data_store().add_image(photo_id)
+        #if self.live_mode:
+        #    filename = images.send_to_server(photo_id, self.app.get_trip_id(), self.app.get_user_id())
+        #else:
+        #    self.app.get_data_store().
+
         # record = [{
         # 	"sensorID": 8,
         # 	"timestamp": datetime.datetime.fromtimestamp(time.time()).strftime(

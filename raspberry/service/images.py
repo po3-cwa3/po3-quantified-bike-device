@@ -20,7 +20,6 @@ def get_filename(photo_id):
 
 
 def take_photo():
-#    return "halfvol"
     photo_id=id_generator()
     with picamera.PiCamera() as camera:
         camera.capture(images_path + get_filename(photo_id))

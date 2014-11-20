@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Oct 16, 2014 at 05:31 PM
+-- Generation Time: Nov 20, 2014 at 04:59 PM
 -- Server version: 5.5.40-0ubuntu0.14.04.1
--- PHP Version: 5.5.9-1ubuntu4.4
+-- PHP Version: 5.5.9-1ubuntu4.5
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -19,6 +19,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `QuantifiedBike`
 --
+CREATE DATABASE IF NOT EXISTS `QuantifiedBike` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `QuantifiedBike`;
 
 -- --------------------------------------------------------
 
@@ -26,13 +28,27 @@ SET time_zone = "+00:00";
 -- Table structure for table `Data`
 --
 
+DROP TABLE IF EXISTS `Data`;
 CREATE TABLE IF NOT EXISTS `Data` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `Trip` int(11) NOT NULL,
   `DataString` text NOT NULL,
   PRIMARY KEY (`Id`),
   KEY `Trip` (`Trip`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=46 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=585 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Images`
+--
+
+DROP TABLE IF EXISTS `Images`;
+CREATE TABLE IF NOT EXISTS `Images` (
+  `Trip` int(11) NOT NULL,
+  `ImageName` varchar(100) NOT NULL,
+  KEY `Trip` (`Trip`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -40,10 +56,11 @@ CREATE TABLE IF NOT EXISTS `Data` (
 -- Table structure for table `Trips`
 --
 
+DROP TABLE IF EXISTS `Trips`;
 CREATE TABLE IF NOT EXISTS `Trips` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=28 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
 -- Constraints for dumped tables

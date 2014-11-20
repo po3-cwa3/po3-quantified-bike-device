@@ -4,15 +4,18 @@ import time
 import json
 from socketIO_client import SocketIO
 import config
+import images
 
 class BatchUpload:
-    def __init__(self, hostname=config.local_host, username=config.local_database_username, password=config.local_database_password, database_name=config.local_database_name, server=config.remote_hostname, port=config.remote_port):
+    def __init__(self, disabled_trips, hostname=config.local_host, username=config.local_database_username, password=config.local_database_password, database_name=config.local_database_name, server=config.remote_hostname, port=config.remote_port, user_id=config.user_id):
+        self.disabled_trips = disabled_trips
         self.hostname = hostname
         self.username = username
         self.password = password
         self.database_name = database_name
         self.server = server
         self.port = port
+        self.user_id = user_id
         self.trip_started = False
         self.db = MySQLdb.connect(host=self.hostname, user=self.username, passwd=self.password, db=self.database_name)
         self.socket = None
@@ -26,7 +29,7 @@ class BatchUpload:
         self.socket.on('server_message', self.on_response)
 
     def start(self):
-        data = {'purpose': 'batch-sender', 'groupID': 'cwa3', 'userID': 'r0451433'}
+        data = {'purpose': 'batch-sender', 'groupID': 'cwa3', 'userID': self.user_id}
         self.socket.emit('start', json.dumps(data))
 
     def on_response(self, *args):
@@ -43,6 +46,7 @@ class BatchUpload:
             print("error: ", parsed)
                 
     def retrieve_data(self):
+        print "start batch upload"
         #con = connection.Connection('dali.cs.kuleuven.be',8080)
         #self.start_trip()
         query = "SELECT * FROM Trips"
@@ -51,7 +55,17 @@ class BatchUpload:
         results = cursor.fetchall()
         to_send = []
         for index in results:
+            if int(index[0]) in self.disabled_trips:
+                continue
             self.trips_left+=1
+            query = "SELECT * FROM Images WHERE Trip = "+str(int(index[0]))
+            cursor.execute(query)
+            data = cursor.fetchall()
+            for d in data:
+                print d
+                images.send_to_server(d[1], str(int(index[0])), self.user_id)
+            query = "DELETE FROM Images WHERE Trip = "+str(int(index[0]))
+            cursor.execute(query)
             query = "SELECT * FROM Data WHERE Trip = " + str(int(index[0]))
             cursor.execute(query)
             data = cursor.fetchall()
