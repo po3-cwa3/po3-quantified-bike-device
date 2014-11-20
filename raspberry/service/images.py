@@ -6,8 +6,8 @@ import os
 import json
 import requests
 
-#images_path = "/home/pi/workspace/po3-quantified-bike-device/raspberry/service/images/"
-images_path = "./images/"
+images_path = "/home/pi/workspace/po3-quantified-bike-device/raspberry/service/images/"
+#images_path = "/home/pi/images/"
 upload_url = "http://dali.cs.kuleuven.be:8080/qbike/upload"
 
 
