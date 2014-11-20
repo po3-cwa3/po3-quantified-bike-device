@@ -1,8 +1,6 @@
 import string
 import random
-
-# import time
-#import picamera
+import picamera
 #import base64
 import json
 import requests
@@ -21,8 +19,8 @@ def get_filename(photo_id):
 
 
 def take_photo():
-    return "halfvol"
-    photo_id = id_generator()
+#    return "halfvol"
+    photo_id=id_generator()
     with picamera.PiCamera() as camera:
         camera.capture(images_path + get_filename(photo_id))
     return photo_id
