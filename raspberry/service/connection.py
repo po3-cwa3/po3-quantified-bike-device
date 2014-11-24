@@ -26,6 +26,9 @@ class Connection:
         self.thread.start()
 
     def send_data(self, data, trip_id):
+        if not self.has_connection():
+            print("no connection, dropping data")
+            return
         to_send = {'_id': trip_id, "sensorData": data}
         #print("sending data: "+str(data))
         print("sending data for trip ", trip_id)
@@ -63,6 +66,9 @@ class Connection:
             print("Welcome! ")
         else:
             print("error: ", parsed)
+
+    def has_connection(self):
+        return self.connection_opened and self.socket.connected
 
     def action(self):
         while True:
