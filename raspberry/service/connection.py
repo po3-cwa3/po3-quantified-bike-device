@@ -32,7 +32,10 @@ class Connection:
         to_send = {'_id': trip_id, "sensorData": data}
         #print("sending data: "+str(data))
         print("sending data for trip ", trip_id)
-        self.socket.emit('rt-sensordata', json.dumps(to_send))
+        try:
+            self.socket.emit('rt-sensordata', json.dumps(to_send))
+        except SocketIO.ConnectionError:
+            print("connection error while sending data!")
 
     def open_connection(self):
         self.socket = SocketIO(self.server, self.port)
@@ -73,7 +76,7 @@ class Connection:
     def action(self):
         while True:
             # print("connected: "+str(self.connection_opened and self.socket.connected))
-            if self.connection_opened and self.socket.connected:
+            if self.has_connection():
                 self.socket.wait(.5)
             else:
                 try:
