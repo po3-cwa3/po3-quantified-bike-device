@@ -17,7 +17,7 @@ class Interface:
         self.trip_button = sensor_reader.PushButton(serial, self.trip_button_pressed, "PB1")
         self.picture_button = sensor_reader.PushButton(serial, self.picture_button_pressed, "PB2")
         self.batch_button = sensor_reader.PushButton(serial, self.batch_button_pressed, "PB3")
-        self.live_mode = False
+        self.live_mode = True
 
     def trip_button_pressed(self):
         print("trip button pressed")
