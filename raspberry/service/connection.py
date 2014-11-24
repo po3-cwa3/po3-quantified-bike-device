@@ -48,12 +48,18 @@ class Connection:
     def start_trip(self):
         data = {'purpose': 'realtime-sender', 'groupID': self.application.group_id, 'userID': self.application.user_id}
         print("starting bike trip")
-        self.socket.emit('start', json.dumps(data))
+        try:
+            self.socket.emit('start', json.dumps(data))
+        except SocketIO.ConnectionError:
+            print("connection error while starting trip")
 
     def stop_trip(self):
         data = {'_id': self.application.data_store.current_trip.get_id(), "meta": None}
         print("stopping bike trip!")
-        self.socket.emit('endBikeTrip', json.dumps(data))
+        try:
+            self.socket.emit('endBikeTrip', json.dumps(data))
+        except SocketIO.ConnectionError:
+            print("connection error while ending bike trip")
 
     def on_response(self, *args):
         parsed = args[0]
