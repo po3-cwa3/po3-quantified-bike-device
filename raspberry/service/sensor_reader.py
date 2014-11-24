@@ -214,6 +214,27 @@ class SwitchButton(serial_connection.SerialListener):
         self.action_off = action_off
         self.previous_value = False
         self.identifier = identifier
+        self.on_length = 0
+        self.off_length = 0
+        self.last_on_action = False
+        self.on_threshold = 10
+        self.off_threshold = 10
+
+    def on_received(self):
+        self.on_length += 1
+        self.off_length = 0
+        self.action()
+    def off_received(self):
+        self.on_length = 0
+        self.off_length += 1
+        self.action()
+    def action(self):
+        if self.on_length > self.on_threshold and not self.last_on_action:
+            self.action_on()
+            self.last_on_action = True
+        if self.off_length > self.off_threshold and self.last_on_action:
+            self.action_off()
+            self.last_on_action = False
 
     def data_received(self, data):
         line = data
@@ -223,20 +244,22 @@ class SwitchButton(serial_connection.SerialListener):
             return
         splitted = line.split(";")
         if splitted[1].strip() == "1":
-            if self.previous_value:
-                return
-            else:
-                print "switches value to 1"
-                self.previous_value = True
-                self.action_on()
+            self.on_received()
+            # if self.previous_value:
+            #     return
+            # else:
+            #     print "switches value to 1"
+            #     self.previous_value = True
+            #     self.action_on()
 
         else:
-            if self.previous_value:
-                print "switches value to 0"
-                self.previous_value = False
-                self.action_off()
-            else:
-                return
+            self.off_received()
+            # if self.previous_value:
+            #     print "switches value to 0"
+            #     self.previous_value = False
+            #     self.action_off()
+            # else:
+            #     return
 
 
 class PushButton(serial_connection.SerialListener):
