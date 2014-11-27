@@ -34,7 +34,7 @@ class Connection:
         print("sending data for trip ", trip_id)
         try:
             self.socket.emit('rt-sensordata', json.dumps(to_send))
-        except SocketIO.ConnectionError:
+        except:
             print("connection error while sending data!")
 
     def open_connection(self):
@@ -50,7 +50,7 @@ class Connection:
         print("starting bike trip")
         try:
             self.socket.emit('start', json.dumps(data))
-        except SocketIO.ConnectionError:
+        except:
             print("connection error while starting trip")
 
     def stop_trip(self):
@@ -58,7 +58,7 @@ class Connection:
         print("stopping bike trip!")
         try:
             self.socket.emit('endBikeTrip', json.dumps(data))
-        except SocketIO.ConnectionError:
+        except:
             print("connection error while ending bike trip")
 
     def on_response(self, *args):
