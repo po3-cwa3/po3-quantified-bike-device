@@ -33,7 +33,8 @@ class SendtoArduino:
         lst[place]=char
         self.string = ''.join(lst)
 
-sc = serial_connection.SerialConnection("/dev/arduino1", 115200)
-sc.start()
-sendtoard = SendtoArduino(sc)
-sendtoard.start()
+if __name__ == "__main__":
+    sc = serial_connection.SerialConnection("/dev/arduino1", 115200)
+    sc.start()
+    sendtoard = SendtoArduino(sc)
+    sendtoard.start()
