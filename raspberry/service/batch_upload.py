@@ -112,7 +112,7 @@ class BatchUpload:
             query = "DELETE FROM Trips Where Id = " + str(int(index[0]))
             cursor.execute(query)
             self.db.commit()
-        print("json to send: " + json.dumps(to_send))
+        print("json to send: " + str(json.dumps(to_send))[:100])
 
         f = open("error.batchupload.log", "a")
         f.write("sending: " + str(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')))
