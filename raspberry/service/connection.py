@@ -75,7 +75,7 @@ class Connection:
         elif u'Welcome' in parsed:
             print("Welcome! ")
         else:
-            print("error: ", parsed[:100])
+            print("error: ", str(parsed)[:100])
             f=open("error.log","a")
             f.write(str(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')))
             f.write(str(parsed))
