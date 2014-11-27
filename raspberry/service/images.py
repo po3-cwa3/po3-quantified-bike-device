@@ -4,12 +4,15 @@ import picamera
 #import base64
 import os
 import json
+from httplib import HTTPConnection
 import requests
 
 images_path = "/home/pi/workspace/po3-quantified-bike-device/raspberry/service/images/"
 #images_path = "/home/pi/images/"
 upload_url = "http://dali.cs.kuleuven.be:8080/qbike/upload"
-
+upload_host = "http://dali.cs.kuleuven.be"
+upload_port = 8080
+upload_path = "/qbike/upload"
 
 def id_generator(size=20, chars=string.ascii_uppercase + string.ascii_lowercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
@@ -32,7 +35,14 @@ def send_to_server(photo_id, trip_id, user_id):
     test = json.dumps({"imageName": get_filename(photo_id), "tripID": trip_id, "userID": user_id, "raw": f})
     url = upload_url
     headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-    requests.post(url, data=test, headers=headers)
+    #requests.post(url, data=test, headers=headers)
+    conn = HTTPConnection(upload_host, upload_port)
+    conn.request("POST", upload_path, test, headers)
+    resp = conn.getresponse()
+    print "sending image to server gave the following response: ", resp
+    data = json.loads(resp.read().decode("utf-8"))
+    print "data = ", data
+    conn.close()
     os.remove(location)
     return get_filename(photo_id)
 

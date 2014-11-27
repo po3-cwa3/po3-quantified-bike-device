@@ -6,7 +6,7 @@ import serial_connection
 class SendtoArduino:
     def __init__(self, serial):
         self.serial = serial
-        self.string = '0000'
+        self.string = '00000000'
         self.status = True
         self.thread = None
 
@@ -19,14 +19,14 @@ class SendtoArduino:
 
     def send(self):
         while self.status:
-            self.serial(self.string)
+            self.serial.write(self.string)
             time.sleep(1)
 
     def online(self):
-        self.replace(-1,'1')
+        self.replace(0,'1')
 
     def offline(self):
-        self.replace(-1,'0')
+        self.replace(0,'0')
 
     def replace(self,place,char):
         lst = list(self.string)
