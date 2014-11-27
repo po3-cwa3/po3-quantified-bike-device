@@ -62,6 +62,7 @@ class BatchUpload:
             # print("ready to receive batch data!")
             self.retrieve_data()
         elif "Added trip" in parsed:
+            print "trip added",parsed
             self.trips_left -= 1
             if self.trips_left == 0:
                 self.ready = True
