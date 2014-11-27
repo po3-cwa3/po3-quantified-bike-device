@@ -61,6 +61,7 @@ class Interface:
 
     def batch_button_pressed(self):
         print "batch button pressed"
+        return
         if self.batch_uploading:
             #show error with LEDs
             print "already uploading"
