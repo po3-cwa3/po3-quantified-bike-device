@@ -84,6 +84,7 @@ class BatchUpload:
         cursor.execute(query)
         results = cursor.fetchall()
         to_send = []
+        imagelist=[]
         for index in results:
             print "will try to batch-upload trip ", index[0]
             if int(index[0]) in self.disabled_trips:
@@ -95,6 +96,7 @@ class BatchUpload:
             data = cursor.fetchall()
             for d in data:
                 print d
+                imagelist.append((d[1], str(int(index[0])), self.user_id))
                 #images.send_to_server(d[1], str(int(index[0])), self.user_id)
             query = "DELETE FROM Images WHERE Trip = " + str(int(index[0]))
             cursor.execute(query)
@@ -120,9 +122,18 @@ class BatchUpload:
         f.write("\n\n\n\n")
         f.close()
         self.socket.emit('batch-tripdata', json.dumps(to_send))
-        self.done = True
-        time.sleep(5)
-        self.done = False
+        t=threading.Thread(target=self.image_batch,args=(imagelist,))
+        t.start()
+        #time.sleep(5)
+
+    def image_batch(self,imagelist):
+        print "start imagebatch"
+        for t in imagelist:
+            print "sending 1 image"
+            try:
+                images.send_to_server(t[0],t[1],t[2])
+            except:
+                print "failed to send image ",t
 
 
 if __name__ == "__main__":
