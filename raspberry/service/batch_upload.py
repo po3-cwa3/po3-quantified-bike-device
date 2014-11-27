@@ -67,7 +67,7 @@ class BatchUpload:
             if self.trips_left == 0:
                 self.ready = True
         else:
-            print("error: ", parsed)
+            print("error: ", str(parsed)[:100])
 
             f = open("error.batchupload.log", "a")
             f.write("error: " + str(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')))
@@ -95,7 +95,7 @@ class BatchUpload:
             data = cursor.fetchall()
             for d in data:
                 print d
-                images.send_to_server(d[1], str(int(index[0])), self.user_id)
+                #images.send_to_server(d[1], str(int(index[0])), self.user_id)
             query = "DELETE FROM Images WHERE Trip = " + str(int(index[0]))
             cursor.execute(query)
             query = "SELECT * FROM Data WHERE Trip = " + str(int(index[0]))
