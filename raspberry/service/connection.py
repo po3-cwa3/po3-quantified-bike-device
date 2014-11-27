@@ -2,6 +2,7 @@ import json
 import time
 import logging
 import threading
+import sendtoarduino
 
 from socketIO_client import SocketIO
 
@@ -12,8 +13,9 @@ __author__ = 'fkint'
 
 
 class Connection:
-    def __init__(self, application, server, port):
+    def __init__(self, application, server, port, sendtoarduino):
         self.application = application
+        self.sendtoarduino = sendtoarduino
         self.server = server
         self.port = port
         self.connection_opened = False
@@ -69,6 +71,7 @@ class Connection:
             # print("connected: "+str(self.connection_opened and self.socket.connected))
             if self.connection_opened and self.socket.connected:
                 self.socket.wait(.5)
+                self.sendtoarduino.online()
             else:
                 try:
                     self.open_connection()

@@ -9,12 +9,13 @@ __author__ = 'fkint'
 
 
 class Application:
-    def __init__(self, group_id, user_id):
+    def __init__(self, group_id, user_id, sendtoarduino):
         self.group_id = group_id
         self.user_id = user_id
+        self.sendtoarduino = sendtoarduino
         self.sensors = []
         self.data_store = data_store.DataStore(self)
-        self.connection = connection.Connection(self, "dali.cs.kuleuven.be", 8080)
+        self.connection = connection.Connection(self, "dali.cs.kuleuven.be", 8080, self.sendtoarduino)
         self.active = False
         self.thread = None
 
