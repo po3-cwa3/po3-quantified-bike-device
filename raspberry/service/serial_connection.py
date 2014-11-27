@@ -24,8 +24,9 @@ class SerialConnection:
             for listener in self.listeners:
                 try:
                     listener.data_received(line)
-                except:
+                except Exception as e:
                     print("error in listener - data_received for line = " + line)
+                    print e.message
         self.ser.close()
 
     def stop(self):
