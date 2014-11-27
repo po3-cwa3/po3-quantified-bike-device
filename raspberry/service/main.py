@@ -24,7 +24,7 @@ bpm_sensor = sensor_reader.BPMSensor(sc, app)
 interface = interface.Interface(sc, app)
 
 app.start()
-sendtoard.start()
+#sendtoard.start()
 
 #
 # import time, images, threading, datetime
