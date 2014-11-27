@@ -8,7 +8,7 @@ import sendtoarduino
 
 sc = serial_connection.SerialConnection("/dev/arduino1", 115200)
 sc.start()
-#sendtoard = sendtoarduino.SendtoArduino(sc)
+sendtoard = sendtoarduino.SendtoArduino(sc)
 app = application.Application("cwa3", "r0463107",sendtoard)
 # initialize server connection thread (connects if a Internet connection is available)
 #conn = connection.Connection(app, "dali.cs.kuleuven.be", 8080)
