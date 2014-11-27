@@ -10,7 +10,7 @@ import requests
 images_path = "/home/pi/workspace/po3-quantified-bike-device/raspberry/service/images/"
 #images_path = "/home/pi/images/"
 upload_url = "http://dali.cs.kuleuven.be:8080/qbike/upload"
-upload_host = "http://dali.cs.kuleuven.be"
+upload_host = "dali.cs.kuleuven.be"
 upload_port = 8080
 upload_path = "/qbike/upload"
 
