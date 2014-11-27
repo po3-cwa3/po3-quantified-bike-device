@@ -26,12 +26,6 @@ class Interface:
         else:
             self.app.start_trip(self.live_mode)
 
-    # def trip_button_pressed(self):
-    #     print("trip button pressed")
-    #     if self.app.has_active_trip():
-    #         self.app.stop_trip()
-    #     else:
-    #         self.app.start_trip(self.live_mode)
     def has_internet_connection(self):
         return True
 
