@@ -29,13 +29,24 @@ class BatchUpload:
         self.socket.on('server_message', self.on_response)
 
     def start(self):
-        print
         data = {'purpose': 'batch-sender', 'groupID': 'cwa3', 'userID': self.user_id}
+        f=open("error.batchupload.log","a")
+        f.write("started: "+str(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')))
+        f.write(str(json.dumps(data)))
+        f.write("\n\n\n\n")
+        f.close()
         self.socket.emit('start', json.dumps(data))
+
 
     def on_response(self, *args):
         parsed = args[0]
         print "got response: ", parsed
+
+        f=open("error.batchupload.log","a")
+        f.write("received: "+str(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')))
+        f.write(str(json.dumps(data)))
+        f.write("\n\n\n\n")
+        f.close()
         if "Connection accepted. Ready to receive batch data." in parsed:
             #print("ready to receive batch data!")
             self.retrieve_data()
@@ -45,6 +56,12 @@ class BatchUpload:
                 self.ready = True
         else:
             print("error: ", parsed)
+
+            f=open("error.batchupload.log","a")
+            f.write("error: "+str(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')))
+            f.write(str(parsed))
+            f.write("\n\n\n\n")
+            f.close()
                 
     def retrieve_data(self):
         print "start batch upload"
@@ -82,6 +99,12 @@ class BatchUpload:
             cursor.execute(query)
             self.db.commit()
         print("json to send: "+json.dumps(to_send))
+
+        f=open("error.batchupload.log","a")
+        f.write("sending: "+str(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')))
+        f.write(str(json.dumps(to_send)))
+        f.write("\n\n\n\n")
+        f.close()
         self.socket.emit('batch-tripdata', json.dumps(to_send))
         self.done=True
         time.sleep(5)

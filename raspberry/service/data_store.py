@@ -45,7 +45,9 @@ class DataStore:
         while self.current_trip.has_images():
             d = self.current_trip.next_image()
             if self.current_trip.is_live():
+                print "image starts uploading"
                 images.send_to_server(d, self.current_trip.get_id(), self.application.get_user_id())
+                print "image finished uploading"
             else:
                 self.get_database().send_image(d, self.current_trip.get_id())
 

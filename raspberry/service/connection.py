@@ -3,7 +3,7 @@ import time
 import logging
 import threading
 import sendtoarduino
-
+import datetime
 from socketIO_client import SocketIO
 
 
@@ -28,10 +28,16 @@ class Connection:
         self.thread.start()
 
     def send_data(self, data, trip_id):
+        if not self.has_connection():
+            print("no connection, dropping data")
+            return
         to_send = {'_id': trip_id, "sensorData": data}
         #print("sending data: "+str(data))
         print("sending data for trip ", trip_id)
-        self.socket.emit('rt-sensordata', json.dumps(to_send))
+        try:
+            self.socket.emit('rt-sensordata', json.dumps(to_send))
+        except:
+            print("connection error while sending data!")
 
     def open_connection(self):
         self.socket = SocketIO(self.server, self.port)
@@ -44,12 +50,18 @@ class Connection:
     def start_trip(self):
         data = {'purpose': 'realtime-sender', 'groupID': self.application.group_id, 'userID': self.application.user_id}
         print("starting bike trip")
-        self.socket.emit('start', json.dumps(data))
+        try:
+            self.socket.emit('start', json.dumps(data))
+        except:
+            print("connection error while starting trip")
 
     def stop_trip(self):
         data = {'_id': self.application.data_store.current_trip.get_id(), "meta": None}
         print("stopping bike trip!")
-        self.socket.emit('endBikeTrip', json.dumps(data))
+        try:
+            self.socket.emit('endBikeTrip', json.dumps(data))
+        except:
+            print("connection error while ending bike trip")
 
     def on_response(self, *args):
         parsed = args[0]
@@ -64,12 +76,20 @@ class Connection:
         elif u'Welcome' in parsed:
             print("Welcome! ")
         else:
-            print("error: ", parsed)
+            print("error: ", str(parsed)[:100])
+            f=open("error.log","a")
+            f.write(str(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')))
+            f.write(str(parsed))
+            f.write("\n\n\n\n")
+            f.close()
+
+    def has_connection(self):
+        return self.connection_opened and self.socket.connected
 
     def action(self):
         while True:
             # print("connected: "+str(self.connection_opened and self.socket.connected))
-            if self.connection_opened and self.socket.connected:
+            if self.has_connection():
                 self.socket.wait(.5)
                 self.sendtoarduino.online()
             else:
