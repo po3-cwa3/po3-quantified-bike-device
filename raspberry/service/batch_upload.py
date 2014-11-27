@@ -31,6 +31,7 @@ class BatchUpload:
         self.open_connection()
         self.success = True
         self.current_trip = -1
+        self.current_trip_images = []
 
     def open_connection(self):
         try:
@@ -51,19 +52,13 @@ class BatchUpload:
         self.socket.emit('start', json.dumps(data))
 
     def send_images_of_trip(self, own_id, remote_id):
-        cursor = self.db.cursor()
-        query = "SELECT * FROM Images WHERE Trip = " + str(own_id)
-        cursor.execute(query)
-        data = cursor.fetchall()
+        #cursor = self.db.cursor()
+        data = self.current_trip_images[:]
         for d in data:
             print d
             #imagelist.append((d[1], str(int(index[0])), self.user_id))
             images.send_to_server(d[1], remote_id, self.user_id)
-        query = "DELETE FROM Images WHERE Trip = " + str(own_id)
-        cursor.execute(query)
-        query = "DELETE FROM Trips Where Id = " + str(own_id)
-        cursor.execute(query)
-        self.db.commit()
+        #self.db.commit()
 
 
     def on_response(self, *args):
@@ -118,7 +113,17 @@ class BatchUpload:
                 trip_data['sensorData'].append(json.loads(d[2]))
             query = "DELETE FROM Data WHERE Trip = " + str(int(index[0]))
             cursor.execute(query)
+            query = "SELECT * FROM Images WHERE Trip = " + str(int(index[0]))
+            cursor.execute(query)
+            data = cursor.fetchall()
+            self.current_trip_images = []
+            for d in data:
+                self.current_trip_images.append(d[1])
             to_send.append(trip_data)
+            query = "DELETE FROM Images WHERE Trip = " + str(int(index[0]))
+            cursor.execute(query)
+            query = "DELETE FROM Trips Where Id = " + str(int(index[0]))
+            cursor.execute(query)
             self.db.commit()
             self.disabled_trips.add(int(index[0]))
             break;
