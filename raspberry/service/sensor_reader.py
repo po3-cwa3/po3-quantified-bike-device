@@ -207,6 +207,29 @@ class BPMSensor(SerialSensor):
         self.send_record(gps_data)
 
 
+class HallSensor(SerialSensor):
+    def __init__(self, serial, application):
+        SerialSensor.__init__(self, serial, application)
+
+    def data_received(self, data):
+        line = data
+        if len(line) < 6:
+            return
+        if line[:2] != "v;":
+            return
+
+        splitted = line.split(";")
+        v = float(splitted[1])
+
+        hall_data = [{
+                             "sensorID": 11,
+                             "timestamp": datetime.datetime.fromtimestamp(time.time()).strftime(
+                                 '%Y-%m-%d %H:%M:%S'),
+                             "data": [{"velocity": v}]
+                         }]
+        self.send_record(hall_data)
+
+
 class SwitchButton(serial_connection.SerialListener):
     def __init__(self, serial, action_on, action_off, identifier):
         serial_connection.SerialListener.__init__(self, serial)
