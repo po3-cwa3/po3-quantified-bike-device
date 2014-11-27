@@ -116,6 +116,8 @@ class BatchUpload:
                          'groupID': 'cwa3', 'userID': 'r0451433', 'sensorData': [], 'meta': {}}
             for d in data:
                 trip_data['sensorData'].append(json.loads(d[2]))
+            query = "DELETE FROM Data WHERE Trip = " + str(int(index[0]))
+            cursor.execute(query)
             to_send.append(trip_data)
             self.db.commit()
             self.disabled_trips.add(int(index[0]))
