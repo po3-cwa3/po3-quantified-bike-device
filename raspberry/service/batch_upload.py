@@ -29,7 +29,8 @@ class BatchUpload:
         self.trips_left = 0
         self.done = False
         self.open_connection()
-        self.succes = True
+        self.success = True
+        self.current_trip = -1
 
     def open_connection(self):
         try:
@@ -49,6 +50,21 @@ class BatchUpload:
         f.close()
         self.socket.emit('start', json.dumps(data))
 
+    def send_images_of_trip(self, own_id, remote_id):
+        cursor = self.db.cursor()
+        query = "SELECT * FROM Images WHERE Trip = " + str(own_id)
+        cursor.execute(query)
+        data = cursor.fetchall()
+        for d in data:
+            print d
+            #imagelist.append((d[1], str(int(index[0])), self.user_id))
+            images.send_to_server(d[1], remote_id, self.user_id)
+        query = "DELETE FROM Images WHERE Trip = " + str(own_id)
+        cursor.execute(query)
+        query = "DELETE FROM Trips Where Id = " + str(own_id)
+        cursor.execute(query)
+        self.db.commit()
+
 
     def on_response(self, *args):
         parsed = args[0]
@@ -64,9 +80,13 @@ class BatchUpload:
             self.retrieve_data()
         elif "Added trip" in parsed:
             print "trip added",parsed
-            self.trips_left -= 1
-            if self.trips_left == 0:
-                self.ready = True
+            t = threading.Thread(target=self.send_images_of_trip, args=(self.current_trip, parsed['_id']))
+            t.start()
+            self.send_next_trip()
+            #self.send_images_of_trip(self.current_trip, parsed['_id'])
+            #self.trips_left -= 1
+            #if self.trips_left == 0:
+            #    self.ready = True
         else:
             print("error: ", str(parsed)[:100])
 
@@ -75,6 +95,36 @@ class BatchUpload:
             f.write(str(parsed))
             f.write("\n\n\n\n")
             f.close()
+    def send_next_trip(self):
+        query = "SELECT * FROM TRIPS"
+        cursor = self.db.cursor()
+        cursor.execute(query)
+        results = cursor.fetchall()
+        to_send = []
+        for index in results:
+            print "will try to batch-upload trip ", index[0]
+            if int(index[0]) in self.disabled_trips:
+                continue
+            self.current_trip = str(int(index[0]))
+            print "this trip can be uploaded"
+            query = "SELECT * FROM Data WHERE Trip = " + str(int(index[0]))
+            cursor.execute(query)
+            data = cursor.fetchall()
+            trip_data = {'startTime': datetime.datetime.fromtimestamp(time.time()).strftime("%Y-%m-%d %H:%M:%S"),
+                         'endTime': datetime.datetime.fromtimestamp(time.time() + 1).strftime("%Y-%m-%d %H:%M:%S"),
+                         'groupID': 'cwa3', 'userID': 'r0451433', 'sensorData': [], 'meta': {}}
+            for d in data:
+                trip_data['sensorData'].append(json.loads(d[2]))
+            to_send.append(trip_data)
+            self.db.commit()
+            self.disabled_trips.add(int(index[0]))
+            break;
+        if len(to_send) == 0:
+            self.ready = True
+            return
+        print("json to send: " + str(json.dumps(to_send))[:100])
+        self.socket.emit('batch-tripdata', json.dumps(to_send))
+
 
     def retrieve_data(self):
         print "start batch upload"
