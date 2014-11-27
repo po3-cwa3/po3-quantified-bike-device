@@ -75,6 +75,10 @@ class Connection:
             print("Welcome! ")
         else:
             print("error: ", parsed)
+            f=open("error.log","w")
+            f.write(str(parsed))
+            f.write("\n\n\n\n")
+            f.close()
 
     def has_connection(self):
         return self.connection_opened and self.socket.connected
