@@ -2,6 +2,7 @@ import json
 import time
 import logging
 import threading
+import datetime
 
 from socketIO_client import SocketIO
 
@@ -75,7 +76,8 @@ class Connection:
             print("Welcome! ")
         else:
             print("error: ", parsed)
-            f=open("error.log","w")
+            f=open("error.log","a")
+            f.write(str(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')))
             f.write(str(parsed))
             f.write("\n\n\n\n")
             f.close()
