@@ -30,20 +30,23 @@ def take_photo():
 
 
 def send_to_server(photo_id, trip_id, user_id):
-    location = images_path + get_filename(photo_id)
-    f = open(location, "rb").read().encode("base64")
-    test = json.dumps({"imageName": get_filename(photo_id), "tripID": trip_id, "userID": user_id, "raw": f})
-    url = upload_url
-    headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-    #requests.post(url, data=test, headers=headers)
-    conn = HTTPConnection(upload_host, upload_port)
-    conn.request("POST", upload_path, test, headers)
-    resp = conn.getresponse()
-    print "sending image to server gave the following response: ", resp
-    data = json.loads(resp.read().decode("utf-8"))
-    print "data = ", data
-    conn.close()
-    os.remove(location)
+    try:
+        location = images_path + get_filename(photo_id)
+        f = open(location, "rb").read().encode("base64")
+        test = json.dumps({"imageName": get_filename(photo_id), "tripID": trip_id, "userID": user_id, "raw": f})
+        url = upload_url
+        headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+        #requests.post(url, data=test, headers=headers)
+        conn = HTTPConnection(upload_host, upload_port)
+        conn.request("POST", upload_path, test, headers)
+        resp = conn.getresponse()
+        print "sending image to server gave the following response: ", resp
+        data = json.loads(resp.read().decode("utf-8"))
+        print "data = ", data
+        conn.close()
+        os.remove(location)
+    except Exception as e:
+        print "error while trying to send image to server", e.strerror
     return get_filename(photo_id)
 
 
