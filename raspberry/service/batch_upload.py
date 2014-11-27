@@ -127,6 +127,7 @@ class BatchUpload:
             self.db.commit()
             self.disabled_trips.add(int(index[0]))
             break;
+        cursor.close()
         if len(to_send) == 0:
             self.ready = True
             return
