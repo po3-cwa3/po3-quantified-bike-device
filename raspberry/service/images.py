@@ -46,7 +46,7 @@ def send_to_server(photo_id, trip_id, user_id):
         conn.close()
         os.remove(location)
     except Exception as e:
-        print "error while trying to send image to server", e.message
+        print "error while trying to send image to server", e
     return get_filename(photo_id)
 
 
