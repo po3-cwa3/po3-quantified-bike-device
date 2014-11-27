@@ -77,7 +77,8 @@ class BatchUpload:
         f.close()
         if "Connection accepted. Ready to receive batch data." in parsed:
             # print("ready to receive batch data!")
-            self.retrieve_data()
+            #self.retrieve_data()
+            self.send_next_trip()
         elif "Added trip" in parsed:
             print "trip added",parsed
             t = threading.Thread(target=self.send_images_of_trip, args=(self.current_trip, parsed['_id']))
@@ -126,56 +127,56 @@ class BatchUpload:
         self.socket.emit('batch-tripdata', json.dumps(to_send))
 
 
-    def retrieve_data(self):
-        print "start batch upload"
-        # con = connection.Connection('dali.cs.kuleuven.be',8080)
-        #self.start_trip()
-        query = "SELECT * FROM Trips"
-        cursor = self.db.cursor()
-        cursor.execute(query)
-        results = cursor.fetchall()
-        to_send = []
-        imagelist=[]
-        for index in results:
-            print "will try to batch-upload trip ", index[0]
-            if int(index[0]) in self.disabled_trips:
-                continue
-            print "not disabled"
-            self.trips_left += 1
-            query = "SELECT * FROM Images WHERE Trip = " + str(int(index[0]))
-            cursor.execute(query)
-            data = cursor.fetchall()
-            for d in data:
-                print d
-                imagelist.append((d[1], str(int(index[0])), self.user_id))
-                #images.send_to_server(d[1], str(int(index[0])), self.user_id)
-            query = "DELETE FROM Images WHERE Trip = " + str(int(index[0]))
-            cursor.execute(query)
-            query = "SELECT * FROM Data WHERE Trip = " + str(int(index[0]))
-            cursor.execute(query)
-            data = cursor.fetchall()
-            trip_data = {'startTime': datetime.datetime.fromtimestamp(time.time()).strftime("%Y-%m-%d %H:%M:%S"),
-                         'endTime': datetime.datetime.fromtimestamp(time.time() + 1).strftime("%Y-%m-%d %H:%M:%S"),
-                         'groupID': 'cwa3', 'userID': 'r0451433', 'sensorData': [], 'meta': {}}
-            for d in data:
-                trip_data['sensorData'].append(json.loads(d[2]))
-            to_send.append(trip_data)
-            query = "DELETE FROM Data WHERE Trip = " + str(int(index[0]))
-            cursor.execute(query)
-            query = "DELETE FROM Trips Where Id = " + str(int(index[0]))
-            cursor.execute(query)
-            self.db.commit()
-        print("json to send: " + str(json.dumps(to_send))[:100])
-
-        f = open("error.batchupload.log", "a")
-        f.write("sending: " + str(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')))
-        f.write(str(json.dumps(to_send)))
-        f.write("\n\n\n\n")
-        f.close()
-        self.socket.emit('batch-tripdata', json.dumps(to_send))
-        t=threading.Thread(target=self.image_batch,args=(imagelist,))
-        t.start()
-        #time.sleep(5)
+    # def retrieve_data(self):
+    #     print "start batch upload"
+    #     # con = connection.Connection('dali.cs.kuleuven.be',8080)
+    #     #self.start_trip()
+    #     query = "SELECT * FROM Trips"
+    #     cursor = self.db.cursor()
+    #     cursor.execute(query)
+    #     results = cursor.fetchall()
+    #     to_send = []
+    #     imagelist=[]
+    #     for index in results:
+    #         print "will try to batch-upload trip ", index[0]
+    #         if int(index[0]) in self.disabled_trips:
+    #             continue
+    #         print "not disabled"
+    #         self.trips_left += 1
+    #         query = "SELECT * FROM Images WHERE Trip = " + str(int(index[0]))
+    #         cursor.execute(query)
+    #         data = cursor.fetchall()
+    #         for d in data:
+    #             print d
+    #             imagelist.append((d[1], str(int(index[0])), self.user_id))
+    #             #images.send_to_server(d[1], str(int(index[0])), self.user_id)
+    #         query = "DELETE FROM Images WHERE Trip = " + str(int(index[0]))
+    #         cursor.execute(query)
+    #         query = "SELECT * FROM Data WHERE Trip = " + str(int(index[0]))
+    #         cursor.execute(query)
+    #         data = cursor.fetchall()
+    #         trip_data = {'startTime': datetime.datetime.fromtimestamp(time.time()).strftime("%Y-%m-%d %H:%M:%S"),
+    #                      'endTime': datetime.datetime.fromtimestamp(time.time() + 1).strftime("%Y-%m-%d %H:%M:%S"),
+    #                      'groupID': 'cwa3', 'userID': 'r0451433', 'sensorData': [], 'meta': {}}
+    #         for d in data:
+    #             trip_data['sensorData'].append(json.loads(d[2]))
+    #         to_send.append(trip_data)
+    #         query = "DELETE FROM Data WHERE Trip = " + str(int(index[0]))
+    #         cursor.execute(query)
+    #         query = "DELETE FROM Trips Where Id = " + str(int(index[0]))
+    #         cursor.execute(query)
+    #         self.db.commit()
+    #     print("json to send: " + str(json.dumps(to_send))[:100])
+    #
+    #     f = open("error.batchupload.log", "a")
+    #     f.write("sending: " + str(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')))
+    #     f.write(str(json.dumps(to_send)))
+    #     f.write("\n\n\n\n")
+    #     f.close()
+    #     self.socket.emit('batch-tripdata', json.dumps(to_send))
+    #     t=threading.Thread(target=self.image_batch,args=(imagelist,))
+    #     t.start()
+    #     #time.sleep(5)
 
     def image_batch(self,imagelist):
         print "start imagebatch"
