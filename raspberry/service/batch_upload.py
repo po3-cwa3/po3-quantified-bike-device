@@ -55,7 +55,7 @@ class BatchUpload:
 
         f = open("error.batchupload.log", "a")
         f.write("received: " + str(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')))
-        f.write(str(json.dumps(data)))
+        f.write(str(json.dumps(parsed)))
         f.write("\n\n\n\n")
         f.close()
         if "Connection accepted. Ready to receive batch data." in parsed:
