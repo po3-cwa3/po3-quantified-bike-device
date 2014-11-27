@@ -21,7 +21,10 @@ class SerialConnection:
         while self.active:
             line = self.ser.readline().strip()
             for listener in self.listeners:
-                listener.data_received(line)
+                try:
+                    listener.data_received(line)
+                except:
+                    print("error in listener - data_received for line = " + line)
         self.ser.close()
 
     def stop(self):
