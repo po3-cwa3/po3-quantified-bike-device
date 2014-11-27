@@ -23,10 +23,16 @@ class BatchUpload:
         self.trips_left = 0
         self.done = False
         self.open_connection()
+        self.succes = True
 
     def open_connection(self):
-        self.socket = SocketIO(self.server, self.port)
-        self.socket.on('server_message', self.on_response)
+        try:
+            self.socket = SocketIO(self.server, self.port)
+            self.socket.on('server_message', self.on_response)
+        except:
+            print "error in open connection"
+            self.ready=True
+            self.success=False
 
     def start(self):
         data = {'purpose': 'batch-sender', 'groupID': 'cwa3', 'userID': self.user_id}
