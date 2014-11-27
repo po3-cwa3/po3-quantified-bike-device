@@ -30,6 +30,9 @@ class SerialConnection:
     def stop(self):
         self.active = False;
 
+    def write(self, data):
+        self.ser.write(data)
+
     def start(self):
         self.active = True;
         self.thread = threading.Thread(name="serial", target=self.action)

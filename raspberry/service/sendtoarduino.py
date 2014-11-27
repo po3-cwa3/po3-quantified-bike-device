@@ -1,6 +1,7 @@
 import threading
 import time
 import serial
+import serial_connection
 
 class SendtoArduino:
     def __init__(self, serial):
@@ -18,7 +19,7 @@ class SendtoArduino:
 
     def send(self):
         while self.status:
-            self.serial.write(self.string)
+            self.serial(self.string)
             time.sleep(1)
 
     def online(self):
@@ -32,7 +33,7 @@ class SendtoArduino:
         lst[place]=char
         self.string = ''.join(lst)
 
-sc = serial.Serial("COM4", 115200)
-time.sleep(1)
+sc = serial_connection.SerialConnection("/dev/arduino1", 115200)
+sc.start()
 sendtoard = SendtoArduino(sc)
 sendtoard.start()
