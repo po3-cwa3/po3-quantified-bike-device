@@ -67,7 +67,9 @@ class SendtoArduino:
 
 # Debugging code
 if __name__ == "__main__":
-    sc = serial_connection.SerialConnection("COM6", 115200)
+    sc = serial_connection.SerialConnection("COM5", 115200)
     sc.start()
     sendtoard = SendtoArduino(sc)
     sendtoard.start()
+    time.sleep(5)
+    sendtoard.online()

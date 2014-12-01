@@ -41,6 +41,7 @@ class SerialConnection:
         while self.active:
             # Waits until a new line of data is available from the Arduino
             line = self.ser.readline().strip()
+            print line
             # Inform all listeners about the data that has been received from the Arduino
             for listener in self.listeners:
                 try:

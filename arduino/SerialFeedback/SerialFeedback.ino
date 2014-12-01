@@ -2,12 +2,14 @@
 example code for leds: https://sites.google.com/site/summerfuelrobots/arduino-sensor-tutorials/3-color-rgb-led-module
 */
 
-int ledDigitalOne[] = {10, 11, 9}; // 10 = red, 11 = green, 9 = blue
+int ledDigitalOne[] = {6, 11, 3}; // 3 = red, 6 = green, 11 = blue
+int i = 0;
 const boolean ON = HIGH;
 const boolean OFF = LOW;
 boolean stat = false;
-String string = "";
-String pattern = "1111100000";
+char string[] = "";
+char test[11];
+char pattern[] = "1111100000";
 
 //Predefined Colors
 const boolean RED[] = {ON, OFF, OFF};    
@@ -25,33 +27,34 @@ void setup(){
 void loop(){
   if (Serial.available()>0){
     char incoming = Serial.read();
-    string += incoming;
+    string[sizeof(string)] = incoming;
     if (stat == false){
-      if (string.length() == 10){
-        if (string == pattern){
-          stat = true;
-          string = "";
-          Serial.println("Pattern confirmed!");
+      for (i=0;i<10;i++){
+        test[i+1]=string[sizeof(string)-9+i];
+        Serial.println(test);
+      }
+      if (test == pattern){
+        stat = true;
+        char string[] = "";
+        Serial.println("Pattern confirmed!");
         }
-        else{
-          string.setCharAt(1,'\0');
-          Serial.println("Wrong pattern.");
-        }
+      else{
+        Serial.println("Wrong pattern.");
       }
     }
     else{
-      Serial.println("Receiving data.");      
-      if (string.length() == 9){
+      if (sizeof(string) == 9){
+        Serial.println("Receiving data.");      
         Color(string);
-        string = "";
+        char string[] = "";
         stat = false;
       }
     }
   }
 }
 
-void Color(String string){
-  if (string.charAt(string.length()-1)=='1'){
+void Color(char* string){
+  if (string[1]=='1'){
     setColor(ledDigitalOne, GREEN);
     Serial.println("online");
   }

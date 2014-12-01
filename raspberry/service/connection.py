@@ -136,6 +136,7 @@ class Connection:
                 # Notify the Arduino that a network connection is available.
                 self.sendtoarduino.online()
             else:
+                self.sendtoarduino.offline()
                 try:
                     # No connection is available, try to initialize one
                     self.open_connection()
