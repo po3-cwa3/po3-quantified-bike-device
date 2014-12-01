@@ -13,7 +13,18 @@ __author__ = 'fkint'
 
 
 class Connection:
+    """
+    This class manages the connection to the remote server using Websockets.
+    It uses the modue socketIO_client.SocketIO.
+    """
     def __init__(self, application, server, port, sendtoarduino):
+        """
+        Initializes the connection object.
+        @param application: a reference to the current application object that manages the main thread.
+        @param server: the address of the server
+        @param port: the port of the server to which the program should connect
+        @param sendtoarduino: the object that keeps track of the state and sends it to the Arduino (used to inform the user wether the socket is connected).
+        """
         self.application = application
         self.sendtoarduino = sendtoarduino
         self.server = server
@@ -23,14 +34,24 @@ class Connection:
         self.thread = None
 
     def start(self):
+        """
+        Starts the connection thread.
+        """
         self.thread = threading.Thread(name="connection thread", target=self.action)
         self.thread.daemon = True
         self.thread.start()
 
     def send_data(self, data, trip_id):
+        """
+        Sends the given data to the remote server if a connection is available.
+        @param data: the sensor data as a Python dict
+        @param trip_id: the id of the trip to which this data should be added
+        """
+        # If no connection is available, just drop the data
         if not self.has_connection():
             print("no connection, dropping data")
             return
+        # Prepare the dict to be sent to the server
         to_send = {'_id': trip_id, "sensorData": data}
         #print("sending data: "+str(data))
         print("sending data for trip ", trip_id)
@@ -40,14 +61,23 @@ class Connection:
             print("connection error while sending data!")
 
     def open_connection(self):
+        """
+        Initializes the connection.
+        """
         self.socket = SocketIO(self.server, self.port)
         self.socket.on('server_message', self.on_response)
         self.connection_opened = True
 
     def close_connection(self):
+        """
+        Closes the connection.
+        """
         self.socket.disconnect()
 
     def start_trip(self):
+        """
+        Asks the server to start a new trip.
+        """
         data = {'purpose': 'realtime-sender', 'groupID': self.application.group_id, 'userID': self.application.user_id}
         print("starting bike trip")
         try:
@@ -56,6 +86,9 @@ class Connection:
             print("connection error while starting trip")
 
     def stop_trip(self):
+        """
+        Asks the server to stop the current trip.
+        """
         data = {'_id': self.application.data_store.current_trip.get_id(), "meta": None}
         print("stopping bike trip!")
         try:
@@ -64,6 +97,9 @@ class Connection:
             print("connection error while ending bike trip")
 
     def on_response(self, *args):
+        """
+        Handles the responses received from the server.
+        """
         parsed = args[0]
         if "Connection accepted. Ready to receive realtime data." in parsed:
             self.application.trip_started(parsed['_id'])
@@ -84,16 +120,24 @@ class Connection:
             f.close()
 
     def has_connection(self):
+        """
+        Returns wether a connection to the remote server is available.
+        """
         return self.connection_opened and self.socket.connected
 
     def action(self):
+        """
+        This function is executed in the connection thread.
+        """
         while True:
             # print("connected: "+str(self.connection_opened and self.socket.connected))
             if self.has_connection():
                 self.socket.wait(.5)
+                # Notify the Arduino that a network connection is available.
                 self.sendtoarduino.online()
             else:
                 try:
+                    # No connection is available, try to initialize one
                     self.open_connection()
                     time.sleep(.1)
                 except ValueError:
