@@ -29,17 +29,19 @@ void loop(){
     char incoming = Serial.read();
     string[sizeof(string)] = incoming;
     if (stat == false){
-      for (i=0;i<10;i++){
-        test[i+1]=string[sizeof(string)-9+i];
-        Serial.println(test);
-      }
-      if (test == pattern){
-        stat = true;
-        char string[] = "";
-        Serial.println("Pattern confirmed!");
+      if (sizeof(string)>9){
+        for (i=0;i<11;i++){
+          test[i]=string[sizeof(string)-10+i];
+          Serial.println(test);
         }
-      else{
-        Serial.println("Wrong pattern.");
+        if (strcmp(test, pattern)){
+          stat = true;
+          char string[] = "";
+          Serial.println("Pattern confirmed!");
+        }
+        else{
+          Serial.println("Wrong pattern.");
+        }
       }
     }
     else{
