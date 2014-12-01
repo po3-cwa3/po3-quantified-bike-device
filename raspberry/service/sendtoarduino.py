@@ -1,7 +1,7 @@
 import threading
 import time
-import serial
 import serial_connection
+
 
 class SendtoArduino:
     def __init__(self, serial):
@@ -13,7 +13,7 @@ class SendtoArduino:
         self.tosend = None
 
     def start(self):
-        self.thread = threading.Thread(name="SendtoArduino",target=self.send)
+        self.thread = threading.Thread(name="SendtoArduino", target=self.send)
         self.thread.run()
 
     def stop(self):
@@ -26,14 +26,14 @@ class SendtoArduino:
             time.sleep(1)
 
     def online(self):
-        self.replace(0,'1')
+        self.replace(0, '1')
 
     def offline(self):
-        self.replace(0,'0')
+        self.replace(0, '0')
 
-    def replace(self,place,char):
+    def replace(self, place, char):
         lst = list(self.string)
-        lst[place]=char
+        lst[place] = char
         self.string = ''.join(lst)
 
 if __name__ == "__main__":
