@@ -482,7 +482,7 @@ class PushButton(serial_connection.SerialListener):
         """
         #print(data)
         line = data
-        # Only consider lines with length longer than the length of the identifer +1
+        # Only consider lines with length longer than the length of the identifer +2
         if len(line) < len(self.identifier) + 2:
             return
         # Only consider lines with a matching identification pattern
