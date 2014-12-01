@@ -61,10 +61,9 @@ class SendtoArduino:
         """
         Sets the bit at place in the state string to char.
         """
-        self.string[place] = char
-#        lst = list(self.string)
-#        lst[place]=char
-#        self.string = ''.join(lst)
+        lst = list(self.string)
+        lst[place]=char
+        self.string = ''.join(lst)
 
 # Debugging code
 if __name__ == "__main__":
