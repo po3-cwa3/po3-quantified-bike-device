@@ -10,6 +10,7 @@ void setup(){
   setupGPS();
   setupHall();
   setupBPM();
+  setupStateHandler();
   //digitalWrite(9, LOW);
   //delay(1000);
 }
@@ -20,6 +21,7 @@ void loop(){
   readTempHumi();
   readBPM();
   readHall();
+  readState();
   //delay(1);
 }
   

@@ -1,11 +1,11 @@
-const int redPin = 16;
-const int greenPin = 15;
-const int bluePin = 14;
-void setup(){
+const int redPin = 18;
+const int greenPin = 17;
+const int bluePin = 16;
+
+void setupStateHandler(){
   pinMode(redPin, OUTPUT);
   pinMode(greenPin, OUTPUT);
   pinMode(bluePin, OUTPUT);
-  Serial.begin(115200);
 }
 #define PATTERN_LENGTH 19
 char currently_received[PATTERN_LENGTH];
@@ -26,7 +26,7 @@ void check_pattern(){
   analogWrite(greenPin, (current_pattern[1]=='1')?255:0);
   analogWrite(bluePin, (current_pattern[2]=='1')?255:0);
 }
-void loop(){
+void readState(){
   if(Serial.available() > 0){
     currently_received[current_receive_index] = Serial.read();
     ++current_receive_index;
