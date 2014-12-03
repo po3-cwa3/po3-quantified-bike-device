@@ -15,13 +15,16 @@ class SendtoArduino:
         """
         self.serial = serial
         # The initial state (of length 9)
-        self.string = '000000000'
-        # The pattern preceding the state string (of length 9+1 = 10)
+        self.current_status = [False]*9
+        # The pattern preceding the state string (of length 10)
         # This pattern is used so there is no ambiguity for the Arduino about which part of the data contains the state string.
         self.pattern = '1111100000'
         self.status = False
         self.thread = None
         self.tosend = None
+
+    def get_string(self):
+        return ''.join(['1' if x else '0' for x in self.current_status])
 
     def start(self):
         """
@@ -43,7 +46,7 @@ class SendtoArduino:
         """
         while self.status:
             #Always send the pattern concatenated with the state string to the Arduino
-            tosend = self.pattern + self.string
+            tosend = self.pattern + self.get_string()
             self.serial.write(tosend)
             time.sleep(1)
 
@@ -60,7 +63,7 @@ class SendtoArduino:
         :param index: the index of the bit that has to be set
         :param value: the value of the bit that has to be set (True or False)
         """
-        self.string[index] = '1' if value else '0'
+        self.current_status[index] = value
 
 
 # Debugging code
