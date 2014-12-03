@@ -13,21 +13,19 @@ class Application:
     The application class manages the main thread, the DataStore and the Connection to the remote server.
     It also provides a few basic functions returning information about the application state
     """
-    def __init__(self, group_id, user_id, sendtoarduino):
+    def __init__(self, group_id, user_id):
         """
         Initializes the Application
         @param group_id: this id is used when sending trips to the remote database
         @param user_id: this id is used when sending trips to the remote database
-        @param sendtoarduino: via this interface, information about the application state can be sent to the Arduino to enable/disable LEDs
         """
         self.group_id = group_id
         self.user_id = user_id
-        self.sendtoarduino = sendtoarduino
         self.sensors = []
         # self.data_store manages all data that's waiting to be sent to either the local or the remote database
         self.data_store = data_store.DataStore(self)
         # self.connection manages the connection to the remote server
-        self.connection = connection.Connection(self, "dali.cs.kuleuven.be", 8080, self.sendtoarduino)
+        self.connection = connection.Connection(self, "dali.cs.kuleuven.be", 8080)
         self.active = False
         self.ui = None
         self.thread = None
