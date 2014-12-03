@@ -31,7 +31,7 @@ class SendtoArduino:
         
     def stop(self):
         """
-        Stop the thread continuously sending the state information to the Arduino.
+        Stop the thread that continuously sends the state information to the Arduino.
         """
         self.status = False
 

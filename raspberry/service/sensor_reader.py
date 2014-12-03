@@ -441,22 +441,10 @@ class SwitchButton(serial_connection.SerialListener):
         if splitted[1].strip() == "1":
             # Current received state is 'on'
             self.on_received()
-            # if self.previous_value:
-            #     return
-            # else:
-            #     print "switches value to 1"
-            #     self.previous_value = True
-            #     self.action_on()
 
         else:
             # Current received state is 'off'
             self.off_received()
-            # if self.previous_value:
-            #     print "switches value to 0"
-            #     self.previous_value = False
-            #     self.action_off()
-            # else:
-            #     return
 
 
 class PushButton(serial_connection.SerialListener):
