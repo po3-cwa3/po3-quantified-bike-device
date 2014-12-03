@@ -1,6 +1,5 @@
 #include "headers.h"
 
-//const int pin_button1 = 7;
 #define PIN_BUTTON1 7
 #define PIN_BUTTON2 15
 #define PIN_BUTTON3 10

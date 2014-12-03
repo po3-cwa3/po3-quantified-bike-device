@@ -2,7 +2,7 @@
 example code for leds: https://sites.google.com/site/summerfuelrobots/arduino-sensor-tutorials/3-color-rgb-led-module
 */
 
-int ledDigitalOne[] = {6, 11, 3}; // 3 = red, 6 = green, 11 = blue
+int ledDigitalOne[] = {11,10,9/*6, 11, 3*/}; // 3 = red, 6 = green, 11 = blue
 int i = 0;
 const boolean ON = HIGH;
 const boolean OFF = LOW;

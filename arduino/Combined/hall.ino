@@ -2,7 +2,10 @@ int counter;
 float velocity = 0;
 float distance = 0;
 long time = 0;
-float radius = 33; //in cm
+//float radius = 33; //in cm
+//Send speed for a wheel of radius 1 cm. 
+//Configuration is easier on the RPi, so let the RPi calculate the real speed.
+float radius = 1.0; 
 
 void setupHall(){
    attachInterrupt(0, counting, RISING);
