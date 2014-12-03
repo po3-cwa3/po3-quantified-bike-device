@@ -36,7 +36,7 @@ class Interface:
         self.send_to_arduino.set_taking_picture_status(self.taking_picture)
         self.send_to_arduino.set_taking_picture_success_status(picture_succeeded)
         self.send_to_arduino.set_taking_picture_failed_status(picture_failed)
-        self.send_to_arduino.set_active_trip_status(self.app.has_active_trip())
+        self.send_to_arduino.set_trip_active_status(self.app.has_active_trip())
         self.send_to_arduino.send_status()
 
     def has_internet_connection(self):
