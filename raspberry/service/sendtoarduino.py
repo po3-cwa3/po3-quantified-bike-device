@@ -92,7 +92,7 @@ class SendtoArduino:
         """
         self.set_status(SendtoArduino.BATCH_UPLOADING_SUCCESS, value)
 
-    def set_batch_uploading_status_failed(self, value):
+    def set_batch_uploading_failed_status(self, value):
         """
         Sets the batch uploading failure status in the state string.
         :param value: True or False, depending on whether batch uploading failed or not
