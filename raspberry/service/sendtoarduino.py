@@ -3,8 +3,26 @@ import time
 import serial_connection
 
 
+# State string:
+# 0: 1 if a connection is available
+# 1: 1 if batch-uploading
+# 2: 1 if batch-uploading succeeded
+# 3: 1 if batch-uploading failed
+# 4: 1 if taking picture
+# 5: 1 if taking picture failed
+# 6: 1 if taking picture succeeded
+# 7: 1 if trip active
+# 8:
+
 class SendtoArduino:
     ONLINE = 0
+    BATCH_UPLOADING = 1
+    BATCH_UPLOADING_SUCCESS = 2
+    BATCH_UPLOADING_FAILED = 3
+    TAKING_PICTURE = 4
+    TAKING_PICTURE_FAILED = 5
+    TAKING_PICTURE_SUCCESS = 6
+    TRIP_ACTIVE = 7
     """
     Class to ease sending the state of the appliction to the Arduino.
     """
@@ -56,6 +74,55 @@ class SendtoArduino:
         :param value: True or False, depending on whether a connection is available
         """
         self.set_status(SendtoArduino.ONLINE, value)
+
+    def set_batch_uploading_status(self, value):
+        """
+        Sets the batch uploading status in the state string.
+        :param value: True or False, depending on whether batch uploading or not
+        """
+        self.set_status(SendtoArduino.BATCH_UPLOADING, value)
+
+    def set_batch_uploading_success_status(self, value):
+        """
+        Sets the batch uploading success status in the state string.
+        :param value: True or False, depending on whether batch uploading succeeded or not
+        """
+        self.set_status(SendtoArduino.BATCH_UPLOADING_SUCCESS, value)
+
+    def set_batch_uploading_status_failed(self, value):
+        """
+        Sets the batch uploading failure status in the state string.
+        :param value: True or False, depending on whether batch uploading failed or not
+        """
+        self.set_status(SendtoArduino.BATCH_UPLOADING_FAILED, value)
+
+    def set_taking_picture_status(self, value):
+        """
+        Sets the taking picture status in the state string.
+        :param value: True or False, depending on whether taking a picture or not
+        """
+        self.set_status(SendtoArduino.TAKING_PICTURE, value)
+
+    def set_taking_picture_success_status(self, value):
+        """
+        Sets the taking picture success status in the state string.
+        :param value: True or False, depending on whether taking a picture succeeded or not
+        """
+        self.set_status(SendtoArduino.TAKING_PICTURE_SUCCESS, value)
+
+    def set_taking_picture_failed_status(self, value):
+        """
+        Sets the taking picture failure status in the state string.
+        :param value: True or False, depending on whether taking a picture failed or not
+        """
+        self.set_status(SendtoArduino.TAKING_PICTURE_FAILED, value)
+
+    def set_trip_active_status(self, value):
+        """
+        Sets the active trip status in the state string.
+        :param value: True or False, depending on whether a trip is going on or not
+        """
+        self.set_status(SendtoArduino.TRIP_ACTIVE, value)
 
     def set_status(self, index, value):
         """

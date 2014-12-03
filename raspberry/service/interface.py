@@ -30,6 +30,15 @@ class Interface:
 
     def update_state(self):
         self.send_to_arduino.set_online_status(self.has_internet_connection())
+        self.send_to_arduino.set_batch_upload_status(self.batch_uploading)
+        #@TODO: batch upload result states
+        self.send_to_arduino.set_batch_upload_success_status(False)
+        self.send_to_arduino.set_batch_upload_failed_status(False)
+        self.send_to_arduino.set_taking_picture_status(self.taking_picture)
+        #@TODO: picture result states
+        self.send_to_arduino.set_taking_picture_success_status(False)
+        self.send_to_arduino.set_taking_picture_failed_status(False)
+        self.send_to_arduino.set_active_trip_status(self.app.has_active_trip())
 
     def has_internet_connection(self):
         return self.app.has_connection()
