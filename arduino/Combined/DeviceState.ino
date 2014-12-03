@@ -111,10 +111,45 @@ void setTripLED(boolean value){
   digitalWrite(ACTIVE_TRIP_LED, value);
 }
 
+int batch_success_start = 0;
+int batch_failed_start = 0;
+int picture_success_start = 0;
+int picture_failed_start = 0;
 /*
 A new state string has been received, so the status of the LEDs should be updated.
 */
 void patternUpdated(){
+  if(getBatchSuccess()){
+    batch_success_start = millis();
+  }
+  if(getBatchFailed()){
+    batch_failed_start = millis();
+  }
+  if(getPictureSuccess()){
+    picture_success_start = millis();
+  }
+  if(getPictureFailed()){
+    picture_failed_start = millis();
+  }
+}
+const int batch_result_notification_time = 2000;
+const int picture_result_notification_time = 2000;
+boolean getBatchSuccessLED(){
+  return millis() - batch_success_start <= batch_result_notification_time;
+}
+boolean getBatchFailedLED(){
+  return millis() - batch_failed_start <= batch_result_notification_time;
+}
+boolean getPictureSuccessLED(){
+  return millis() - picture_success_start <= picture_result_notification_time;
+}
+boolean getPictureFailedLED(){
+  return millis() - picture_failed_start <= picture_result_notification_time;
+}
+/*
+Update LEDs depending on status.
+*/
+void updateLEDs(){
   if(getOnline()){
     setConnectionLED(true);
   }else{
@@ -123,19 +158,19 @@ void patternUpdated(){
   if(getBatchUploading()){
     setBatchLED(BLUE);
   }
-  if(getBatchSuccess()){
+  if(getBatchSuccessLED()){
     setBatchLED(GREEN);
   }
-  if(getBatchFailed()){
+  if(getBatchFailedLED()){
     setBatchLED(RED);
   }
   if(getTakingPicture()){
     setPictureLED(BLUE);
   }
-  if(getPictureSuccess()){
+  if(getPictureSuccessLED()){
     setPictureLED(GREEN);
   }
-  if(getPictureFailed()){
+  if(getPictureFailedLED()){
     setPictureLED(RED);
   }
   if(getTripActive()){
@@ -169,4 +204,5 @@ void readState(){
     current_receive_index %= PATTERN_LENGTH;
     check_pattern();
   }
+  updateLEDs();
 }
