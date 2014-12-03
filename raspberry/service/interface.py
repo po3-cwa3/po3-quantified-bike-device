@@ -28,22 +28,24 @@ class Interface:
         else:
             self.app.start_trip(self.live_mode)
 
-    def update_state(self):
+    def update_state(self, picture_failed=False, picture_succeeded=False, batch_failed=False, batch_succeeded=False):
         self.send_to_arduino.set_online_status(self.has_internet_connection())
         self.send_to_arduino.set_batch_upload_status(self.batch_uploading)
         #@TODO: batch upload result states
-        self.send_to_arduino.set_batch_upload_success_status(False)
-        self.send_to_arduino.set_batch_upload_failed_status(False)
+        self.send_to_arduino.set_batch_upload_success_status(batch_succeeded)
+        self.send_to_arduino.set_batch_upload_failed_status(batch_failed)
         self.send_to_arduino.set_taking_picture_status(self.taking_picture)
         #@TODO: picture result states
-        self.send_to_arduino.set_taking_picture_success_status(False)
-        self.send_to_arduino.set_taking_picture_failed_status(False)
+        self.send_to_arduino.set_taking_picture_success_status(picture_succeeded)
+        self.send_to_arduino.set_taking_picture_failed_status(picture_failed)
         self.send_to_arduino.set_active_trip_status(self.app.has_active_trip())
+        self.send_to_arduino.send_status()
 
     def has_internet_connection(self):
         return self.app.has_connection()
 
     def batch_upload(self):
+        self.update_state()
         disabled_trips = set()
         if self.app.get_data_store().current_trip is not None:
             disabled_trips.add(self.app.get_trip_id())
@@ -55,6 +57,10 @@ class Interface:
             b.socket.wait_for_callbacks(seconds=1)
         print "batch finished"
         self.batch_uploading = False
+        if b.success:
+            self.update_state(batch_succeeded=True)
+        else:
+            self.update_state(batch_succeeded=False)
 
     def picture_button_pressed(self):
         print("picture button pressed")
@@ -80,9 +86,14 @@ class Interface:
         t.start()
 
     def take_picture(self):
-        print("in take_picture")
-        photo_id = images.take_photo()
-        print("photo taken")
-        self.app.get_data_store().add_image(photo_id)
-        print("record added")
-        self.taking_picture = False
+        try:
+            self.update_state()
+            print("in take_picture")
+            photo_id = images.take_photo()
+            print("photo taken")
+            self.app.get_data_store().add_image(photo_id)
+            print("record added")
+            self.taking_picture = False
+            self.update_state(picture_failed=True)
+        except:
+            self.update_state(picture_failed=False)

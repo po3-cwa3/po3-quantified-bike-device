@@ -35,7 +35,7 @@ accelero_sensor = sensor_reader.AcceleroSensor(app)
 bpm_sensor = sensor_reader.BPMSensor(sc, app)
 
 # Enable SendToArduino
-sendtoard.start()
+#sendtoard.start()
 # Class managing user interaction
 interface = interface.Interface(sc, app, sendtoard)
 

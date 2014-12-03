@@ -44,29 +44,32 @@ class SendtoArduino:
     def get_string(self):
         return ''.join(['1' if x else '0' for x in self.current_status])
 
-    def start(self):
-        """
-        Initializes the thread continuously sending the state information to the Arduino.
-        """
-        self.status = True
-        self.thread = threading.Thread(name="SendtoArduino",target=self.send)
-        self.thread.start()
+    # def start(self):
+    #     """
+    #     Initializes the thread continuously sending the state information to the Arduino.
+    #     """
+    #     self.status = True
+    #     self.thread = threading.Thread(name="SendtoArduino",target=self.send)
+    #     self.thread.start()
         
     def stop(self):
         """
         Stop the thread that continuously sends the state information to the Arduino.
         """
         self.status = False
+    def send_status(self):
+        tosend = self.pattern + self.get_string()
+        self.serial.write(tosend)
 
-    def send(self):
-        """
-        This function is executed in the SendToArduino thread.
-        """
-        while self.status:
-            #Always send the pattern concatenated with the state string to the Arduino
-            tosend = self.pattern + self.get_string()
-            self.serial.write(tosend)
-            time.sleep(1)
+    # def send(self):
+    #     """
+    #     This function is executed in the SendToArduino thread.
+    #     """
+    #     while self.status:
+    #         #Always send the pattern concatenated with the state string to the Arduino
+    #         tosend = self.pattern + self.get_string()
+    #         self.serial.write(tosend)
+    #         time.sleep(1)
 
     def set_online_status(self, value):
         """
