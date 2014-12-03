@@ -13,7 +13,7 @@ sc.start()
 # SentToArduino enables the application to send data to the Arduino
 sendtoard = sendtoarduino.SendtoArduino(sc)
 # The application initializes the main thread that manages the connection and data store
-app = application.Application("cwa3", "r0463107",sendtoard)
+app = application.Application("cwa3", "r0463107")
 # initialize server connection thread (connects if a Internet connection is available)
 #conn = connection.Connection(app, "dali.cs.kuleuven.be", 8080)
 
