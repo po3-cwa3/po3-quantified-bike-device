@@ -1,3 +1,4 @@
 images/*
+config.py
 error.log
 error.batchupload.log
