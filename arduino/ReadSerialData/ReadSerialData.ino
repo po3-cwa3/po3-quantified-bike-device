@@ -1,6 +1,6 @@
-const int redPin = 16;
-const int greenPin = 15;
-const int bluePin = 14;
+const int redPin = 18;
+const int greenPin = 17;
+const int bluePin = 16;
 void setup(){
   pinMode(redPin, OUTPUT);
   pinMode(greenPin, OUTPUT);
@@ -22,9 +22,9 @@ void check_pattern(){
       current_pattern[i-current_receive_index-10] = currently_received[i%PATTERN_LENGTH];
     }
   }
-  analogWrite(redPin, (current_pattern[0]=='1')?255:0);
-  analogWrite(greenPin, (current_pattern[1]=='1')?255:0);
-  analogWrite(bluePin, (current_pattern[2]=='1')?255:0);
+  digitalWrite(redPin, (current_pattern[0]=='1')?255:0);
+  digitalWrite(greenPin, (current_pattern[1]=='1')?255:0);
+  digitalWrite(bluePin, (current_pattern[2]=='1')?255:0);
 }
 void loop(){
   if(Serial.available() > 0){

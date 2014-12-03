@@ -1,10 +1,28 @@
 /*
 Device State reads the state string from the RPi and displays the state by using the LEDs.
 */
-const int redPin = 18;
-const int greenPin = 17;
-const int bluePin = 16;
+#define CONNECTION_LED_BLUE 16
+#define CONNECTION_LED_GREEN 17
+#define CONNECTION_LED_RED 18
 
+#define PICTURE_LED_BLUE 6
+#define PICTURE_LED_GREEN 9
+#define PICTURE_LED_RED 11
+
+#define ACTIVE_TRIP_LED 5
+
+/*
+State string:
+0: 1 if a connection is available
+1: 1 if batch-uploading
+2: 1 if batch-uploading succeeded
+3: 1 if batch-uploading failed
+4: 1 if taking picture
+5: 1 if taking picture failed
+6: 1 if taking picture succeeded
+7: 1 if trip active
+8:
+*/
 /*
 Initialize the LEDs
 */
