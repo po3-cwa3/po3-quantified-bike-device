@@ -16,9 +16,6 @@ brand tijdens foto nemen, knippert 3 keer als succesvol
 led3 (rgb)
 groen indien geen connectie
 rood indien wel connectie
-brand enkel tijdens trip?
-
-led4 (rgb)
-blauw indien geen connectie
-groen indien batch-upload gelukt
-rood indien batch-upload niet gelukt
+blauw tijdens batch-upload
+knippert rood als batch-upload mislukt is
+knippert groen als batch-upload gelukt is
