@@ -3,6 +3,7 @@ __author__ = 'fkint'
 import MySQLdb
 import json
 import images
+import config
 
 
 class DataStore:
@@ -17,7 +18,7 @@ class DataStore:
         self.application = app;
         self.current_trip = None
         # Initialize the connection to the local Database
-        self.database = DatabaseConnection('localhost', 'QB_CWA3', 'CEeT9cPFSnPExMzQ', 'QuantifiedBike')
+        self.database = DatabaseConnection(config.local_host, config.local_database_username, config.local_database_password, config.local_database_name)
 
     def start_trip(self, live):
         """
