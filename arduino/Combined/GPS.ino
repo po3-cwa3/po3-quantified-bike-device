@@ -8,11 +8,13 @@
 // Configuration based on the examples in the Adafruit_GPS library
 #define GPS_UPDATE_INTERVAL 2000
 // GPS interrupt
-unsigned int current_value_gps = 0;
 SIGNAL(TIMER0_COMPA_vect) {
   char c = GPS.read();
 }
 
+/*
+Initialize the GPS
+*/
 void setupGPS(){
   GPS.begin(9600);
   GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);//Recommended minimum + fix data (including altitude)
@@ -23,6 +25,8 @@ void setupGPS(){
   TIMSK0 |= _BV(OCIE0A);//enable B
   mySerial.println(PMTK_Q_RELEASE);
 }
+
+
 uint32_t last_gps_data_time = millis();
 
 //checks if new GPS data is available and processes it
@@ -31,8 +35,6 @@ void readGPSData(){
     if(!GPS.parse(GPS.lastNMEA())){ // can this data be parsed? (also sets newNMEAreceived to false)
       return;
     }
-  }else{
-    //return;
   }
   if(last_gps_data_time > millis()) last_gps_data_time = millis();
   if(millis()-last_gps_data_time < GPS_UPDATE_INTERVAL){

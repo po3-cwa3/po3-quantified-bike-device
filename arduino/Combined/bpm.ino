@@ -10,6 +10,9 @@ volatile int IBI = 600;
 volatile boolean Pulse = false;
 volatile boolean QS = false;
 
+/*
+Initialize the pulse sensor.
+*/
 void setupBPM(){
 }
 uint32_t last_bpm_time = millis();
@@ -24,7 +27,9 @@ volatile int amp = 100;                   // used to hold amplitude of pulse wav
 volatile boolean firstBeat = true;        // used to seed rate array so we startup with reasonable BPM
 volatile boolean secondBeat = false;      // used to seed rate array so we startup with reasonable BPM
 
-
+/*
+Try to calculate a new BPM value.
+*/
 void process(){
   Signal = analogRead(PIN_PULSE);              // read the Pulse Sensor 
   uint32_t interval;
@@ -109,6 +114,10 @@ void process(){
     secondBeat = false;                    // when we get the heartbeat back
   }
 }
+
+/*
+Tries to calculate a new BPM value and sends it to the Raspberry if available.
+*/
 void readBPM(){
   process();
   if (QS == true){                      

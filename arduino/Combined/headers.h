@@ -12,10 +12,12 @@ void readGPSData();
 void setupTempHumi();
 void setupBPM();
 void setupHall();
+void setupStateHandler();
 
 void setupButtons();
 void readButtons();
 void readTempHumi();
 void readBPM();
 void readHall();
+void readState();
 #endif

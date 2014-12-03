@@ -28,6 +28,10 @@ AP03: Device State multicolor led 1 (green pin)
 AP04: Device State multicolor led 1 (red pin)
 AP05:
 **/
+
+/*
+Initializes all modules of the Arduino code
+*/
 void setup(){
   Serial.begin(115200);
   setupButtons();
@@ -36,17 +40,16 @@ void setup(){
   setupHall();
   setupBPM();
   setupStateHandler();
-  //digitalWrite(9, LOW);
-  //delay(1000);
 }
+/*
+Execute code for each of the modules.
+*/
 void loop(){
-  //Serial.println("in loop");
   readButtons();
   readGPSData();
   readTempHumi();
   readBPM();
   readHall();
   readState();
-  //delay(1);
 }
   

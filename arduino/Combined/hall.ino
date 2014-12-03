@@ -7,14 +7,20 @@ long time = 0;
 //Configuration is easier on the RPi, so let the RPi calculate the real speed.
 float radius = 1.0; 
 
+/*
+Initializes the Hall Sensor.
+*/
 void setupHall(){
    attachInterrupt(0, counting, RISING);
 }
 
+/*
+Sends any new data from the hall sensor to the Raspberry Pi.
+*/
 void readHall(){
    if (counter >= 5) {
      distance = counter*2*radius*0.01*3.14;
-     velocity = (distance/(millis()-time))*3600; //in km/u
+     velocity = (distance/(millis()-time))*3600; //in kmph
      time = millis();
      counter = 0;
      Serial.print("v;");
