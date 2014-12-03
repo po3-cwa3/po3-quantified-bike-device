@@ -2,8 +2,8 @@ import json
 import time
 import logging
 import threading
-import sendtoarduino
 import datetime
+
 from socketIO_client import SocketIO
 
 
@@ -17,7 +17,7 @@ class Connection:
     This class manages the connection to the remote server using Websockets.
     It uses the modue socketIO_client.SocketIO.
     """
-    def __init__(self, application, server, port, sendtoarduino):
+    def __init__(self, application, server, port):
         """
         Initializes the connection object.
         @param application: a reference to the current application object that manages the main thread.
@@ -26,7 +26,6 @@ class Connection:
         @param sendtoarduino: the object that keeps track of the state and sends it to the Arduino (used to inform the user wether the socket is connected).
         """
         self.application = application
-        self.sendtoarduino = sendtoarduino
         self.server = server
         self.port = port
         self.connection_opened = False
@@ -134,9 +133,7 @@ class Connection:
             if self.has_connection():
                 self.socket.wait(.5)
                 # Notify the Arduino that a network connection is available.
-                self.sendtoarduino.online()
             else:
-                self.sendtoarduino.offline()
                 try:
                     # No connection is available, try to initialize one
                     self.open_connection()
