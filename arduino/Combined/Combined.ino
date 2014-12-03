@@ -6,9 +6,9 @@
 
 
 /**
-DP00: Hall sensor
+DP00:
 DP01:
-DP02:
+DP02: Hall sensor
 DP03:
 DP04: Software Serial GPS (TX)
 DP05:
