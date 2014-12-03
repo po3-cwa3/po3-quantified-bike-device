@@ -31,7 +31,6 @@ class Interface:
     def update_state(self):
         self.send_to_arduino.set_online_status(self.has_internet_connection())
 
-
     def has_internet_connection(self):
         return self.app.has_connection()
 

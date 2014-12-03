@@ -122,3 +122,6 @@ class Application:
         :param ui: a reference to the interface instance.
         """
         self.ui = ui
+
+    def has_connection(self):
+        return self.connection.has_connection()
