@@ -1,9 +1,11 @@
 /*
 Device State reads the state string from the RPi and displays the state by using the LEDs.
 */
-#define CONNECTION_LED_BLUE 16
-#define CONNECTION_LED_GREEN 17
-#define CONNECTION_LED_RED 18
+#define CONNECTION_LED 3
+
+#define BATCH_LED_BLUE 16
+#define BATCH_LED_GREEN 17
+#define BATCH_LED_RED 18
 
 #define PICTURE_LED_BLUE 6
 #define PICTURE_LED_GREEN 9
@@ -11,6 +13,9 @@ Device State reads the state string from the RPi and displays the state by using
 
 #define ACTIVE_TRIP_LED 5
 
+const boolean GREEN[] = {false, true, false};
+const boolean RED[] = {true, false, false};
+const boolean BLUE[] = {false, false, true};
 /*
 State string:
 0: 1 if a connection is available
@@ -27,9 +32,14 @@ State string:
 Initialize the LEDs
 */
 void setupStateHandler(){
-  pinMode(redPin, OUTPUT);
-  pinMode(greenPin, OUTPUT);
-  pinMode(bluePin, OUTPUT);
+  pinMode(CONNECTION_LED, OUTPUT);
+  pinMode(BATCH_LED_BLUE, OUTPUT);
+  pinMode(BATCH_LED_GREEN, OUTPUT);
+  pinMode(BATCH_LED_RED, OUTPUT);
+  pinMode(PICTURE_LED_BLUE, OUTPUT);
+  pinMode(PICTURE_LED_GREEN, OUTPUT);
+  pinMode(PICTURE_LED_RED, OUTPUT);
+  pinMode(ACTIVE_TRIP_LED, OUTPUT);
 }
 #define PATTERN_LENGTH 19
 //buffer containing the latest PATTERN_LENGTH characters
@@ -41,15 +51,99 @@ int current_receive_index = 0;
 char pattern_check[] = "1111100000";
 char current_pattern[] = "000000000";
 
+boolean getOnline(){
+  return current_pattern[0] == '1';
+}
+
+boolean getBatchUploading(){
+  return current_pattern[1] == '1';
+}
+
+boolean getBatchSuccess(){
+  return current_pattern[2] == '1';
+}
+
+boolean getBatchFailed(){
+  return current_pattern[3] == '1';
+}
+
+boolean getTakingPicture(){
+  return current_pattern[4] == '1';
+}
+
+boolean getPictureFailed(){
+  return current_pattern[5] == '1';
+}
+
+boolean getPictureSuccess(){
+  return current_pattern[6] == '1';
+}
+
+boolean getTripActive(){
+  return current_pattern[7] == '1';
+}
+
+
+/*
+Sets the picture taking LED.
+*/
+void setPictureLED(const boolean values[]){
+  digitalWrite(PICTURE_LED_RED, values[0]);
+  digitalWrite(PICTURE_LED_GREEN, values[1]);
+  digitalWrite(PICTURE_LED_BLUE, values[2]);
+}/*
+Sets the batch uploading LED.
+*/
+void setBatchLED(const boolean values[]){
+  digitalWrite(BATCH_LED_RED, values[0]);
+  digitalWrite(BATCH_LED_GREEN, values[1]);
+  digitalWrite(BATCH_LED_BLUE, values[2]);
+}
+/*
+Sets the connection LED.
+*/
+void setConnectionLED(boolean value){
+  digitalWrite(CONNECTION_LED, value);
+}/*
+Sets the active trip LED.
+*/
+void setTripLED(boolean value){
+  digitalWrite(ACTIVE_TRIP_LED, value);
+}
+
 /*
 A new state string has been received, so the status of the LEDs should be updated.
 */
 void patternUpdated(){
-  analogWrite(redPin, (current_pattern[0]=='1')?255:0);
-  analogWrite(greenPin, (current_pattern[1]=='1')?255:0);
-  analogWrite(bluePin, (current_pattern[2]=='1')?255:0);
+  if(getOnline()){
+    setConnectionLED(true);
+  }else{
+    setConnectionLED(false);
+  }
+  if(getBatchUploading()){
+    setBatchLED(BLUE);
+  }
+  if(getBatchSuccess()){
+    setBatchLED(GREEN);
+  }
+  if(getBatchFailed()){
+    setBatchLED(RED);
+  }
+  if(getTakingPicture()){
+    setPictureLED(BLUE);
+  }
+  if(getPictureSuccess()){
+    setPictureLED(GREEN);
+  }
+  if(getPictureFailed()){
+    setPictureLED(RED);
+  }
+  if(getTripActive()){
+    setTripLED(true);
+  }else{
+    setTripLED(false);
+  }
 }
-
 /*
 Check if there is a state string in the received data.
 */
