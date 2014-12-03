@@ -10,8 +10,10 @@ import images
 #it sends all data to the data-store
 
 class Interface:
-    def __init__(self, serial, app):
+    def __init__(self, serial, app, send_to_arduino):
         self.app = app
+        self.app.set_interface(self)
+        self.send_to_arduino = send_to_arduino
         self.taking_picture = False
         self.batch_uploading = False
         self.trip_button = sensor_reader.PushButton(serial, self.trip_button_pressed, "PB1")
@@ -26,8 +28,12 @@ class Interface:
         else:
             self.app.start_trip(self.live_mode)
 
+    def update_state(self):
+        self.send_to_arduino.set_online_status(self.has_internet_connection())
+
+
     def has_internet_connection(self):
-        return True
+        return self.app.has_connection()
 
     def batch_upload(self):
         disabled_trips = set()
@@ -41,7 +47,6 @@ class Interface:
             b.socket.wait_for_callbacks(seconds=1)
         print "batch finished"
         self.batch_uploading = False
-    
 
     def picture_button_pressed(self):
         print("picture button pressed")
@@ -51,7 +56,6 @@ class Interface:
         self.taking_picture = True
         t = threading.Thread(target=self.take_picture)
         t.start()
-
 
     def batch_button_pressed(self):
         print "batch button pressed"
@@ -67,43 +71,10 @@ class Interface:
         t = threading.Thread(target=self.batch_upload)
         t.start()
 
-    # def batch_button_pressed(self):
-    #     print("batch button pressed")
-    #     if self.app.connection_opened and self.app.socket.connection:
-    #         try:
-    #             batch=batch_upload.BatchUpload
-    #             batch.start()
-    #             while not batch.ready:
-    #                 #led uit
-    #             while batch.done:
-    #                 #led Groen
-    #             #led uit
-    #         except:
-    #             #led Rood
-    #             #delay
-    #             #led uit
-    #     else:
-    #         #led Blauw
-
-
     def take_picture(self):
         print("in take_picture")
         photo_id = images.take_photo()
         print("photo taken")
         self.app.get_data_store().add_image(photo_id)
-        #if self.live_mode:
-        #    filename = images.send_to_server(photo_id, self.app.get_trip_id(), self.app.get_user_id())
-        #else:
-        #    self.app.get_data_store().
-
-        # record = [{
-        # 	"sensorID": 8,
-        # 	"timestamp": datetime.datetime.fromtimestamp(time.time()).strftime(
-        # 		'%Y-%m-%d %H:%M:%S'),
-        # 	"data": [{"value": filename}]
-        # 	}]
-        #self.app.data_store.add_record(record)
         print("record added")
         self.taking_picture = False
-
-

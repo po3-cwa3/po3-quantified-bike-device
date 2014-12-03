@@ -34,37 +34,11 @@ accelero_sensor = sensor_reader.AcceleroSensor(app)
 # SerialSensor for the Pulse Sensor
 bpm_sensor = sensor_reader.BPMSensor(sc, app)
 
+# Enable SendToArduino
+sendtoard.start()
 # Class managing user interaction
-interface = interface.Interface(sc, app)
+interface = interface.Interface(sc, app, sendtoard)
 
 # Start the main thread
 app.start()
 
-# Enable SendToArduino
-#sendtoard.start()
-
-#
-# import time, images, threading, datetime
-#
-# time.sleep(2);
-# app.start_trip(True)
-# time.sleep(2)
-#
-# def tmp_picture():
-#     filename = images.send_to_server("img", app.get_trip_id(), app.get_user_id())
-#     print("filename = "+filename)
-#     record = [{
-#         "sensorID": 8,
-#         "timestamp": datetime.datetime.fromtimestamp(time.time()).strftime(
-#             '%Y-%m-%d %H:%M:%S'),
-#         "data": [{"value": filename}]
-#         }]
-#     app.data_store.add_record(record)
-#     print("record added")
-#
-# t = threading.Thread(target=tmp_picture)
-# t.start()
-#
-# time.sleep(5)
-# print("stopping app")
-# app.stop()

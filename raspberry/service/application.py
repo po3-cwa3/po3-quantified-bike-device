@@ -29,6 +29,7 @@ class Application:
         # self.connection manages the connection to the remote server
         self.connection = connection.Connection(self, "dali.cs.kuleuven.be", 8080, self.sendtoarduino)
         self.active = False
+        self.ui = None
         self.thread = None
 
     # def action(self):
@@ -36,7 +37,7 @@ class Application:
 
     def has_active_trip(self):
         """
-        returns wether a trip is going on
+        returns whether a trip is going on
         """
         return self.data_store.current_trip is not None
 
@@ -76,7 +77,7 @@ class Application:
         Stops the main thread and the connections.
         """
         self.connection.stop_trip()
-        time.sleep(2);
+        time.sleep(2)
         self.active = False
         self.connection.close_connection()
         self.data_store.send_data()
@@ -100,6 +101,7 @@ class Application:
         """
         while self.active:
             self.data_store.send_data()
+            self.ui.update_state()
             time.sleep(.1)
 
     def get_trip_id(self):
@@ -113,3 +115,10 @@ class Application:
         Returns the user_id the application has been initialized with.
         """
         return self.user_id
+
+    def set_interface(self, ui):
+        """
+        Sets the reference to the interface.
+        :param ui: a reference to the interface instance.
+        """
+        self.ui = ui

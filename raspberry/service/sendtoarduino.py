@@ -4,13 +4,14 @@ import serial_connection
 
 
 class SendtoArduino:
+    ONLINE = 0
     """
     Class to ease sending the state of the appliction to the Arduino.
     """
     def __init__(self, serial):
         """
         Initializes the object.
-        @param serial: the SerialConnection object used to communicate with the serial device.
+        :param serial: the SerialConnection object used to communicate with the serial device.
         """
         self.serial = serial
         # The initial state (of length 9)
@@ -18,7 +19,7 @@ class SendtoArduino:
         # The pattern preceding the state string (of length 9+1 = 10)
         # This pattern is used so there is no ambiguity for the Arduino about which part of the data contains the state string.
         self.pattern = '1111100000'
-        self.status = True
+        self.status = False
         self.thread = None
         self.tosend = None
 
@@ -26,6 +27,7 @@ class SendtoArduino:
         """
         Initializes the thread continuously sending the state information to the Arduino.
         """
+        self.status = True
         self.thread = threading.Thread(name="SendtoArduino",target=self.send)
         self.thread.start()
         
@@ -45,25 +47,21 @@ class SendtoArduino:
             self.serial.write(tosend)
             time.sleep(1)
 
-    def online(self):
+    def set_online_status(self, value):
         """
-        Sets the online bit in the state string to 1.
+        Sets the online status in the state string.
+        :param value: True or False, depending on whether a connection is available
         """
-        self.replace(0,'1')
+        self.set_status(SendtoArduino.ONLINE, value)
 
-    def offline(self):
+    def set_status(self, index, value):
         """
-        Sets the online bit in the state string to 0
+        Sets the status bit at index in the state string.
+        :param index: the index of the bit that has to be set
+        :param value: the value of the bit that has to be set (True or False)
         """
-        self.replace(0,'0')
+        self.string[index] = '1' if value else '0'
 
-    def replace(self,place,char):
-        """
-        Sets the bit at place in the state string to char.
-        """
-        lst = list(self.string)
-        lst[place]=char
-        self.string = ''.join(lst)
 
 # Debugging code
 if __name__ == "__main__":
