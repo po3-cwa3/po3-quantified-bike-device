@@ -8,8 +8,13 @@ import serial_connection
 
 
 # Some configuration for the Accelero sensor on the Raspberry Pi itself
-XLoBorg.printFunction = XLoBorg.NoPrint
-XLoBorg.Init()
+xloborg_found = False
+try:
+    XLoBorg.printFunction = XLoBorg.NoPrint
+    XLoBorg.Init()
+    xloborg_found = True
+except:
+    print "XLoBorg not found"
 
 __author__ = 'fkint'
 
@@ -69,7 +74,8 @@ class AcceleroSensor(SensorReader):
         """
         SensorReader.__init__(self, app.data_store)
         self.application = app
-
+        if not xloborg_found:
+            return
         #Initialize a thread that constantly reads the data from the XyBorg sensor
         self.thread = threading.Thread(name="AccelleroSensor", target=self.action)
         self.thread.start()
