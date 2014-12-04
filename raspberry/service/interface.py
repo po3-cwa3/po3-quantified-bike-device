@@ -130,6 +130,6 @@ class Interface:
             self.app.get_data_store().add_image(photo_id)
             print("record added")
             self.taking_picture = False
-            self.update_state(picture_failed=True)
+            self.update_state(picture_success=True)
         except:
-            self.update_state(picture_failed=False)
+            self.update_state(picture_failed=True)
