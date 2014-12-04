@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 04, 2014 at 02:16 AM
+-- Generation Time: Dec 04, 2014 at 10:57 AM
 -- Server version: 5.5.40-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.5
 
@@ -47,6 +47,7 @@ DROP TABLE IF EXISTS `Images`;
 CREATE TABLE IF NOT EXISTS `Images` (
   `Trip` int(11) NOT NULL,
   `ImageName` varchar(100) NOT NULL,
+  `Timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   KEY `Trip` (`Trip`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
