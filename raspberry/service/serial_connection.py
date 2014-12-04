@@ -26,14 +26,6 @@ class SerialConnection:
         """
         self.listeners.add(listener)
 
-    #@TODO: remote send_data or write
-    def send_data(self, data):
-        """
-        Send data to the Arduino.
-        :param data: data that will be sent to the Arduino.
-        """
-        self.ser.write(self, data)
-
     def action(self):
         """
         This method is executed in the Serial Thread.

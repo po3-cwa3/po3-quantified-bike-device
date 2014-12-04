@@ -2,6 +2,7 @@ import threading
 import time
 import random
 import datetime
+import config
 
 import XLoBorg
 import serial_connection
@@ -28,21 +29,7 @@ class SensorReader:
         """
         Initialize the SensorReader by storing a reference to the data_store.
         """
-        self.active = False
         self.set_data_store(data_store)
-
-    #@TODO: the active flag is not used. Will we use it or remote this code?
-    def start(self):
-        """
-        Start the sensor. This means that from now on, as soon as data is received, the data will be processed.
-        """
-        self.active = True
-
-    def stop(self):
-        """
-        Stop the sensor. This means that from now on, all received data will be ignored.
-        """
-        self.active = False
 
     def set_data_store(self, store):
         """
@@ -84,7 +71,7 @@ class AcceleroSensor(SensorReader):
         """
         This function is executed in the AcceleroSensor thread.
         """
-        while (True):
+        while True:
             self.read()
             time.sleep(1)
 
@@ -167,8 +154,6 @@ class SerialSensor(SensorReader, serial_connection.SerialListener):
         """
         serial_connection.SerialListener.__init__(self, serial)
         SensorReader.__init__(self, application.data_store)
-        #@TODO: is self.application used somewhere?
-        self.application = application
 
 
 class HumiditySensor(SerialSensor):
@@ -190,11 +175,7 @@ class HumiditySensor(SerialSensor):
         """
         line = data
         #format: th;TT.tt;HH.hh
-        #data for the humidity sensor should be at least 10 characters long
-        if len(line) < 10:
-            return
         #This format is sent by the TH-sensor when an error occurred.
-        #@TODO: refactor this error message so it fits in the TH-format.
         if line[:10] == "Error No :":
             print("thermo sensor error: ", line)
             return
@@ -233,11 +214,7 @@ class ThermoSensor(SerialSensor):
         """
         line = data
         # format TH;TT.tt;HH.hh
-        # Only consider lines having at least length 10
-        if len(line) < 10:
-            return
         # Error message from the Temperature and Humidity Sensor
-        #@TODO: refactor this error message so it fits in the TH-format
         if line[:10] == "Error No :":
             print("thermo sensor error: ", line)
             return
@@ -276,9 +253,6 @@ class GPSSensor(SerialSensor):
         """
         line = data
         # Format: GPS;nofix or GPS;Lat;Long
-        # Only consider lines of length at least 9
-        if len(line) < 9:
-            return
         # Only consider lines with a matching identification pattern
         if line[:4] != "GPS;":
             return
@@ -320,9 +294,6 @@ class BPMSensor(SerialSensor):
         """
         line = data
         # Format: BPM;xx
-        # Only consider lines of length at least 5
-        if len(line) < 5:
-            return
         # Only consider lines with a matching identification pattern
         if line[:4] != "BPM;":
             return
@@ -358,17 +329,12 @@ class HallSensor(SerialSensor):
         """
         # Format: v;xx.xx
         line = data
-        #@TODO: remove all length as they make the code longer and not faster (also at other sensors)
-        # Only consider lines of at least length 6
-        if len(line) < 6:
-            return
         # Only consider lines with a matching identification pattern
         if line[:2] != "v;":
             return
 
         splitted = line.split(";")
-        #@TODO: multiply v by the radius (or diameter, needs check) of the wheel (store as value in config.py)
-        v = float(splitted[1])
+        v = float(splitted[1]) * config.wheel_radius
 
         hall_data = [{
                              "sensorID": 11,
@@ -436,9 +402,6 @@ class SwitchButton(serial_connection.SerialListener):
         :param data: the line received from the Arduino.
         """
         line = data
-        # Only consider lines with length strictly longer than the length of the identifier + 1 
-        if len(line) < len(self.identifier) + 2:
-            return
         # Only consider lines with a matching identification pattern
         if line[:len(self.identifier)+1] != self.identifier + ";":
             return
@@ -474,11 +437,7 @@ class PushButton(serial_connection.SerialListener):
         Processes data received from the Arduino.
         :param data: the line received from the Arduino.
         """
-        #print(data)
         line = data
-        # Only consider lines with length longer than the length of the identifer +2
-        if len(line) < len(self.identifier) + 2:
-            return
         # Only consider lines with a matching identification pattern
         if line[:len(self.identifier) + 1] != self.identifier + ";":
             return
