@@ -67,22 +67,25 @@ class DataStore:
             return
         if not self.current_trip.has_id():
             return
-        while self.current_trip.has_data():
-            #First send all sensor data that is available for the current trip
-            d = self.current_trip.next_data()
-            if self.current_trip.is_live():
-                self.get_connection().send_data(d, self.current_trip.get_id())
-            else:
-                self.get_database().send_data(d, self.current_trip.get_id())
-        while self.current_trip.has_images():
-            #Next send all images that are available for the current trip
-            d = self.current_trip.next_image()
-            if self.current_trip.is_live():
-                print "image starts uploading"
-                images.send_to_server(d, self.current_trip.get_id(), self.application.get_user_id())
-                print "image finished uploading"
-            else:
-                self.get_database().send_image(d, self.current_trip.get_id())
+        try:
+            while self.current_trip.has_data():
+                #First send all sensor data that is available for the current trip
+                d = self.current_trip.next_data()
+                if self.current_trip.is_live():
+                    self.get_connection().send_data(d, self.current_trip.get_id())
+                else:
+                    self.get_database().send_data(d, self.current_trip.get_id())
+            while self.current_trip.has_images():
+                #Next send all images that are available for the current trip
+                d = self.current_trip.next_image()
+                if self.current_trip.is_live():
+                    print "image starts uploading"
+                    images.send_to_server(d, self.current_trip.get_id(), self.application.get_user_id())
+                    print "image finished uploading"
+                else:
+                    self.get_database().send_image(d, self.current_trip.get_id())
+        except Exception as ex:
+            print "There was an error in send data", str(e)
 
     def get_connection(self):
         """
