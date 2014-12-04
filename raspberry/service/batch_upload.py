@@ -104,7 +104,7 @@ class BatchUpload:
         Checks if there's a trip left to be sent to the server.
         If one is available, it loads all sensor data stored in the local database.
         """
-        query = "SELECT * FROM TRIPS"
+        query = "SELECT * FROM Trips"
         cursor = self.db.cursor()
         cursor.execute(query)
         results = cursor.fetchall()
@@ -122,6 +122,7 @@ class BatchUpload:
             # The global trip data
             startTime = index[1]
             endTime = index[2]
+
             trip_data = {'startTime': startTime,# datetime.datetime.fromtimestamp(time.time()).strftime("%Y-%m-%d %H:%M:%S"),
                          'endTime': endTime, #datetime.datetime.fromtimestamp(time.time() + 1).strftime("%Y-%m-%d %H:%M:%S"),
                          'groupID': 'cwa3', 'userID': 'r0451433', 'sensorData': [], 'meta': {}}
@@ -136,7 +137,7 @@ class BatchUpload:
             self.current_trip_images = []
             # Add all image ids to current_trip_images
             for d in data:
-                self.current_trip_images.append((d[1], d[2]))
+                self.current_trip_images.append((d[0], d[1]))
             to_send.append(trip_data)
             # Clean images from database that will be set to the remote server
             query = "DELETE FROM Images WHERE Trip = " + str(int(index[0]))
@@ -157,59 +158,7 @@ class BatchUpload:
         print("json to send: " + str(json.dumps(to_send))[:100])
         self.socket.emit('batch-tripdata', json.dumps(to_send))
 
-
-    # def retrieve_data(self):
-    #     print "start batch upload"
-    #     # con = connection.Connection('dali.cs.kuleuven.be',8080)
-    #     #self.start_trip()
-    #     query = "SELECT * FROM Trips"
-    #     cursor = self.db.cursor()
-    #     cursor.execute(query)
-    #     results = cursor.fetchall()
-    #     to_send = []
-    #     imagelist=[]
-    #     for index in results:
-    #         print "will try to batch-upload trip ", index[0]
-    #         if int(index[0]) in self.disabled_trips:
-    #             continue
-    #         print "not disabled"
-    #         self.trips_left += 1
-    #         query = "SELECT * FROM Images WHERE Trip = " + str(int(index[0]))
-    #         cursor.execute(query)
-    #         data = cursor.fetchall()
-    #         for d in data:
-    #             print d
-    #             imagelist.append((d[1], str(int(index[0])), self.user_id))
-    #             #images.send_to_server(d[1], str(int(index[0])), self.user_id)
-    #         query = "DELETE FROM Images WHERE Trip = " + str(int(index[0]))
-    #         cursor.execute(query)
-    #         query = "SELECT * FROM Data WHERE Trip = " + str(int(index[0]))
-    #         cursor.execute(query)
-    #         data = cursor.fetchall()
-    #         trip_data = {'startTime': datetime.datetime.fromtimestamp(time.time()).strftime("%Y-%m-%d %H:%M:%S"),
-    #                      'endTime': datetime.datetime.fromtimestamp(time.time() + 1).strftime("%Y-%m-%d %H:%M:%S"),
-    #                      'groupID': 'cwa3', 'userID': 'r0451433', 'sensorData': [], 'meta': {}}
-    #         for d in data:
-    #             trip_data['sensorData'].append(json.loads(d[2]))
-    #         to_send.append(trip_data)
-    #         query = "DELETE FROM Data WHERE Trip = " + str(int(index[0]))
-    #         cursor.execute(query)
-    #         query = "DELETE FROM Trips Where Id = " + str(int(index[0]))
-    #         cursor.execute(query)
-    #         self.db.commit()
-    #     print("json to send: " + str(json.dumps(to_send))[:100])
-    #
-    #     f = open("error.batchupload.log", "a")
-    #     f.write("sending: " + str(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')))
-    #     f.write(str(json.dumps(to_send)))
-    #     f.write("\n\n\n\n")
-    #     f.close()
-    #     self.socket.emit('batch-tripdata', json.dumps(to_send))
-    #     t=threading.Thread(target=self.image_batch,args=(imagelist,))
-    #     t.start()
-    #     #time.sleep(5)
-
-    def image_batch(self,imagelist):
+    def image_batch(self, imagelist):
         """
         Sends the all images in imagelist to the remote server.
         :param imagelist: a list of tupples (photo_id, trip_id, user_id)
