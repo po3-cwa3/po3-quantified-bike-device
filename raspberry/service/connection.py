@@ -31,6 +31,7 @@ class Connection:
         self.connection_opened = False
         self.socket = None
         self.thread = None
+        self.trips_can_be_started = False
 
     def start(self):
         """
@@ -110,6 +111,7 @@ class Connection:
             print("saving data to database failed")
         elif u'Welcome' in parsed:
             print("Welcome! ")
+            self.trips_can_be_started = True
         else:
             print("error: ", str(parsed)[:100])
             f=open("error.log","a")
