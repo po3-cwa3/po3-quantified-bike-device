@@ -13,6 +13,8 @@ Device State reads the state string from the RPi and displays the state by using
 
 #define ACTIVE_TRIP_LED 5
 
+#define LIVE_LED 19
+
 const boolean GREEN[] = {false, true, false};
 const boolean RED[] = {true, false, false};
 const boolean BLUE[] = {false, false, true};
@@ -41,6 +43,7 @@ void setupStateHandler(){
   pinMode(PICTURE_LED_GREEN, OUTPUT);
   pinMode(PICTURE_LED_RED, OUTPUT);
   pinMode(ACTIVE_TRIP_LED, OUTPUT);
+  pinMode(LIVE_LED, OUTPUT);
 }
 #define PATTERN_LENGTH 19
 //buffer containing the latest PATTERN_LENGTH characters
@@ -84,6 +87,10 @@ boolean getTripActive(){
   return current_pattern[7] == '1';
 }
 
+boolean getLiveMode(){
+  return current_pattern[8] == '1';
+}
+
 
 /*
 Sets the picture taking LED.
@@ -110,6 +117,12 @@ Sets the active trip LED.
 */
 void setTripLED(boolean value){
   digitalWrite(ACTIVE_TRIP_LED, value);
+}
+/*
+Sets the live vs batch mode LED.
+*/
+void setLiveModeLED(boolean value){
+  digitalWrite(LIVE_LED, value);
 }
 
 int batch_success_start = 0;
@@ -151,12 +164,7 @@ boolean getPictureFailedLED(){
 Update LEDs depending on status.
 */
 void updateLEDs(){
-  Serial.println(current_pattern);
-  if(getOnline()){
-    setConnectionLED(true);
-  }else{
-    setConnectionLED(false);
-  }
+  setConnectionLED(getOnline());
   setBatchLED(BLACK);
   if(getBatchUploading()){
     setBatchLED(BLUE);
@@ -177,11 +185,8 @@ void updateLEDs(){
   if(getPictureFailedLED()){
     setPictureLED(RED);
   }
-  if(getTripActive()){
-    setTripLED(true);
-  }else{
-    setTripLED(false);
-  }
+  setTripLED(getTripActive());
+  setLiveModeLED(getLiveMode());
 }
 /*
 Check if there is a state string in the received data.

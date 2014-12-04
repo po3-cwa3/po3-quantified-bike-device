@@ -40,9 +40,11 @@ class Interface:
             self.app.stop_trip()
         else:
             self.app.start_trip(self.live_mode)
-            
+        self.update_state()
+
     def mode_button_pressed(self):
         self.live_mode = not self.live_mode
+        self.update_state()
 
     def update_state(self, picture_failed=False, picture_succeeded=False, batch_failed=False, batch_succeeded=False):
         """
@@ -85,10 +87,7 @@ class Interface:
             b.socket.wait_for_callbacks(seconds=1)
         print "batch finished"
         self.batch_uploading = False
-        if b.success:
-            self.update_state(batch_succeeded=True)
-        else:
-            self.update_state(batch_succeeded=False)
+        self.update_state(batch_succeeded=b.success)
 
     def picture_button_pressed(self):
         """

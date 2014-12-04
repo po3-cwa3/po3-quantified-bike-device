@@ -3,6 +3,7 @@
 #define PIN_BUTTON1 7
 #define PIN_BUTTON2 15
 #define PIN_BUTTON3 10
+#define PIN_BUTTON4 13
 
 /*
 Initialize buttons
@@ -11,6 +12,7 @@ void setupButtons(){
   pinMode(PIN_BUTTON1, INPUT);
   pinMode(PIN_BUTTON2, INPUT);
   pinMode(PIN_BUTTON3, INPUT);
+  pinMode(PIN_BUTTON4, INPUT);
 }
 
 uint32_t previous_button_time = millis();
@@ -28,4 +30,6 @@ void readButtons(){
   Serial.println(digitalRead(PIN_BUTTON2));
   Serial.print("PB3;");//normal button
   Serial.println(digitalRead(PIN_BUTTON3));
+  Serial.print("PB4;");
+  Serial.println(digitalRead(PIN_BUTTON4));
 }

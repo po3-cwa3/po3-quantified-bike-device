@@ -19,14 +19,14 @@ DP09: Picture Taking LED (LED 2, green pin)
 DP10: Button 3
 DP11: Picture Taking LED (LED 2, red pin)
 DP12: Software Serial GPS (RX)
-DP13:
+DP13: Live vs Batch trips Button
 
 AP00: Pulse sensor
 AP01: Button 2
 AP02: Device State multicolor LED (LED 3, blue pin)
 AP03: Device State multicolor LED (LED 3, green pin)
 AP04: Device State multicolor LED (LED 3, red pin)
-AP05:
+AP05: Live vs Batch LED (LED 4)
 **/
 
 /*
