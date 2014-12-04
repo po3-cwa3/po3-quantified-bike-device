@@ -1,5 +1,7 @@
 __author__ = 'fkint'
 
+import time
+import datetime
 import MySQLdb
 import json
 import images
@@ -13,7 +15,7 @@ class DataStore:
     def __init__(self, app):
         """
         Initializes the DataStore
-        @param app: a reference to the Application object this DataStore belongs to.
+        :param app: a reference to the Application object this DataStore belongs to.
         """
         self.application = app;
         self.current_trip = None
@@ -23,7 +25,7 @@ class DataStore:
     def start_trip(self, live):
         """
         Starts a new trip
-        @param live: if True, all data received for that trip will be sent to the remote server immediately. If false, all data be stored in the local database.
+        :param live: if True, all data received for that trip will be sent to the remote server immediately. If false, all data be stored in the local database.
         """
         t = Trip(live)
         self.current_trip = t
@@ -46,12 +48,14 @@ class DataStore:
         if self.current_trip.is_live():
             # If the trip is live, warn the remote server that we want to stop the trip.
             self.get_connection().stop_trip()
+        else:
+            self.get_database().stop_trip(self.current_trip.get_id())
         self.current_trip = None
 
     def trip_started(self, id):
         """
         This function is called when the creation of a new trip has been confirmed.
-        @param id: the id of the new trip (either an id for the remote server or an id for the local database.
+        :param id: the id of the new trip (either an id for the remote server or an id for the local database.
         """
         self.current_trip.set_id(id)
 
@@ -95,7 +99,7 @@ class DataStore:
     def add_record(self, data):
         """
         Temporarily store a record that will be sent to either the remote server or the local database when send_data is called.
-        @param data: the record data that should be stored.
+        :param data: the record data that should be stored.
         """
         if self.current_trip is None:
             print "no trip to add data"
@@ -105,7 +109,7 @@ class DataStore:
     def add_image(self, image_name):
         """
         Temporarily store information about an image that will be sent to either the remote server or the local database when send_data is called.
-        @param image_name: the id of the image that should be sent.
+        :param image_name: the id of the image that should be sent.
         """
         if self.current_trip is None:
             print "no trip to add image"
@@ -120,10 +124,10 @@ class DatabaseConnection:
     def __init__(self, hostname, username, password, database_name):
         """
         Initializes the connection to the local database.
-        @param hostname: the hostname of the local database
-        @param username: the username that should be used to connect to the local database
-        @param password: the password that should be used to connect to the local database
-        @param database_name: the name of the database in which all data is stored
+        :param hostname: the hostname of the local database
+        :param username: the username that should be used to connect to the local database
+        :param password: the password that should be used to connect to the local database
+        :param database_name: the name of the database in which all data is stored
         """
         self.hostname = hostname
         self.username = username
@@ -135,19 +139,32 @@ class DatabaseConnection:
     def start_trip(self, trip):
         """
         Adds a new trip to the local database.
-        @param trip: a reference to the Trip object. This object will be notified about the id it receives in the database.
+        :param trip: a reference to the Trip object. This object will be notified about the id it receives in the database.
         """
-        query = "INSERT INTO Trips VALUES()"
+        t = datetime.datetime.fromtimestamp(time.time()).strftime("%Y-%m-%d %H:%M:%S")
+        query = "INSERT INTO Trips (StartTime, EndTime) VALUES('"+t+"', '"+t+"')"
         cursor = self.db.cursor()
         cursor.execute(query)
         trip.set_id(cursor.lastrowid)
         self.db.commit()
 
+    def stop_trip(self, trip_id):
+        """
+        Sets the end time of the trip.
+        :param trip_id: the id of the trip of which the end time should be set.
+        """
+        t = datetime.datetime.fromtimestamp(time.time()).strftime("%Y-%m-%d %H:%M:%S")
+        query = "UPDATE Trips SET EndTime='"+t+"' WHERE Id = '"+str(trip_id)+"'"
+        cursor = self.db.cursor()
+        cursor.execute(query)
+        self.db.commit()
+
+
     def send_data(self, data, trip_id):
         """
         Sends data to the database.
-        @param data: the record data (a Python dict) that should be stored in the database.
-        @param trip_id: the id of the trip to which this data belongs.
+        :param data: the record data (a Python dict) that should be stored in the database.
+        :param trip_id: the id of the trip to which this data belongs.
         """
         query = "INSERT INTO Data (Trip, DataString) VALUES (%s, %s)"
         cursor = self.db.cursor()
@@ -157,8 +174,8 @@ class DatabaseConnection:
     def send_image(self, image_name, trip_id):
         """
         Stores the image_name in the database.
-        @param image_name: the id of the image that should be stored in the database.
-        @param trip_id: the id of the trip to which this image belongs.
+        :param image_name: the id of the image that should be stored in the database.
+        :param trip_id: the id of the trip to which this image belongs.
         """
         query = "INSERT INTO Images (Trip, ImageName) VALUES (%s, %s)"
         cursor = self.db.cursor()
@@ -173,7 +190,7 @@ class Trip:
     def __init__(self, live):
         """
         Initializes the trip.
-        @param live: stores wether all data should be sent immediately to the remote server or first to the local database.
+        :param live: stores wether all data should be sent immediately to the remote server or first to the local database.
         """
         self.data = []
         self.images = []
@@ -183,14 +200,14 @@ class Trip:
     def store_image(self, image_name):
         """
         Save image_name so it can be sent to the appropriate place later.
-        @param image_name: the id of the image that belongs to this trip
+        :param image_name: the id of the image that belongs to this trip
         """
         self.images.append(image_name)
 
     def store_data(self, data):
         """
         Save record so it can be sent to the appropriate place later.
-        @param data: the Python dict containing the record.
+        :param data: the Python dict containing the record.
         """
         self.data.append(data)
 

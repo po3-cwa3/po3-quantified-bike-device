@@ -2,6 +2,7 @@ import threading
 import time
 import random
 import datetime
+import config
 
 import XLoBorg
 import serial_connection
@@ -28,33 +29,19 @@ class SensorReader:
         """
         Initialize the SensorReader by storing a reference to the data_store.
         """
-        self.active = False
         self.set_data_store(data_store)
-
-    #@TODO: the active flag is not used. Will we use it or remote this code?
-    def start(self):
-        """
-        Start the sensor. This means that from now on, as soon as data is received, the data will be processed.
-        """
-        self.active = True
-
-    def stop(self):
-        """
-        Stop the sensor. This means that from now on, all received data will be ignored.
-        """
-        self.active = False
 
     def set_data_store(self, store):
         """
         Store a reference to the data_store.
-        @param store: a reference to the data_store this sensor should send its processed data to.
+        :param store: a reference to the data_store this sensor should send its processed data to.
         """
         self.data_store = store
 
     def send_record(self, record):
         """
         Send the record to the DataStore.
-        @param record: the record (a Python dict) to be sent to the DataStore.
+        :param record: the record (a Python dict) to be sent to the DataStore.
         """
         self.data_store.add_record(record)
 
@@ -84,7 +71,7 @@ class AcceleroSensor(SensorReader):
         """
         This function is executed in the AcceleroSensor thread.
         """
-        while (True):
+        while True:
             self.read()
             time.sleep(1)
 
@@ -162,13 +149,11 @@ class SerialSensor(SensorReader, serial_connection.SerialListener):
     def __init__(self, serial, application):
         """
         Initializes the SerialSensor by registering itself as a Serialistener and storing a reference to the application
-        @param serial: a reference to the SerialConnection used for communication with the Arduino
-        @param application: a reference to the main application
+        :param serial: a reference to the SerialConnection used for communication with the Arduino
+        :param application: a reference to the main application
         """
         serial_connection.SerialListener.__init__(self, serial)
         SensorReader.__init__(self, application.data_store)
-        #@TODO: is self.application used somewhere?
-        self.application = application
 
 
 class HumiditySensor(SerialSensor):
@@ -178,23 +163,19 @@ class HumiditySensor(SerialSensor):
     def __init__(self, serial, application):
         """
         Initializes the HumiditySensor as a SerialSensor.
-        @param serial: a reference to the SerialConnection used for communication with the Arduino.
-        @param application: a reference to the main application
+        :param serial: a reference to the SerialConnection used for communication with the Arduino.
+        :param application: a reference to the main application
         """
         SerialSensor.__init__(self, serial, application)
 
     def data_received(self, data):
         """
         Processes the data that has been received from the Arduino.
-        @param data: the string sent by the Arduino
+        :param data: the string sent by the Arduino
         """
         line = data
         #format: th;TT.tt;HH.hh
-        #data for the humidity sensor should be at least 10 characters long
-        if len(line) < 10:
-            return
         #This format is sent by the TH-sensor when an error occurred.
-        #@TODO: refactor this error message so it fits in the TH-format.
         if line[:10] == "Error No :":
             print("thermo sensor error: ", line)
             return
@@ -221,23 +202,19 @@ class ThermoSensor(SerialSensor):
     def __init__(self, serial, application):
         """
         Initializes the ThermoSensor by registering it as a SerialSensor.
-        @param serial: a reference to the SerialConnection used for communication with the Arduino.
-        @param application: a reference to the main application
+        :param serial: a reference to the SerialConnection used for communication with the Arduino.
+        :param application: a reference to the main application
         """
         SerialSensor.__init__(self, serial, application)
 
     def data_received(self, data):
         """
         Processes the data received from the Arduino.
-        @param data: the line received from the Arduino.
+        :param data: the line received from the Arduino.
         """
         line = data
         # format TH;TT.tt;HH.hh
-        # Only consider lines having at least length 10
-        if len(line) < 10:
-            return
         # Error message from the Temperature and Humidity Sensor
-        #@TODO: refactor this error message so it fits in the TH-format
         if line[:10] == "Error No :":
             print("thermo sensor error: ", line)
             return
@@ -264,21 +241,18 @@ class GPSSensor(SerialSensor):
     def __init__(self, serial, application):
         """
         Initializes the GPSSensor by registering itself as a SerialSensor.
-        @param serial: a reference to the SerialConnection used for communication with the Arduino
-        @param applicatoi: a reference to the main application
+        :param serial: a reference to the SerialConnection used for communication with the Arduino
+        :param applicatoi: a reference to the main application
         """
         SerialSensor.__init__(self, serial, application)
 
     def data_received(self, data):
         """
         Processed the data received from the Arduino.
-        @param data: the line received from the Arduino.
+        :param data: the line received from the Arduino.
         """
         line = data
         # Format: GPS;nofix or GPS;Lat;Long
-        # Only consider lines of length at least 9
-        if len(line) < 9:
-            return
         # Only consider lines with a matching identification pattern
         if line[:4] != "GPS;":
             return
@@ -308,7 +282,7 @@ class BPMSensor(SerialSensor):
     def __init__(self, serial, application):
         """
         Initialize the BPMSensor by registering it as a SerialSensor.
-        @param serial: a reference to the SerialConnection used to communicate with the Arduino
+        :param serial: a reference to the SerialConnection used to communicate with the Arduino
         @aram application: a reference to the main application
         """
         SerialSensor.__init__(self, serial, application)
@@ -316,13 +290,10 @@ class BPMSensor(SerialSensor):
     def data_received(self, data):
         """
         Processes the data received from the Arduino.
-        @param data: the line received from the Arduino.
+        :param data: the line received from the Arduino.
         """
         line = data
         # Format: BPM;xx
-        # Only consider lines of length at least 5
-        if len(line) < 5:
-            return
         # Only consider lines with a matching identification pattern
         if line[:4] != "BPM;":
             return
@@ -346,29 +317,24 @@ class HallSensor(SerialSensor):
     def __init__(self, serial, application):
         """
         Initialize the HallSensor by registering it as a SeralSensor.
-        @param serial: a reference to the SerialConnection used for communication with the Arduino.
-        @param application: a reference to the main Application
+        :param serial: a reference to the SerialConnection used for communication with the Arduino.
+        :param application: a reference to the main Application
         """
         SerialSensor.__init__(self, serial, application)
 
     def data_received(self, data):
         """
         Processes the data received from the Arduino.
-        @param data: the line received from the Arduino.
+        :param data: the line received from the Arduino.
         """
         # Format: v;xx.xx
         line = data
-        #@TODO: remove all length as they make the code longer and not faster (also at other sensors)
-        # Only consider lines of at least length 6
-        if len(line) < 6:
-            return
         # Only consider lines with a matching identification pattern
         if line[:2] != "v;":
             return
 
         splitted = line.split(";")
-        #@TODO: multiply v by the radius (or diameter, needs check) of the wheel (store as value in config.py)
-        v = float(splitted[1])
+        v = float(splitted[1]) * config.wheel_radius
 
         hall_data = [{
                              "sensorID": 11,
@@ -386,10 +352,10 @@ class SwitchButton(serial_connection.SerialListener):
     def __init__(self, serial, action_on, action_off, identifier):
         """
         Initialize SwitchButton by registering it as a SerialSensor.
-        @param serial: a reference to the SerialConnection used for communication with the Arduino.
-        @param action_on: a function that should be called when the button is switched on
-        @param action_off: a function that should be called when the button is switched off
-        @param identifier: the identifier of this switch button
+        :param serial: a reference to the SerialConnection used for communication with the Arduino.
+        :param action_on: a function that should be called when the button is switched on
+        :param action_off: a function that should be called when the button is switched off
+        :param identifier: the identifier of this switch button
         """
         serial_connection.SerialListener.__init__(self, serial)
         self.action_on = action_on
@@ -433,12 +399,9 @@ class SwitchButton(serial_connection.SerialListener):
     def data_received(self, data):
         """
         Processes the data received from the Arduino.
-        @param data: the line received from the Arduino.
+        :param data: the line received from the Arduino.
         """
         line = data
-        # Only consider lines with length strictly longer than the length of the identifier + 1 
-        if len(line) < len(self.identifier) + 2:
-            return
         # Only consider lines with a matching identification pattern
         if line[:len(self.identifier)+1] != self.identifier + ";":
             return
@@ -452,7 +415,6 @@ class SwitchButton(serial_connection.SerialListener):
             # Current received state is 'off'
             self.off_received()
 
-
 class PushButton(serial_connection.SerialListener):
     """
     Class for push buttons.
@@ -460,35 +422,37 @@ class PushButton(serial_connection.SerialListener):
     def __init__(self, serial, action, identifier):
         """
         Initializes PushButton by registering it as a SerialSensor.
-        @param serial: a reference to the SerialConnection used for communication with the Arduino.
-        @param action: a function that should be called when the button is pressed.
-        @param identifier: the identifier of this button.
+        :param serial: a reference to the SerialConnection used for communication with the Arduino.
+        :param action: a function that should be called when the button is pressed.
+        :param identifier: the identifier of this button.
         """
         serial_connection.SerialListener.__init__(self, serial)
         self.action = action
-        self.previous_value = False
         self.identifier = identifier
+        self.pressed_length = 0
+        self.unpressed_length = 0
+        self.unpressed_threshold = 3
+        self.pressed_threshold = 5
 
     def data_received(self, data):
         """
         Processes data received from the Arduino.
-        @param data: the line received from the Arduino.
+        :param data: the line received from the Arduino.
         """
-        #print(data)
         line = data
-        # Only consider lines with length longer than the length of the identifer +2
-        if len(line) < len(self.identifier) + 2:
-            return
         # Only consider lines with a matching identification pattern
         if line[:len(self.identifier) + 1] != self.identifier + ";":
             return
         splitted = line.split(";")
-        #@TODO: add threshold?
         if splitted[1].strip() == "1":
-            # Only trigger a button-pressed event when the button wasn't pressed previously
-            if not self.previous_value:
-                print(self.identifier+" pressed")
+            self.pressed_length += 1
+            if self.pressed_length > self.pressed_threshold:
+                self.unpressed_length = 0
+            elif self.pressed_length == self.pressed_threshold:
+                print(self.identifier + " pressed")
                 self.action()
-            self.previous_value = True
         else:
-            self.previous_value = False
+            self.unpressed_length += 1
+            if self.unpressed_length > self.unpressed_threshold:
+                self.pressed_length = 0
+

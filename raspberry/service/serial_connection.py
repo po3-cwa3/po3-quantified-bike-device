@@ -11,8 +11,8 @@ class SerialConnection:
     def __init__(self, address, baud):
         """
         Initializes the serial connection.
-        @param address: the path to the serial device
-        @param baud: the baud rate used by the serial device
+        :param address: the path to the serial device
+        :param baud: the baud rate used by the serial device
         """
         self.ser = serial.Serial(address, baud)
         self.active = False
@@ -22,17 +22,9 @@ class SerialConnection:
     def attach_listener(self, listener):
         """
         Add a SerialListener.
-        @param listener: will be added to the listeners that are notified when new data is received from the Arduino.
+        :param listener: will be added to the listeners that are notified when new data is received from the Arduino.
         """
         self.listeners.add(listener)
-
-    #@TODO: remote send_data or write
-    def send_data(self, data):
-        """
-        Send data to the Arduino.
-        @param data: data that will be sent to the Arduino.
-        """
-        self.ser.write(self, data)
 
     def action(self):
         """
@@ -60,7 +52,7 @@ class SerialConnection:
     def write(self, data):
         """
         Send data to the Arduino
-        @param data: data that will be sent to the Arduino
+        :param data: data that will be sent to the Arduino
         """
         self.ser.write(data)
 
@@ -81,7 +73,7 @@ class SerialListener:
     def __init__(self, serial_connection):
         """
         Initialize the listener by attaching it to the serial_connection
-        @param serial_connection: the connection to which this listener should be attached
+        :param serial_connection: the connection to which this listener should be attached
         """
         serial_connection.attach_listener(self)
 
