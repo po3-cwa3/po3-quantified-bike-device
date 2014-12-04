@@ -58,7 +58,7 @@ def send_to_server(photo_id, trip_id, user_id, timestamp=None):
         # Prepare the Python dict to be sent to the server over HTTP POST
         data = {"imageName": get_filename(photo_id), "tripID": trip_id, "userID": user_id, "raw": f}
         if timestamp is not None:
-            data['timestamp'] = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
+            data['timestamp'] = timestamp.strftime('%Y-%m-%d %H:%M:%S')
         test = json.dumps(data)
         # Prepare the headers used in the HTTP Request
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}

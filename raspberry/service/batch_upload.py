@@ -122,9 +122,9 @@ class BatchUpload:
             # The global trip data
             startTime = index[1]
             endTime = index[2]
-            print(startTime)
-            trip_data = {'startTime': str(startTime),# datetime.datetime.fromtimestamp(time.time()).strftime("%Y-%m-%d %H:%M:%S"),
-                         'endTime': str(endTime), #datetime.datetime.fromtimestamp(time.time() + 1).strftime("%Y-%m-%d %H:%M:%S"),
+            print(startTime.strftime("%Y-%m-%d %H:%M:%S"))
+            trip_data = {'startTime': startTime.strftime("%Y-%m-%d %H:%M:%S"),# datetime.datetime.fromtimestamp(time.time()).strftime("%Y-%m-%d %H:%M:%S"),
+                         'endTime': endTime.strftime("%Y-%m-%d %H:%M:%S"), #datetime.datetime.fromtimestamp(time.time() + 1).strftime("%Y-%m-%d %H:%M:%S"),
                          'groupID': 'cwa3', 'userID': 'r0451433', 'sensorData': [], 'meta': {}}
             for d in data:
                 trip_data['sensorData'].append(json.loads(d[2]))
@@ -157,19 +157,19 @@ class BatchUpload:
             return
         print("json to send: " + str(json.dumps(to_send))[:100])
         self.socket.emit('batch-tripdata', json.dumps(to_send))
-
-    def image_batch(self, imagelist):
-        """
-        Sends the all images in imagelist to the remote server.
-        :param imagelist: a list of tupples (photo_id, trip_id, user_id)
-        """
-        print "start imagebatch"
-        for t in imagelist:
-            print "sending 1 image"
-            try:
-                images.send_to_server(t[0],t[1],t[2])
-            except:
-                print "failed to send image ",t
+    #
+    # def image_batch(self, imagelist):
+    #     """
+    #     Sends the all images in imagelist to the remote server.
+    #     :param imagelist: a list of tupples (photo_id, trip_id, user_id)
+    #     """
+    #     print "start imagebatch"
+    #     for t in imagelist:
+    #         print "sending 1 image"
+    #         try:
+    #             images.send_to_server(t[0],t[1],t[2])
+    #         except:
+    #             print "failed to send image ",t
 
 
 #stand-alone test script
