@@ -22,8 +22,8 @@ upload_path = "/qbike/upload"
 def id_generator(size=20, chars=string.ascii_uppercase + string.ascii_lowercase + string.digits):
     """
     Generates a new id for images (used to determine a filename)
-    @param size: the length of the id
-    @param chars: the collection of chars that can be used in the id
+    :param size: the length of the id
+    :param chars: the collection of chars that can be used in the id
     """
     return ''.join(random.choice(chars) for _ in range(size))
 
@@ -48,9 +48,9 @@ def take_photo():
 def send_to_server(photo_id, trip_id, user_id):
     """
     Sends a picture to the remote server.
-    @param photo_id: the id of the picture to be sent.
-    @param trip_id: the id (received from the remote server) of the trip to which the picture belongs.
-    @param user_id: the id of the user to which the picture (and the trip) belong.
+    :param photo_id: the id of the picture to be sent.
+    :param trip_id: the id (received from the remote server) of the trip to which the picture belongs.
+    :param user_id: the id of the user to which the picture (and the trip) belong.
     """
     try:
         location = images_path + get_filename(photo_id)

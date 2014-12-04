@@ -16,8 +16,8 @@ class Application:
     def __init__(self, group_id, user_id):
         """
         Initializes the Application
-        @param group_id: this id is used when sending trips to the remote database
-        @param user_id: this id is used when sending trips to the remote database
+        :param group_id: this id is used when sending trips to the remote database
+        :param user_id: this id is used when sending trips to the remote database
         """
         self.group_id = group_id
         self.user_id = user_id
@@ -29,9 +29,6 @@ class Application:
         self.active = False
         self.ui = None
         self.thread = None
-
-    # def action(self):
-    #     self.connection.wait()
 
     def has_active_trip(self):
         """
@@ -45,7 +42,6 @@ class Application:
         """
         self.active = True
         self.connection.start()
-        #self.connection.open_connection()
         self.thread = threading.Thread(name="main thread", target=self.action)
         self.thread.start()
 

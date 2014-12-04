@@ -20,10 +20,10 @@ class Connection:
     def __init__(self, application, server, port):
         """
         Initializes the connection object.
-        @param application: a reference to the current application object that manages the main thread.
-        @param server: the address of the server
-        @param port: the port of the server to which the program should connect
-        @param sendtoarduino: the object that keeps track of the state and sends it to the Arduino (used to inform the user wether the socket is connected).
+        :param application: a reference to the current application object that manages the main thread.
+        :param server: the address of the server
+        :param port: the port of the server to which the program should connect
+        :param sendtoarduino: the object that keeps track of the state and sends it to the Arduino (used to inform the user wether the socket is connected).
         """
         self.application = application
         self.server = server
@@ -43,8 +43,8 @@ class Connection:
     def send_data(self, data, trip_id):
         """
         Sends the given data to the remote server if a connection is available.
-        @param data: the sensor data as a Python dict
-        @param trip_id: the id of the trip to which this data should be added
+        :param data: the sensor data as a Python dict
+        :param trip_id: the id of the trip to which this data should be added
         """
         # If no connection is available, just drop the data
         if not self.has_connection():
@@ -120,7 +120,7 @@ class Connection:
 
     def has_connection(self):
         """
-        Returns wether a connection to the remote server is available.
+        Returns whether a connection to the remote server is available.
         """
         return self.connection_opened and self.socket.connected
 

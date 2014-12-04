@@ -47,14 +47,14 @@ class SensorReader:
     def set_data_store(self, store):
         """
         Store a reference to the data_store.
-        @param store: a reference to the data_store this sensor should send its processed data to.
+        :param store: a reference to the data_store this sensor should send its processed data to.
         """
         self.data_store = store
 
     def send_record(self, record):
         """
         Send the record to the DataStore.
-        @param record: the record (a Python dict) to be sent to the DataStore.
+        :param record: the record (a Python dict) to be sent to the DataStore.
         """
         self.data_store.add_record(record)
 
@@ -162,8 +162,8 @@ class SerialSensor(SensorReader, serial_connection.SerialListener):
     def __init__(self, serial, application):
         """
         Initializes the SerialSensor by registering itself as a Serialistener and storing a reference to the application
-        @param serial: a reference to the SerialConnection used for communication with the Arduino
-        @param application: a reference to the main application
+        :param serial: a reference to the SerialConnection used for communication with the Arduino
+        :param application: a reference to the main application
         """
         serial_connection.SerialListener.__init__(self, serial)
         SensorReader.__init__(self, application.data_store)
@@ -178,15 +178,15 @@ class HumiditySensor(SerialSensor):
     def __init__(self, serial, application):
         """
         Initializes the HumiditySensor as a SerialSensor.
-        @param serial: a reference to the SerialConnection used for communication with the Arduino.
-        @param application: a reference to the main application
+        :param serial: a reference to the SerialConnection used for communication with the Arduino.
+        :param application: a reference to the main application
         """
         SerialSensor.__init__(self, serial, application)
 
     def data_received(self, data):
         """
         Processes the data that has been received from the Arduino.
-        @param data: the string sent by the Arduino
+        :param data: the string sent by the Arduino
         """
         line = data
         #format: th;TT.tt;HH.hh
@@ -221,15 +221,15 @@ class ThermoSensor(SerialSensor):
     def __init__(self, serial, application):
         """
         Initializes the ThermoSensor by registering it as a SerialSensor.
-        @param serial: a reference to the SerialConnection used for communication with the Arduino.
-        @param application: a reference to the main application
+        :param serial: a reference to the SerialConnection used for communication with the Arduino.
+        :param application: a reference to the main application
         """
         SerialSensor.__init__(self, serial, application)
 
     def data_received(self, data):
         """
         Processes the data received from the Arduino.
-        @param data: the line received from the Arduino.
+        :param data: the line received from the Arduino.
         """
         line = data
         # format TH;TT.tt;HH.hh
@@ -264,15 +264,15 @@ class GPSSensor(SerialSensor):
     def __init__(self, serial, application):
         """
         Initializes the GPSSensor by registering itself as a SerialSensor.
-        @param serial: a reference to the SerialConnection used for communication with the Arduino
-        @param applicatoi: a reference to the main application
+        :param serial: a reference to the SerialConnection used for communication with the Arduino
+        :param applicatoi: a reference to the main application
         """
         SerialSensor.__init__(self, serial, application)
 
     def data_received(self, data):
         """
         Processed the data received from the Arduino.
-        @param data: the line received from the Arduino.
+        :param data: the line received from the Arduino.
         """
         line = data
         # Format: GPS;nofix or GPS;Lat;Long
@@ -308,7 +308,7 @@ class BPMSensor(SerialSensor):
     def __init__(self, serial, application):
         """
         Initialize the BPMSensor by registering it as a SerialSensor.
-        @param serial: a reference to the SerialConnection used to communicate with the Arduino
+        :param serial: a reference to the SerialConnection used to communicate with the Arduino
         @aram application: a reference to the main application
         """
         SerialSensor.__init__(self, serial, application)
@@ -316,7 +316,7 @@ class BPMSensor(SerialSensor):
     def data_received(self, data):
         """
         Processes the data received from the Arduino.
-        @param data: the line received from the Arduino.
+        :param data: the line received from the Arduino.
         """
         line = data
         # Format: BPM;xx
@@ -346,15 +346,15 @@ class HallSensor(SerialSensor):
     def __init__(self, serial, application):
         """
         Initialize the HallSensor by registering it as a SeralSensor.
-        @param serial: a reference to the SerialConnection used for communication with the Arduino.
-        @param application: a reference to the main Application
+        :param serial: a reference to the SerialConnection used for communication with the Arduino.
+        :param application: a reference to the main Application
         """
         SerialSensor.__init__(self, serial, application)
 
     def data_received(self, data):
         """
         Processes the data received from the Arduino.
-        @param data: the line received from the Arduino.
+        :param data: the line received from the Arduino.
         """
         # Format: v;xx.xx
         line = data
@@ -386,10 +386,10 @@ class SwitchButton(serial_connection.SerialListener):
     def __init__(self, serial, action_on, action_off, identifier):
         """
         Initialize SwitchButton by registering it as a SerialSensor.
-        @param serial: a reference to the SerialConnection used for communication with the Arduino.
-        @param action_on: a function that should be called when the button is switched on
-        @param action_off: a function that should be called when the button is switched off
-        @param identifier: the identifier of this switch button
+        :param serial: a reference to the SerialConnection used for communication with the Arduino.
+        :param action_on: a function that should be called when the button is switched on
+        :param action_off: a function that should be called when the button is switched off
+        :param identifier: the identifier of this switch button
         """
         serial_connection.SerialListener.__init__(self, serial)
         self.action_on = action_on
@@ -433,7 +433,7 @@ class SwitchButton(serial_connection.SerialListener):
     def data_received(self, data):
         """
         Processes the data received from the Arduino.
-        @param data: the line received from the Arduino.
+        :param data: the line received from the Arduino.
         """
         line = data
         # Only consider lines with length strictly longer than the length of the identifier + 1 
@@ -460,9 +460,9 @@ class PushButton(serial_connection.SerialListener):
     def __init__(self, serial, action, identifier):
         """
         Initializes PushButton by registering it as a SerialSensor.
-        @param serial: a reference to the SerialConnection used for communication with the Arduino.
-        @param action: a function that should be called when the button is pressed.
-        @param identifier: the identifier of this button.
+        :param serial: a reference to the SerialConnection used for communication with the Arduino.
+        :param action: a function that should be called when the button is pressed.
+        :param identifier: the identifier of this button.
         """
         serial_connection.SerialListener.__init__(self, serial)
         self.action = action
@@ -472,7 +472,7 @@ class PushButton(serial_connection.SerialListener):
     def data_received(self, data):
         """
         Processes data received from the Arduino.
-        @param data: the line received from the Arduino.
+        :param data: the line received from the Arduino.
         """
         #print(data)
         line = data

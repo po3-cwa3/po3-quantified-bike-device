@@ -19,14 +19,14 @@ class BatchUpload:
                  server=config.remote_hostname, port=config.remote_port, user_id=config.user_id):
         """
         Initialize the BatchUpload.
-        @param disabled_trips: a set of ids of the trips that shouldn't be uploaded (e.g. the current trip)
-        @param hostname: the hostname of the server hosting the local MySQL Database
-        @param username: the username that should be used to connect to the local MySQL Database
-        @param password: the password that should be used to connect to the local MySQL Database
-        @param database: the name of the database in which all data is stored in the local MySQL Database
-        @param server: the hostname of the remote server
-        @param port: the port of the remote server
-        @param user_id: the id of the user that should be used to send data to the server
+        :param disabled_trips: a set of ids of the trips that shouldn't be uploaded (e.g. the current trip)
+        :param hostname: the hostname of the server hosting the local MySQL Database
+        :param username: the username that should be used to connect to the local MySQL Database
+        :param password: the password that should be used to connect to the local MySQL Database
+        :param database: the name of the database in which all data is stored in the local MySQL Database
+        :param server: the hostname of the remote server
+        :param port: the port of the remote server
+        :param user_id: the id of the user that should be used to send data to the server
         """
         self.disabled_trips = disabled_trips
         self.hostname = hostname
@@ -91,7 +91,7 @@ class BatchUpload:
     def on_response(self, *args):
         """
         Handles response sent by the server.
-        @param: an array containing the arguments passed by the socket.
+        :param: an array containing the arguments passed by the socket.
         """
         parsed = args[0]
         print "got response: ", parsed
@@ -235,7 +235,7 @@ class BatchUpload:
     def image_batch(self,imagelist):
         """
         Sends the all images in imagelist to the remote server.
-        @param imagelist: a list of tupples (photo_id, trip_id, user_id)
+        :param imagelist: a list of tupples (photo_id, trip_id, user_id)
         """
         print "start imagebatch"
         for t in imagelist:
