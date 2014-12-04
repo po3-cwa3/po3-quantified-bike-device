@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 20, 2014 at 04:59 PM
+-- Generation Time: Dec 04, 2014 at 02:16 AM
 -- Server version: 5.5.40-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.5
 
@@ -59,6 +59,8 @@ CREATE TABLE IF NOT EXISTS `Images` (
 DROP TABLE IF EXISTS `Trips`;
 CREATE TABLE IF NOT EXISTS `Trips` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `StartTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `EndTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
