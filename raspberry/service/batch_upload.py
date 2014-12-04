@@ -67,25 +67,17 @@ class BatchUpload:
         The first step, executed in this function, is sending a batch-send request to the server.
         """
         data = {'purpose': 'batch-sender', 'groupID': 'cwa3', 'userID': self.user_id}
-        f = open("error.batchupload.log", "a")
-        f.write("started: " + str(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')))
-        f.write(str(json.dumps(data)))
-        f.write("\n\n\n\n")
-        f.close()
         self.socket.emit('start', json.dumps(data))
 
     def send_images_of_trip(self, own_id, remote_id):
         """
         Sends all images belonging to a certain trip to the server.
         """
-        #cursor = self.db.cursor()
         # Take a copy of all images stored in current_trip_images (that way a new trip can already load its images while waiting for this function to finish).
         data = self.current_trip_images[:]
         for d in data:
             print d
-            #imagelist.append((d[1], str(int(index[0])), self.user_id))
-            images.send_to_server(d[1], remote_id, self.user_id)
-        #self.db.commit()
+            images.send_to_server(d[0], remote_id, self.user_id, d[1])
 
 
     def on_response(self, *args):
@@ -95,31 +87,18 @@ class BatchUpload:
         """
         parsed = args[0]
         print "got response: ", parsed
-
-        f = open("error.batchupload.log", "a")
-        f.write("received: " + str(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')))
-        f.write(str(json.dumps(parsed)))
-        f.write("\n\n\n\n")
-        f.close()
         if "Connection accepted. Ready to receive batch data." in parsed:
-            # print("ready to receive batch data!")
-            #self.retrieve_data()
             self.send_next_trip()
         elif "Added trip" in parsed:
             # A trip has been added
-            print "trip added",parsed
+            print "trip added", parsed
+            self.send_images_of_trip(self.current_trip, parsed['_id'])
             # First start sending all images of the current trip to the server
-            t = threading.Thread(target=self.send_images_of_trip, args=(self.current_trip, parsed['_id']))
-            t.start()
             #Try to send the next trip
             self.send_next_trip()
         else:
             print("error: ", str(parsed)[:100])
-            f = open("error.batchupload.log", "a")
-            f.write("error: " + str(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')))
-            f.write(str(parsed))
-            f.write("\n\n\n\n")
-            f.close()
+
     def send_next_trip(self):
         """
         Checks if there's a trip left to be sent to the server.
@@ -141,7 +120,6 @@ class BatchUpload:
             cursor.execute(query)
             data = cursor.fetchall()
             # The global trip data
-            #@TODO: fix the timestamps
             startTime = index[1]
             endTime = index[2]
             trip_data = {'startTime': startTime,# datetime.datetime.fromtimestamp(time.time()).strftime("%Y-%m-%d %H:%M:%S"),
@@ -152,13 +130,13 @@ class BatchUpload:
             # Clean the local database by removing all data that is to be sent to the remote server.
             query = "DELETE FROM Data WHERE Trip = " + str(int(index[0]))
             cursor.execute(query)
-            query = "SELECT * FROM Images WHERE Trip = " + str(int(index[0]))
+            query = "SELECT ImageName, Timestamp FROM Images WHERE Trip = " + str(int(index[0]))
             cursor.execute(query)
             data = cursor.fetchall()
             self.current_trip_images = []
             # Add all image ids to current_trip_images
             for d in data:
-                self.current_trip_images.append(d[1])
+                self.current_trip_images.append((d[1], d[2]))
             to_send.append(trip_data)
             # Clean images from database that will be set to the remote server
             query = "DELETE FROM Images WHERE Trip = " + str(int(index[0]))
@@ -168,9 +146,6 @@ class BatchUpload:
             cursor.execute(query)
             #Commit the DELETE queries
             self.db.commit()
-            # Add this trip to disabled_trips
-            #@TODO: check if this is necessary (as the trip id is deleted from the local database)
-            self.disabled_trips.add(int(index[0]))
             break;
         cursor.close()
         if len(to_send) == 0:

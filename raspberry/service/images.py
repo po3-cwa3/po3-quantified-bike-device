@@ -1,11 +1,10 @@
 import string
 import random
 import picamera
-#import base64
+import datetime
 import os
 import json
 from httplib import HTTPConnection
-import requests
 
 # The path of the directory containing the images that are temporarily stored on the RPi
 images_path = "/home/pi/workspace/po3-quantified-bike-device/raspberry/service/images/"
@@ -45,22 +44,24 @@ def take_photo():
     return photo_id
 
 
-def send_to_server(photo_id, trip_id, user_id):
+def send_to_server(photo_id, trip_id, user_id, timestamp=None):
     """
     Sends a picture to the remote server.
     :param photo_id: the id of the picture to be sent.
     :param trip_id: the id (received from the remote server) of the trip to which the picture belongs.
     :param user_id: the id of the user to which the picture (and the trip) belong.
+    :param timestamp: the timestamp at which the picture was taken
     """
     try:
         location = images_path + get_filename(photo_id)
         f = open(location, "rb").read().encode("base64")
         # Prepare the Python dict to be sent to the server over HTTP POST
-        test = json.dumps({"imageName": get_filename(photo_id), "tripID": trip_id, "userID": user_id, "raw": f})
-        #url = upload_url
+        data = {"imageName": get_filename(photo_id), "tripID": trip_id, "userID": user_id, "raw": f}
+        if timestamp is not None:
+            data['timestamp'] = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
+        test = json.dumps(data)
         # Prepare the headers used in the HTTP Request
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-        #requests.post(url, data=test, headers=headers)
         conn = HTTPConnection(upload_host, upload_port)
         conn.request("POST", upload_path, test, headers)
         resp = conn.getresponse()
