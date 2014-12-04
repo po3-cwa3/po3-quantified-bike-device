@@ -103,6 +103,11 @@ void setPictureLED(const boolean values[]){
 Sets the batch uploading LED.
 */
 void setBatchLED(const boolean values[]){
+  Serial.print("batch led: ");
+  Serial.print(values[0]);
+  Serial.print(values[1]);
+  Serial.print(values[2]);
+  Serial.println();
   digitalWrite(BATCH_LED_RED, values[0]);
   digitalWrite(BATCH_LED_GREEN, values[1]);
   digitalWrite(BATCH_LED_BLUE, values[2]);
@@ -125,10 +130,10 @@ void setLiveModeLED(boolean value){
   digitalWrite(LIVE_LED, value);
 }
 
-int batch_success_start = 0;
-int batch_failed_start = 0;
-int picture_success_start = 0;
-int picture_failed_start = 0;
+unsigned long batch_success_start = 0;
+unsigned long batch_failed_start = 0;
+unsigned long picture_success_start = 0;
+unsigned long picture_failed_start = 0;
 /*
 A new state string has been received, so the status of the LEDs should be updated.
 */
@@ -165,26 +170,26 @@ Update LEDs depending on status.
 */
 void updateLEDs(){
   setConnectionLED(getOnline());
-  setBatchLED(BLACK);
   if(getBatchUploading()){
     setBatchLED(BLUE);
-  }
-  if(getBatchSuccessLED()){
+  }else if(getBatchSuccessLED()){
     setBatchLED(GREEN);
-  }
-  if(getBatchFailedLED()){
+  }else if(getBatchFailedLED()){
     setBatchLED(RED);
+  }else{
+    setBatchLED(BLACK);
   }
-  setPictureLED(BLACK);
+  
   if(getTakingPicture()){
     setPictureLED(BLUE);
-  }
-  if(getPictureSuccessLED()){
+  }else if(getPictureSuccessLED()){
     setPictureLED(GREEN);
-  }
-  if(getPictureFailedLED()){
+  }else if(getPictureFailedLED()){
     setPictureLED(RED);
+  }else{
+    setPictureLED(BLACK);
   }
+  
   setTripLED(getTripActive());
   setLiveModeLED(getLiveMode());
 }

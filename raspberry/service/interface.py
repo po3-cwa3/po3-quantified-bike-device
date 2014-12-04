@@ -87,7 +87,10 @@ class Interface:
             b.socket.wait_for_callbacks(seconds=1)
         print "batch finished"
         self.batch_uploading = False
-        self.update_state(batch_succeeded=b.success)
+        if b.success:
+            self.update_state(batch_succeeded=True)
+        else:
+            self.update_state(batch_failed=True)
 
     def picture_button_pressed(self):
         """
@@ -130,6 +133,6 @@ class Interface:
             self.app.get_data_store().add_image(photo_id)
             print("record added")
             self.taking_picture = False
-            self.update_state(picture_success=True)
+            self.update_state(picture_succeeded=True)
         except:
             self.update_state(picture_failed=True)
