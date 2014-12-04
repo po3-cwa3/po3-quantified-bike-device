@@ -184,6 +184,8 @@ class HumiditySensor(SerialSensor):
             return
 
         splitted = line.split(";")
+        if len(splitted) < 3:
+            return
         h = float(splitted[2])
 
         humidity_data = [{
@@ -223,6 +225,8 @@ class ThermoSensor(SerialSensor):
             return
 
         splitted = line.split(";")
+        if len(splitted) < 2:
+            return
         t = float(splitted[1])
 
         temperature_data = [{
@@ -258,6 +262,8 @@ class GPSSensor(SerialSensor):
             return
 
         splitted = line.split(";")
+        if len(splitted) < 3:
+            return
         # If the GPS has no fix, the data is useless
         if splitted[1] == "nofix":
             return
@@ -299,7 +305,8 @@ class BPMSensor(SerialSensor):
             return
 
         splitted = line.split(";")
-
+        if len(splitted) < 2:
+            return
         bpm = float(splitted[1])
         gps_data = [{
                         "sensorID": 9,
@@ -334,6 +341,9 @@ class HallSensor(SerialSensor):
             return
 
         splitted = line.split(";")
+        if len(splitted) < 2:
+            return
+
         v = float(splitted[1]) * config.wheel_radius
 
         hall_data = [{
@@ -406,7 +416,8 @@ class SwitchButton(serial_connection.SerialListener):
         if line[:len(self.identifier)+1] != self.identifier + ";":
             return
         splitted = line.split(";")
-
+        if len(splitted) < 2:
+            return
         if splitted[1].strip() == "1":
             # Current received state is 'on'
             self.on_received()
@@ -444,6 +455,8 @@ class PushButton(serial_connection.SerialListener):
         if line[:len(self.identifier) + 1] != self.identifier + ";":
             return
         splitted = line.split(";")
+        if len(splitted) < 2:
+            return
         if splitted[1].strip() == "1":
             self.pressed_length += 1
             if self.pressed_length > self.pressed_threshold:
