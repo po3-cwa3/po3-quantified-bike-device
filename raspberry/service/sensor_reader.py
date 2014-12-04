@@ -415,7 +415,6 @@ class SwitchButton(serial_connection.SerialListener):
             # Current received state is 'off'
             self.off_received()
 
-
 class PushButton(serial_connection.SerialListener):
     """
     Class for push buttons.
@@ -429,8 +428,11 @@ class PushButton(serial_connection.SerialListener):
         """
         serial_connection.SerialListener.__init__(self, serial)
         self.action = action
-        self.previous_value = False
         self.identifier = identifier
+        self.pressed_length = 0
+        self.unpressed_length = 0
+        self.unpressed_threshold = 3
+        self.pressed_threshold = 5
 
     def data_received(self, data):
         """
@@ -442,12 +444,15 @@ class PushButton(serial_connection.SerialListener):
         if line[:len(self.identifier) + 1] != self.identifier + ";":
             return
         splitted = line.split(";")
-        #@TODO: add threshold?
         if splitted[1].strip() == "1":
-            # Only trigger a button-pressed event when the button wasn't pressed previously
-            if not self.previous_value:
-                print(self.identifier+" pressed")
+            self.pressed_length += 1
+            if self.pressed_length > self.pressed_threshold:
+                self.unpressed_length = 0
+            elif self.pressed_length == self.pressed_threshold:
+                print(self.identifier + " pressed")
                 self.action()
-            self.previous_value = True
         else:
-            self.previous_value = False
+            self.unpressed_length += 1
+            if self.unpressed_length > self.unpressed_threshold:
+                self.pressed_length = 0
+
