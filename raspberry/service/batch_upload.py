@@ -116,7 +116,7 @@ class BatchUpload:
                 continue
             self.current_trip = str(int(index[0]))
             print "this trip can be uploaded"
-            query = "SELECT Id, StartTime, EndTime FROM Data WHERE Trip = " + str(int(index[0]))
+            query = "SELECT * FROM Data WHERE Trip = " + str(int(index[0]))
             cursor.execute(query)
             data = cursor.fetchall()
             # The global trip data
