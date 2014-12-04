@@ -122,9 +122,9 @@ class BatchUpload:
             # The global trip data
             startTime = index[1]
             endTime = index[2]
-
-            trip_data = {'startTime': startTime,# datetime.datetime.fromtimestamp(time.time()).strftime("%Y-%m-%d %H:%M:%S"),
-                         'endTime': endTime, #datetime.datetime.fromtimestamp(time.time() + 1).strftime("%Y-%m-%d %H:%M:%S"),
+            print(startTime)
+            trip_data = {'startTime': str(startTime),# datetime.datetime.fromtimestamp(time.time()).strftime("%Y-%m-%d %H:%M:%S"),
+                         'endTime': str(endTime), #datetime.datetime.fromtimestamp(time.time() + 1).strftime("%Y-%m-%d %H:%M:%S"),
                          'groupID': 'cwa3', 'userID': 'r0451433', 'sensorData': [], 'meta': {}}
             for d in data:
                 trip_data['sensorData'].append(json.loads(d[2]))
