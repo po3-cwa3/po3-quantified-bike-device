@@ -85,7 +85,7 @@ class DataStore:
                 else:
                     self.get_database().send_image(d, self.current_trip.get_id())
         except Exception as ex:
-            print "There was an error in send data", str(e)
+            print "There was an error in send data", str(ex)
 
     def get_connection(self):
         """
