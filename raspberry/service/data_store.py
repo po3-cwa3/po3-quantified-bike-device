@@ -190,7 +190,7 @@ class Trip:
     def __init__(self, live):
         """
         Initializes the trip.
-        :param live: stores wether all data should be sent immediately to the remote server or first to the local database.
+        :param live: stores whether all data should be sent immediately to the remote server or first to the local database.
         """
         self.data = []
         self.images = []
@@ -213,13 +213,13 @@ class Trip:
 
     def is_live(self):
         """
-        Returns wether all data about this trip should be stored in the local database or on the remote server.
+        Returns whether all data about this trip should be stored in the local database or on the remote server.
         """
         return self.live
 
     def has_id(self):
         """
-        Returns wether this trip received an id from the storage yet.
+        Returns whether this trip received an id from the storage yet.
         """
         return not self.id is None
 
@@ -238,13 +238,13 @@ class Trip:
 
     def has_data(self):
         """
-        Returns wether there's data to be sent.
+        Returns whether there's data to be sent.
         """
         return len(self.data) > 0
 
     def has_images(self):
         """
-        Returns wether there are images to be sent.
+        Returns whether there are images to be sent.
         """
         return len(self.images) > 0
 

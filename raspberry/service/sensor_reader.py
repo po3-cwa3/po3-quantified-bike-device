@@ -46,10 +46,6 @@ class SensorReader:
         self.data_store.add_record(record)
 
 
-# class GPSSensor(SensorReader):
-#    def __init__(self):
-#        pass
-
 
 class AcceleroSensor(SensorReader):
     """
@@ -396,7 +392,7 @@ class SwitchButton(serial_connection.SerialListener):
         self.action()
     def action(self):
         """
-        Determines wether the button state is reliable and takes action if this is the case.
+        Determines whether the button state is reliable and takes action if this is the case.
         The button state is reliable if at least self.on_threshold times the same signal has been received.
         """
         if self.on_length > self.on_threshold and not self.last_on_action:

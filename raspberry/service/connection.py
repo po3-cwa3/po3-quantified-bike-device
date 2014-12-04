@@ -23,7 +23,7 @@ class Connection:
         :param application: a reference to the current application object that manages the main thread.
         :param server: the address of the server
         :param port: the port of the server to which the program should connect
-        :param sendtoarduino: the object that keeps track of the state and sends it to the Arduino (used to inform the user wether the socket is connected).
+        :param sendtoarduino: the object that keeps track of the state and sends it to the Arduino (used to inform the user whether the socket is connected).
         """
         self.application = application
         self.server = server
