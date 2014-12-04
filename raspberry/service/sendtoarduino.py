@@ -23,6 +23,7 @@ class SendtoArduino:
     TAKING_PICTURE_FAILED = 5
     TAKING_PICTURE_SUCCESS = 6
     TRIP_ACTIVE = 7
+    LIVE_MODE = 8
     """
     Class to ease sending the state of the appliction to the Arduino.
     """
@@ -126,6 +127,13 @@ class SendtoArduino:
         :param value: True or False, depending on whether a trip is going on or not
         """
         self.set_status(SendtoArduino.TRIP_ACTIVE, value)
+
+    def set_live_mode_status(self, value):
+        """
+        Sets the live mode status in the state string.
+        :param value: True or False, depending on whether new trips should be live or not.
+        """
+        self.set_status(SendtoArduino.LIVE_MODE, value)
 
     def set_status(self, index, value):
         """

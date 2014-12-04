@@ -28,6 +28,7 @@ class Interface:
         self.trip_button = sensor_reader.PushButton(serial, self.trip_button_pressed, "PB1")
         self.picture_button = sensor_reader.PushButton(serial, self.picture_button_pressed, "PB2")
         self.batch_button = sensor_reader.PushButton(serial, self.batch_button_pressed, "PB3")
+        self.mode_button = sensor_reader.PushButton(serial, self.mode_button_pressed, "PB4")
         self.live_mode = True
 
     def trip_button_pressed(self):
@@ -39,6 +40,9 @@ class Interface:
             self.app.stop_trip()
         else:
             self.app.start_trip(self.live_mode)
+            
+    def mode_button_pressed(self):
+        self.live_mode = not self.live_mode
 
     def update_state(self, picture_failed=False, picture_succeeded=False, batch_failed=False, batch_succeeded=False):
         """
@@ -56,6 +60,7 @@ class Interface:
         self.send_to_arduino.set_taking_picture_success_status(picture_succeeded)
         self.send_to_arduino.set_taking_picture_failed_status(picture_failed)
         self.send_to_arduino.set_trip_active_status(self.app.has_active_trip())
+        self.send_to_arduino.set_live_mode_status(self.live_mode)
         self.send_to_arduino.send_status()
 
     def has_internet_connection(self):
