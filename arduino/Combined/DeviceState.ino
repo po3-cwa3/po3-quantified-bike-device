@@ -16,6 +16,7 @@ Device State reads the state string from the RPi and displays the state by using
 const boolean GREEN[] = {false, true, false};
 const boolean RED[] = {true, false, false};
 const boolean BLUE[] = {false, false, true};
+const boolean BLACK[] = {false, false, false};
 /*
 State string:
 0: 1 if a connection is available
@@ -150,11 +151,13 @@ boolean getPictureFailedLED(){
 Update LEDs depending on status.
 */
 void updateLEDs(){
+  Serial.println(current_pattern);
   if(getOnline()){
     setConnectionLED(true);
   }else{
     setConnectionLED(false);
   }
+  setBatchLED(BLACK);
   if(getBatchUploading()){
     setBatchLED(BLUE);
   }
@@ -164,6 +167,7 @@ void updateLEDs(){
   if(getBatchFailedLED()){
     setBatchLED(RED);
   }
+  setPictureLED(BLACK);
   if(getTakingPicture()){
     setPictureLED(BLUE);
   }
