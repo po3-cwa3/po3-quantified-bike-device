@@ -137,13 +137,15 @@ class BatchUpload:
                 continue
             self.current_trip = str(int(index[0]))
             print "this trip can be uploaded"
-            query = "SELECT * FROM Data WHERE Trip = " + str(int(index[0]))
+            query = "SELECT Id, StartTime, EndTime FROM Data WHERE Trip = " + str(int(index[0]))
             cursor.execute(query)
             data = cursor.fetchall()
             # The global trip data
             #@TODO: fix the timestamps
-            trip_data = {'startTime': datetime.datetime.fromtimestamp(time.time()).strftime("%Y-%m-%d %H:%M:%S"),
-                         'endTime': datetime.datetime.fromtimestamp(time.time() + 1).strftime("%Y-%m-%d %H:%M:%S"),
+            startTime = index[1]
+            endTime = index[2]
+            trip_data = {'startTime': startTime,# datetime.datetime.fromtimestamp(time.time()).strftime("%Y-%m-%d %H:%M:%S"),
+                         'endTime': endTime, #datetime.datetime.fromtimestamp(time.time() + 1).strftime("%Y-%m-%d %H:%M:%S"),
                          'groupID': 'cwa3', 'userID': 'r0451433', 'sensorData': [], 'meta': {}}
             for d in data:
                 trip_data['sensorData'].append(json.loads(d[2]))

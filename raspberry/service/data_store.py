@@ -1,5 +1,7 @@
 __author__ = 'fkint'
 
+import time
+import datetime
 import MySQLdb
 import json
 import images
@@ -46,6 +48,8 @@ class DataStore:
         if self.current_trip.is_live():
             # If the trip is live, warn the remote server that we want to stop the trip.
             self.get_connection().stop_trip()
+        else:
+            self.get_database().stop_trip(self.current_trip.get_id())
         self.current_trip = None
 
     def trip_started(self, id):
@@ -137,11 +141,24 @@ class DatabaseConnection:
         Adds a new trip to the local database.
         :param trip: a reference to the Trip object. This object will be notified about the id it receives in the database.
         """
-        query = "INSERT INTO Trips VALUES()"
+        t = datetime.datetime.fromtimestamp(time.time()).strftime("%Y-%m-%d %H:%M:%S")
+        query = "INSERT INTO Trips (StartTime, EndTime) VALUES('"+t+"', '"+t+"')"
         cursor = self.db.cursor()
         cursor.execute(query)
         trip.set_id(cursor.lastrowid)
         self.db.commit()
+
+    def stop_trip(self, trip_id):
+        """
+        Sets the end time of the trip.
+        :param trip_id: the id of the trip of which the end time should be set.
+        """
+        t = datetime.datetime.fromtimestamp(time.time()).strftime("%Y-%m-%d %H:%M:%S")
+        query = "UPDATE Trips SET EndTime='"+t+"' WHERE Id = '"+str(trip_id)+"'"
+        cursor = self.db.cursor()
+        cursor.execute(query)
+        self.db.commit()
+
 
     def send_data(self, data, trip_id):
         """
