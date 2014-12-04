@@ -10,7 +10,16 @@ import images
 #it sends all data to the data-store
 
 class Interface:
+    """
+    Class managing the user input and feedback.
+    """
     def __init__(self, serial, app, send_to_arduino):
+        """
+        Initializes the Interface.
+        :param serial: reference to SerialConnection used to communicate with the Arduino.
+        :param app: reference to the main application.
+        :param send_to_arduino: reference to a SendToArduino object used to send the application state to the Arduino.
+        """
         self.app = app
         self.app.set_interface(self)
         self.send_to_arduino = send_to_arduino
@@ -22,6 +31,9 @@ class Interface:
         self.live_mode = True
 
     def trip_button_pressed(self):
+        """
+        Triggered whenever the trip button on the Arduino breadboard is pressed.
+        """
         print("trip button pressed")
         if self.app.has_active_trip():
             self.app.stop_trip()
@@ -29,6 +41,13 @@ class Interface:
             self.app.start_trip(self.live_mode)
 
     def update_state(self, picture_failed=False, picture_succeeded=False, batch_failed=False, batch_succeeded=False):
+        """
+        Updates the current application state and sends it to the Arduino.
+        :param picture_failed: whether taking a picture failed.
+        :param picture_succeeded: whether taking a picture succeeded.
+        :param batch_failed: whether batch uploading failed.
+        :param batch_succeeded: whether batch uploading succeeded.
+        """
         self.send_to_arduino.set_online_status(self.has_internet_connection())
         self.send_to_arduino.set_batch_uploading_status(self.batch_uploading)
         self.send_to_arduino.set_batch_uploading_success_status(batch_succeeded)
@@ -40,9 +59,15 @@ class Interface:
         self.send_to_arduino.send_status()
 
     def has_internet_connection(self):
+        """
+        :return: True if a connection to the remote server is available, else False.
+        """
         return self.app.has_connection()
 
     def batch_upload(self):
+        """
+        Requests a Batch Upload of all data that has been stored locally.
+        """
         self.update_state()
         disabled_trips = set()
         if self.app.get_data_store().current_trip is not None:
@@ -61,6 +86,9 @@ class Interface:
             self.update_state(batch_succeeded=False)
 
     def picture_button_pressed(self):
+        """
+        Triggered whenever the picture button is pressed. Tries to take a picture and store it.
+        """
         print("picture button pressed")
         if self.taking_picture:
             print("still taking picture, try again later")
@@ -70,6 +98,9 @@ class Interface:
         t.start()
 
     def batch_button_pressed(self):
+        """
+        Triggered whenever the batch upload button is pressed. Tries to batch upload all data.
+        """
         print "batch button pressed"
         if self.batch_uploading:
             #show error with LEDs
@@ -84,6 +115,9 @@ class Interface:
         t.start()
 
     def take_picture(self):
+        """
+        Takes a picture and stores it in the DataStore.
+        """
         try:
             self.update_state()
             print("in take_picture")
