@@ -38,7 +38,7 @@ class Interface:
         print("trip button pressed")
         if self.app.has_active_trip():
             self.app.stop_trip()
-        elif self.app.trips_can_be_started or self.live_mode == False:
+        elif self.app.connection.trips_can_be_started or self.live_mode == False:
             self.app.start_trip(self.live_mode)
         self.update_state()
 
