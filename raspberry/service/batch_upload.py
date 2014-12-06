@@ -147,7 +147,7 @@ class BatchUpload:
             query = "DELETE FROM Trips Where Id = " + str(int(index[0]))
             cursor.execute(query)
             #Commit the DELETE queries
-            self.db.commit()
+            #self.db.commit()
             break;
         cursor.close()
         if len(to_send) == 0:
@@ -156,7 +156,7 @@ class BatchUpload:
             # Sets the ready flag to True, so external watchers we're done uploading 
             self.ready = True
             return
-        print("json to send: " + str(json.dumps(to_send))[:100])
+        print("json to send: " + str(json.dumps(to_send)))
         self.socket.emit('batch-tripdata', json.dumps(to_send))
     #
     # def image_batch(self, imagelist):

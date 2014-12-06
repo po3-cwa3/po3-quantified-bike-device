@@ -125,7 +125,7 @@ class DummySensor(SensorReader):
         """
         Generates random GPS coordinates and sends them to the DataStore in a nice format.
         """
-        data = [{
+        data = {
                     "sensorID": 1,
                     "timestamp": datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'),
                     "data": [
@@ -134,7 +134,7 @@ class DummySensor(SensorReader):
                              [random.randint(0, 100), random.randint(0, 100)]
                          ]
                         }]
-                }]
+                }
         self.application.get_data_store().add_record(data)
 
 

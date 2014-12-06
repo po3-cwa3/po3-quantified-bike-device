@@ -95,7 +95,7 @@ class DataStore:
 
     def get_database(self):
         """
-        Returns a reference to the object that is used to communicat with the local database.
+        Returns a reference to the object that is used to communicate with the local database.
         """
         return self.database
 
