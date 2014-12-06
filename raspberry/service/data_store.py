@@ -68,13 +68,22 @@ class DataStore:
         if not self.current_trip.has_id():
             return
         try:
-            while self.current_trip.has_data():
-                #First send all sensor data that is available for the current trip
-                d = self.current_trip.next_data()
-                if self.current_trip.is_live():
+            if self.current_trip.is_live():
+                while self.current_trip.has_data():
+                    d = self.current_trip.next_data()
                     self.get_connection().send_data(d, self.current_trip.get_id())
-                else:
-                    self.get_database().send_data(d, self.current_trip.get_id())
+            else:
+                data_array = []
+                while self.current_trip.has_data():
+                    data_array.append(self.current_trip.next_data())
+                self.get_database().send_multiple_data(data_array, self.current_trip.get_id())
+            # while self.current_trip.has_data():
+            #     #First send all sensor data that is available for the current trip
+            #     d = self.current_trip.next_data()
+            #     if self.current_trip.is_live():
+            #         self.get_connection().send_data(d, self.current_trip.get_id())
+            #     else:
+            #         self.get_database().send_data(d, self.current_trip.get_id())
             while self.current_trip.has_images():
                 #Next send all images that are available for the current trip
                 d = self.current_trip.next_image()
@@ -162,6 +171,21 @@ class DatabaseConnection:
             t = datetime.datetime.fromtimestamp(time.time()).strftime("%Y-%m-%d %H:%M:%S")
             query = "UPDATE Trips SET EndTime='"+t+"' WHERE Id = '"+str(trip_id)+"'"
             cursor.execute(query)
+            self.db.commit()
+
+
+    def send_multiple_data(self, data_array, trip_id):
+        """
+        Sends multiple records to the database.
+        :param data_array: the list of records (Python dicts) that should be stored in the database.
+        :param trip_id: the id of the trip to which this data belongs
+        """
+        l = []
+        for d in data_array:
+            l.append((trip_id, d))
+        with closing(self.db.cursor()) as cursor:
+            query = "INSERT INTO Data (Trip, DataString) VALUES (%s, %s)"
+            cursor.executemany(query, l)
             self.db.commit()
 
 

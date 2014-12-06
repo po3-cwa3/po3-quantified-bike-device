@@ -151,8 +151,8 @@ void patternUpdated(){
     picture_failed_start = millis();
   }
 }
-const int batch_result_notification_time = 2000;
-const int picture_result_notification_time = 2000;
+const unsigned long batch_result_notification_time = 2000;
+const unsigned long picture_result_notification_time = 2000;
 boolean getBatchSuccessLED(){
   return millis() - batch_success_start <= batch_result_notification_time;
 }
