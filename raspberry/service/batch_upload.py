@@ -66,7 +66,7 @@ class BatchUpload:
         Starts the uploading of the data.
         The first step, executed in this function, is sending a batch-send request to the server.
         """
-        data = {'purpose': 'batch-sender', 'groupID': 'cwa3', 'userID': self.user_id}
+        data = {'purpose': 'batch-sender', 'groupID': config.group_id, 'userID': self.user_id}
         self.socket.emit('start', json.dumps(data))
 
     def send_images_of_trip(self, own_id, remote_id):

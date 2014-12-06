@@ -3,6 +3,7 @@ import time
 
 import data_store
 import connection
+import config
 
 
 __author__ = 'fkint'
@@ -25,7 +26,7 @@ class Application:
         # self.data_store manages all data that's waiting to be sent to either the local or the remote database
         self.data_store = data_store.DataStore(self)
         # self.connection manages the connection to the remote server
-        self.connection = connection.Connection(self, "dali.cs.kuleuven.be", 8080)
+        self.connection = connection.Connection(self, config.remote_hostname, config.remote_port)
         self.active = False
         self.ui = None
         self.thread = None

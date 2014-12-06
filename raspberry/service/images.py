@@ -1,20 +1,22 @@
 import string
 import random
 import picamera
-import datetime
 import os
 import json
+import config
 from httplib import HTTPConnection
 
 # The path of the directory containing the images that are temporarily stored on the RPi
 images_path = "/home/pi/workspace/po3-quantified-bike-device/raspberry/service/images/"
 #images_path = "/home/pi/images/"
 # The url of the remote server to which the images should be sent
-upload_url = "http://dali.cs.kuleuven.be:8080/qbike/upload"
+#upload_url = "http://dali.cs.kuleuven.be:8080/qbike/upload"
 # The host of the remote server to which the images should be sent
-upload_host = "dali.cs.kuleuven.be"
+#upload_host = "dali.cs.kuleuven.be"
+upload_host = config.remote_hostname
 # The port of the remote server to which the images should be sent
-upload_port = 8080
+#upload_port = 8080
+upload_port = config.remote_port
 # The path on the remote server to which the images should be sent
 upload_path = "/qbike/upload"
 

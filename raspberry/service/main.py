@@ -16,10 +16,6 @@ sc.start()
 sendtoard = sendtoarduino.SendtoArduino(sc)
 # The application initializes the main thread that manages the connection and data store
 app = application.Application(config.group_id, config.user_id)
-# initialize server connection thread (connects if a Internet connection is available)
-#conn = connection.Connection(app, "dali.cs.kuleuven.be", 8080)
-
-#initialize Serial Thread (=Interface)
 
 # dummy_reader can be used to send sample data when no serial device
 # is available
