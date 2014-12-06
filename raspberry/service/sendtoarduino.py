@@ -60,6 +60,7 @@ class SendtoArduino:
         self.status = False
     def send_status(self):
         tosend = self.pattern + self.get_string()
+        print("status: "+tosend)
         self.serial.write(tosend)
 
     # def send(self):
