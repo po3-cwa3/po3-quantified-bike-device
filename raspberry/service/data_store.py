@@ -183,7 +183,7 @@ class DatabaseConnection:
         print data_array
         l = []
         for d in data_array:
-            l.append((trip_id, d))
+            l.append((trip_id, json.dumps(d[0])))
         print l
         with closing(self.db.cursor()) as cursor:
             query = "INSERT INTO Data (Trip, DataString) VALUES (%s, %s)"
