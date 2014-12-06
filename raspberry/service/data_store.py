@@ -188,6 +188,9 @@ class DatabaseConnection:
         for d in data_array:
             l.append((trip_id, json.dumps(d[0])))
         print l
+        if len(l) == 0:
+            print "no records to add"
+            return
         with closing(self.db.cursor()) as cursor:
             query = "INSERT INTO Data (Trip, DataString) VALUES (%s, %s)"
             cursor.executemany(query, l)
