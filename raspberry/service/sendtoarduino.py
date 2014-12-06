@@ -12,7 +12,7 @@ import serial_connection
 # 5: 1 if taking picture failed
 # 6: 1 if taking picture succeeded
 # 7: 1 if trip active
-# 8:
+# 8: 1 if in live mode
 
 class SendtoArduino:
     ONLINE = 0

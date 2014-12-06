@@ -147,7 +147,7 @@ class BatchUpload:
             query = "DELETE FROM Trips Where Id = " + str(int(index[0]))
             cursor.execute(query)
             #Commit the DELETE queries
-            #self.db.commit()
+            self.db.commit()
             break;
         cursor.close()
         if len(to_send) == 0:
