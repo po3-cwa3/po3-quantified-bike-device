@@ -125,7 +125,7 @@ class BatchUpload:
             print(startTime.strftime("%Y-%m-%d %H:%M:%S"))
             trip_data = {'startTime': startTime.strftime("%Y-%m-%d %H:%M:%S"),# datetime.datetime.fromtimestamp(time.time()).strftime("%Y-%m-%d %H:%M:%S"),
                          'endTime': endTime.strftime("%Y-%m-%d %H:%M:%S"), #datetime.datetime.fromtimestamp(time.time() + 1).strftime("%Y-%m-%d %H:%M:%S"),
-                         'groupID': 'cwa3', 'userID': 'r0451433', 'sensorData': [], 'meta': {}}
+                         'groupID': config.group_id, 'userID': config.user_id, 'sensorData': [], 'meta': {}}
             for d in data:
                 trip_data['sensorData'].append(json.loads(d[2]))
                 #print "will be uploaded:", d[2]

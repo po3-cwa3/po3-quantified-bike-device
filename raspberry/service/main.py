@@ -6,6 +6,7 @@ import serial_connection
 import sensor_reader
 import interface
 import sendtoarduino
+import config
 
 # SerialConnection reads data sent by the Arduino 
 # and warns the sensor listeners when new data has been received
@@ -14,7 +15,7 @@ sc.start()
 # SentToArduino enables the application to send data to the Arduino
 sendtoard = sendtoarduino.SendtoArduino(sc)
 # The application initializes the main thread that manages the connection and data store
-app = application.Application("cwa3", "r0463107")
+app = application.Application(config.group_id, config.user_id)
 # initialize server connection thread (connects if a Internet connection is available)
 #conn = connection.Connection(app, "dali.cs.kuleuven.be", 8080)
 

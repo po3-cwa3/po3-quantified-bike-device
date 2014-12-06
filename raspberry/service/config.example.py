@@ -7,5 +7,6 @@ local_database_username = 'QB_CWA3' # The username that should be used to log in
 local_database_password = 'CEeT9cPFSnPExMzQ' # The password that should be used to log in to the local database
 local_database_name = 'QuantifiedBike' # The name of the database all data is stored in locally
 user_id = 'r0451433' # The user id that is used to connect to the remote server
+group_id = "cwa3" # The group id that is used to connect to the remote server
 
 wheel_radius = 31.1 #wheel radius
