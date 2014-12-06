@@ -62,6 +62,7 @@ class Interface:
         self.send_to_arduino.set_taking_picture_success_status(picture_succeeded)
         self.send_to_arduino.set_taking_picture_failed_status(picture_failed)
         self.send_to_arduino.set_trip_active_status(self.app.has_active_trip())
+        print "active trip: ", self.app.has_active_trip()
         self.send_to_arduino.set_live_mode_status(self.live_mode)
         self.send_to_arduino.send_status()
 
