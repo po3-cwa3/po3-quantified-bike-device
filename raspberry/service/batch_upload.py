@@ -128,6 +128,7 @@ class BatchUpload:
                          'groupID': 'cwa3', 'userID': 'r0451433', 'sensorData': [], 'meta': {}}
             for d in data:
                 trip_data['sensorData'].append(json.loads(d[2]))
+                print "will be uploaded:", d[2]
             # Clean the local database by removing all data that is to be sent to the remote server.
             query = "DELETE FROM Data WHERE Trip = " + str(int(index[0]))
             cursor.execute(query)
