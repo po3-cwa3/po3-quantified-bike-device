@@ -128,7 +128,7 @@ class BatchUpload:
                          'groupID': 'cwa3', 'userID': 'r0451433', 'sensorData': [], 'meta': {}}
             for d in data:
                 trip_data['sensorData'].append(json.loads(d[2]))
-                print "will be uploaded:", d[2]
+                #print "will be uploaded:", d[2]
             # Clean the local database by removing all data that is to be sent to the remote server.
             query = "DELETE FROM Data WHERE Trip = " + str(int(index[0]))
             cursor.execute(query)
@@ -156,7 +156,7 @@ class BatchUpload:
             # Sets the ready flag to True, so external watchers we're done uploading 
             self.ready = True
             return
-        print("json to send: " + str(json.dumps(to_send)))
+        print("json to send: " + str(json.dumps(to_send))[:100])
         self.socket.emit('batch-tripdata', json.dumps(to_send))
     #
     # def image_batch(self, imagelist):

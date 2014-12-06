@@ -94,11 +94,8 @@ class Application:
         It triggers the DataStore to send its data to either the local or the remote server.
         """
         while self.active:
-            print "start action in application"
             self.data_store.send_data()
-            print "data sent"
             self.ui.update_state()
-            print "state updated"
             time.sleep(.1)
 
     def get_trip_id(self):
