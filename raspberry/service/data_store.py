@@ -74,7 +74,9 @@ class DataStore:
                     self.get_connection().send_data(d, self.current_trip.get_id())
             else:
                 data_array = []
-                while self.current_trip.has_data():
+                amount = 30
+                while self.current_trip.has_data() and amount > 0:
+                    amount -= 1
                     data_array.append(self.current_trip.next_data())
                 self.get_database().send_multiple_data(data_array, self.current_trip.get_id())
             # while self.current_trip.has_data():
