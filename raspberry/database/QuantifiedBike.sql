@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 04, 2014 at 11:15 AM
+-- Generation Time: Dec 06, 2014 at 04:15 PM
 -- Server version: 5.5.40-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.5
 
@@ -19,8 +19,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `QuantifiedBike`
 --
-CREATE DATABASE IF NOT EXISTS `QuantifiedBike` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `QuantifiedBike`;
 
 -- --------------------------------------------------------
 
@@ -28,7 +26,6 @@ USE `QuantifiedBike`;
 -- Table structure for table `Data`
 --
 
-DROP TABLE IF EXISTS `Data`;
 CREATE TABLE IF NOT EXISTS `Data` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `Trip` int(11) NOT NULL,
@@ -43,7 +40,6 @@ CREATE TABLE IF NOT EXISTS `Data` (
 -- Table structure for table `Images`
 --
 
-DROP TABLE IF EXISTS `Images`;
 CREATE TABLE IF NOT EXISTS `Images` (
   `Trip` int(11) NOT NULL,
   `ImageName` varchar(100) NOT NULL,
@@ -58,10 +54,9 @@ CREATE TABLE IF NOT EXISTS `Images` (
 -- Table structure for table `Trips`
 --
 
-DROP TABLE IF EXISTS `Trips`;
 CREATE TABLE IF NOT EXISTS `Trips` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
-  `StartTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `StartTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `EndTime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
