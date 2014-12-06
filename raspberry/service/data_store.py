@@ -182,6 +182,7 @@ class DatabaseConnection:
         :param data_array: the list of records (Python dicts) that should be stored in the database.
         :param trip_id: the id of the trip to which this data belongs
         """
+        print "start multiple data"
         print data_array
         l = []
         for d in data_array:
@@ -191,6 +192,7 @@ class DatabaseConnection:
             query = "INSERT INTO Data (Trip, DataString) VALUES (%s, %s)"
             cursor.executemany(query, l)
             self.db.commit()
+        print "stop multiple data"
 
 
     def send_data(self, data, trip_id):
