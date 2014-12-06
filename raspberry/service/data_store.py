@@ -171,7 +171,7 @@ class DatabaseConnection:
         """
         query = "INSERT INTO Data (Trip, DataString) VALUES (%s, %s)"
         cursor = self.db.cursor()
-        cursor.execute(query, (trip_id, json.dumps(data)))
+        cursor.execute(query, (trip_id, json.dumps(data[0])))
         self.db.commit()
 
     def send_image(self, image_name, trip_id):
