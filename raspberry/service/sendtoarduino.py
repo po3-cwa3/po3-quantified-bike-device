@@ -61,7 +61,7 @@ class SendtoArduino:
     def send_status(self):
         tosend = self.pattern + self.get_string()
         self.serial.write(tosend)
-
+        print tosend
     # def send(self):
     #     """
     #     This function is executed in the SendToArduino thread.
