@@ -180,9 +180,11 @@ class DatabaseConnection:
         :param data_array: the list of records (Python dicts) that should be stored in the database.
         :param trip_id: the id of the trip to which this data belongs
         """
+        print data_array
         l = []
         for d in data_array:
             l.append((trip_id, d))
+        print l
         with closing(self.db.cursor()) as cursor:
             query = "INSERT INTO Data (Trip, DataString) VALUES (%s, %s)"
             cursor.executemany(query, l)
