@@ -6,7 +6,7 @@ import MySQLdb
 import json
 import images
 import config
-
+from contextlib import closing
 
 class DataStore:
     """
@@ -169,10 +169,11 @@ class DatabaseConnection:
         :param data: the record data (a Python dict) that should be stored in the database.
         :param trip_id: the id of the trip to which this data belongs.
         """
-        query = "INSERT INTO Data (Trip, DataString) VALUES (%s, %s)"
-        cursor = self.db.cursor()
-        cursor.execute(query, (trip_id, json.dumps(data[0])))
-        self.db.commit()
+        with closing(self.db.cursor()) as cursor:
+            query = "INSERT INTO Data (Trip, DataString) VALUES (%s, %s)"
+            #cursor = self.db.cursor()
+            cursor.execute(query, (trip_id, json.dumps(data[0])))
+            self.db.commit()
 
     def send_image(self, image_name, trip_id):
         """
@@ -180,10 +181,11 @@ class DatabaseConnection:
         :param image_name: the id of the image that should be stored in the database.
         :param trip_id: the id of the trip to which this image belongs.
         """
-        query = "INSERT INTO Images (Trip, ImageName) VALUES (%s, %s)"
-        cursor = self.db.cursor()
-        cursor.execute(query, (trip_id, image_name))
-        self.db.commit()
+        with closing(self.db.cursor()) as cursor:
+            query = "INSERT INTO Images (Trip, ImageName) VALUES (%s, %s)"
+            cursor = self.db.cursor()
+            cursor.execute(query, (trip_id, image_name))
+            self.db.commit()
 
 
 class Trip:
