@@ -103,11 +103,6 @@ void setPictureLED(const boolean values[]){
 Sets the batch uploading LED.
 */
 void setBatchLED(const boolean values[]){
-  Serial.print("batch led: ");
-  Serial.print(values[0]);
-  Serial.print(values[1]);
-  Serial.print(values[2]);
-  Serial.println();
   digitalWrite(BATCH_LED_RED, values[0]);
   digitalWrite(BATCH_LED_GREEN, values[1]);
   digitalWrite(BATCH_LED_BLUE, values[2]);
