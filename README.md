@@ -1,6 +1,8 @@
 po3-quantified-bike
 ===================
-<h1>User manual</h1>
+<h2>Code structure</h2>
+<p>This repository contains the code used for the device of the BOSS - Bike Of StatS. The folder 'arduino' contains the sketches that have to be installed on the Arduino controller. The folder 'raspberry' contains the code that should be installed on the Raspberry Pi. More information can be found in the README.md files in those folers.</p>
+<h2>User manual</h2>
 <p>When using the device, it is important to know the meaning of the LEDs and the functions of the buttons.
 On the prototype, these are indicated with paper labels:</p>
 <ul>
