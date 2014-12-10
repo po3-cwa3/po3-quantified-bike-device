@@ -24,3 +24,5 @@
 <p>
 Also make sure that camera support is enabled on your Raspberry Pi using the raspi-config tool.
 </p>
+<h2>Code guide</h2>
+<p>The entry point of the application is main.py. The configuration can be found in config.py (should be created upon installation, based on config.example.py).</p>
