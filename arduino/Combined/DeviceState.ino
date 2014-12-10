@@ -29,7 +29,7 @@ State string:
 5: 1 if taking picture failed
 6: 1 if taking picture succeeded
 7: 1 if trip active
-8:
+8: 1 if next trips will be in Live Mode
 */
 /*
 Initialize the LEDs
