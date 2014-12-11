@@ -3,16 +3,17 @@
 """
 This module is designed to communicate with the XLoBorg
 
-busNumber               I²C bus on which the XLoBorg is attached (Rev 1 is bus 0, Rev 2 is bus 1)
-bus                     the smbus object used to talk to the I²C bus
-addressAccelerometer    The I²C address of the accelerometer chip
-addressCompass          The I²C address of the compass chip
+busNumber               IÂ²C bus on which the XLoBorg is attached (Rev 1 is bus 0, Rev 2 is bus 1)
+bus                     the smbus object used to talk to the IÂ²C bus
+addressAccelerometer    The IÂ²C address of the accelerometer chip
+addressCompass          The IÂ²C address of the compass chip
 foundAccelerometer      True if the accelerometer chip can be seen, False otherwise
 foundCompass            True if the compass chip can be seen, False otherwise
 printFunction           Function reference to call when printing text, if None "print" is used
 gPerCount               Number of G represented by the LSB of the accelerometer at the current sensitivity
-tempOffest              The offset to add to the temperature reading in °C
+tempOffest              The offset to add to the temperature reading in Â°C
 """
+#Source: https://www.piborg.org/index.php?q=xloborg/install
 
 # Import the libraries we need
 import smbus
@@ -297,7 +298,7 @@ if __name__ == '__main__':
             x, y, z = ReadAccelerometer()
             mx, my, mz = ReadCompassRaw()
             temp = ReadTemperature()
-            print 'X = %+01.4f G, Y = %+01.4f G, Z = %+01.4f G, mX = %+06d, mY = %+06d, mZ = %+06d, T = %+03d°C' % (x, y, z, mx, my, mz, temp)
+            print 'X = %+01.4f G, Y = %+01.4f G, Z = %+01.4f G, mX = %+06d, mY = %+06d, mZ = %+06d, T = %+03dÂ°C' % (x, y, z, mx, my, mz, temp)
             time.sleep(0.1)
     except KeyboardInterrupt:
         # User aborted
